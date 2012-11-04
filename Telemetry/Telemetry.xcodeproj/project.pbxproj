@@ -1,0 +1,215 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FA86FDCF1646F0D400CDB5E0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDCD1646F0D400CDB5E0 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FA8B1F87163DECDA00F66ED6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FA86FDCD1646F0D400CDB5E0 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Telemetry/main.cpp; sourceTree = SOURCE_ROOT; };
+		FA86FDCE1646F0D400CDB5E0 /* Telemetry.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = Telemetry.1; path = Telemetry/Telemetry.1; sourceTree = SOURCE_ROOT; };
+		FA8B1F89163DECDA00F66ED6 /* Telemetry */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Telemetry; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FA8B1F86163DECDA00F66ED6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FA8B1F7E163DECDA00F66ED6 = {
+			isa = PBXGroup;
+			children = (
+				FA8B1F8C163DECDA00F66ED6 /* Telemetry */,
+				FA8B1F8A163DECDA00F66ED6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FA8B1F8A163DECDA00F66ED6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA8B1F89163DECDA00F66ED6 /* Telemetry */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA8B1F8C163DECDA00F66ED6 /* Telemetry */ = {
+			isa = PBXGroup;
+			children = (
+				FA86FDCD1646F0D400CDB5E0 /* main.cpp */,
+				FA86FDCE1646F0D400CDB5E0 /* Telemetry.1 */,
+			);
+			name = Telemetry;
+			path = Telepo;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FA8B1F88163DECDA00F66ED6 /* Telemetry */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA8B1F93163DECDA00F66ED6 /* Build configuration list for PBXNativeTarget "Telemetry" */;
+			buildPhases = (
+				FA8B1F85163DECDA00F66ED6 /* Sources */,
+				FA8B1F86163DECDA00F66ED6 /* Frameworks */,
+				FA8B1F87163DECDA00F66ED6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Telemetry;
+			productName = Telepo;
+			productReference = FA8B1F89163DECDA00F66ED6 /* Telemetry */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FA8B1F80163DECDA00F66ED6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Alex Chandel";
+			};
+			buildConfigurationList = FA8B1F83163DECDA00F66ED6 /* Build configuration list for PBXProject "Telemetry" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FA8B1F7E163DECDA00F66ED6;
+			productRefGroup = FA8B1F8A163DECDA00F66ED6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FA8B1F88163DECDA00F66ED6 /* Telemetry */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FA8B1F85163DECDA00F66ED6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA86FDCF1646F0D400CDB5E0 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FA8B1F91163DECDA00F66ED6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FA8B1F92163DECDA00F66ED6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FA8B1F94163DECDA00F66ED6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Telemetry;
+			};
+			name = Debug;
+		};
+		FA8B1F95163DECDA00F66ED6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Telemetry;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FA8B1F83163DECDA00F66ED6 /* Build configuration list for PBXProject "Telemetry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA8B1F91163DECDA00F66ED6 /* Debug */,
+				FA8B1F92163DECDA00F66ED6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA8B1F93163DECDA00F66ED6 /* Build configuration list for PBXNativeTarget "Telemetry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA8B1F94163DECDA00F66ED6 /* Debug */,
+				FA8B1F95163DECDA00F66ED6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FA8B1F80163DECDA00F66ED6 /* Project object */;
+}
