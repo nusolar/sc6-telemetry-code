@@ -8,6 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		FA86FDCF1646F0D400CDB5E0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDCD1646F0D400CDB5E0 /* main.cpp */; };
+		FA86FDE51647508600CDB5E0 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD11647508600CDB5E0 /* SHA1.cpp */; };
+		FA86FDE61647508600CDB5E0 /* SqlCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD31647508600CDB5E0 /* SqlCommon.cpp */; };
+		FA86FDE71647508600CDB5E0 /* SqlDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD51647508600CDB5E0 /* SqlDatabase.cpp */; };
+		FA86FDE81647508600CDB5E0 /* SqlField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD71647508600CDB5E0 /* SqlField.cpp */; };
+		FA86FDE91647508600CDB5E0 /* SqlFieldSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD91647508600CDB5E0 /* SqlFieldSet.cpp */; };
+		FA86FDEA1647508600CDB5E0 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDDB1647508600CDB5E0 /* sqlite3.c */; };
+		FA86FDEB1647508600CDB5E0 /* SqlRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDDD1647508600CDB5E0 /* SqlRecord.cpp */; };
+		FA86FDEC1647508600CDB5E0 /* SqlRecordSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDDF1647508600CDB5E0 /* SqlRecordSet.cpp */; };
+		FA86FDED1647508600CDB5E0 /* SqlTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDE11647508600CDB5E0 /* SqlTable.cpp */; };
+		FA86FDEE1647508600CDB5E0 /* SqlValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDE31647508600CDB5E0 /* SqlValue.cpp */; };
+		FA86FDF516475ED500CDB5E0 /* Sequel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDF316475ED500CDB5E0 /* Sequel.cpp */; };
+		FA86FDF916475F3E00CDB5E0 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDF716475F3E00CDB5E0 /* Logger.cpp */; };
+		FA86FDFC16475F9A00CDB5E0 /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDFA16475F9A00CDB5E0 /* Packet.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +38,32 @@
 /* Begin PBXFileReference section */
 		FA86FDCD1646F0D400CDB5E0 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Telemetry/main.cpp; sourceTree = SOURCE_ROOT; };
 		FA86FDCE1646F0D400CDB5E0 /* Telemetry.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = Telemetry.1; path = Telemetry/Telemetry.1; sourceTree = SOURCE_ROOT; };
+		FA86FDD11647508600CDB5E0 /* SHA1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SHA1.cpp; sourceTree = "<group>"; };
+		FA86FDD21647508600CDB5E0 /* SHA1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA1.h; sourceTree = "<group>"; };
+		FA86FDD31647508600CDB5E0 /* SqlCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlCommon.cpp; sourceTree = "<group>"; };
+		FA86FDD41647508600CDB5E0 /* SqlCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlCommon.h; sourceTree = "<group>"; };
+		FA86FDD51647508600CDB5E0 /* SqlDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlDatabase.cpp; sourceTree = "<group>"; };
+		FA86FDD61647508600CDB5E0 /* SqlDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlDatabase.h; sourceTree = "<group>"; };
+		FA86FDD71647508600CDB5E0 /* SqlField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlField.cpp; sourceTree = "<group>"; };
+		FA86FDD81647508600CDB5E0 /* SqlField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlField.h; sourceTree = "<group>"; };
+		FA86FDD91647508600CDB5E0 /* SqlFieldSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlFieldSet.cpp; sourceTree = "<group>"; };
+		FA86FDDA1647508600CDB5E0 /* SqlFieldSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlFieldSet.h; sourceTree = "<group>"; };
+		FA86FDDB1647508600CDB5E0 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		FA86FDDC1647508600CDB5E0 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		FA86FDDD1647508600CDB5E0 /* SqlRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlRecord.cpp; sourceTree = "<group>"; };
+		FA86FDDE1647508600CDB5E0 /* SqlRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlRecord.h; sourceTree = "<group>"; };
+		FA86FDDF1647508600CDB5E0 /* SqlRecordSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlRecordSet.cpp; sourceTree = "<group>"; };
+		FA86FDE01647508600CDB5E0 /* SqlRecordSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlRecordSet.h; sourceTree = "<group>"; };
+		FA86FDE11647508600CDB5E0 /* SqlTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlTable.cpp; sourceTree = "<group>"; };
+		FA86FDE21647508600CDB5E0 /* SqlTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlTable.h; sourceTree = "<group>"; };
+		FA86FDE31647508600CDB5E0 /* SqlValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlValue.cpp; sourceTree = "<group>"; };
+		FA86FDE41647508600CDB5E0 /* SqlValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlValue.h; sourceTree = "<group>"; };
+		FA86FDF316475ED500CDB5E0 /* Sequel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sequel.cpp; path = Telemetry/Sequel.cpp; sourceTree = SOURCE_ROOT; };
+		FA86FDF416475ED500CDB5E0 /* Sequel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sequel.h; path = Telemetry/Sequel.h; sourceTree = SOURCE_ROOT; };
+		FA86FDF716475F3E00CDB5E0 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = Telemetry/Logger.cpp; sourceTree = SOURCE_ROOT; };
+		FA86FDF816475F3E00CDB5E0 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = Telemetry/Logger.h; sourceTree = SOURCE_ROOT; };
+		FA86FDFA16475F9A00CDB5E0 /* Packet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Packet.cpp; path = Telemetry/Packet.cpp; sourceTree = SOURCE_ROOT; };
+		FA86FDFB16475F9A00CDB5E0 /* Packet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Packet.h; path = Telemetry/Packet.h; sourceTree = SOURCE_ROOT; };
 		FA8B1F89163DECDA00F66ED6 /* Telemetry */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Telemetry; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -39,9 +78,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FA86FDD01647508600CDB5E0 /* easySQLite */ = {
+			isa = PBXGroup;
+			children = (
+				FA86FDD11647508600CDB5E0 /* SHA1.cpp */,
+				FA86FDD21647508600CDB5E0 /* SHA1.h */,
+				FA86FDD31647508600CDB5E0 /* SqlCommon.cpp */,
+				FA86FDD41647508600CDB5E0 /* SqlCommon.h */,
+				FA86FDD51647508600CDB5E0 /* SqlDatabase.cpp */,
+				FA86FDD61647508600CDB5E0 /* SqlDatabase.h */,
+				FA86FDD71647508600CDB5E0 /* SqlField.cpp */,
+				FA86FDD81647508600CDB5E0 /* SqlField.h */,
+				FA86FDD91647508600CDB5E0 /* SqlFieldSet.cpp */,
+				FA86FDDA1647508600CDB5E0 /* SqlFieldSet.h */,
+				FA86FDDB1647508600CDB5E0 /* sqlite3.c */,
+				FA86FDDC1647508600CDB5E0 /* sqlite3.h */,
+				FA86FDDD1647508600CDB5E0 /* SqlRecord.cpp */,
+				FA86FDDE1647508600CDB5E0 /* SqlRecord.h */,
+				FA86FDDF1647508600CDB5E0 /* SqlRecordSet.cpp */,
+				FA86FDE01647508600CDB5E0 /* SqlRecordSet.h */,
+				FA86FDE11647508600CDB5E0 /* SqlTable.cpp */,
+				FA86FDE21647508600CDB5E0 /* SqlTable.h */,
+				FA86FDE31647508600CDB5E0 /* SqlValue.cpp */,
+				FA86FDE41647508600CDB5E0 /* SqlValue.h */,
+			);
+			name = easySQLite;
+			path = Telemetry/easySQLite;
+			sourceTree = "<group>";
+		};
 		FA8B1F7E163DECDA00F66ED6 = {
 			isa = PBXGroup;
 			children = (
+				FA86FDD01647508600CDB5E0 /* easySQLite */,
 				FA8B1F8C163DECDA00F66ED6 /* Telemetry */,
 				FA8B1F8A163DECDA00F66ED6 /* Products */,
 			);
@@ -58,6 +126,12 @@
 		FA8B1F8C163DECDA00F66ED6 /* Telemetry */ = {
 			isa = PBXGroup;
 			children = (
+				FA86FDF816475F3E00CDB5E0 /* Logger.h */,
+				FA86FDF716475F3E00CDB5E0 /* Logger.cpp */,
+				FA86FDFB16475F9A00CDB5E0 /* Packet.h */,
+				FA86FDFA16475F9A00CDB5E0 /* Packet.cpp */,
+				FA86FDF416475ED500CDB5E0 /* Sequel.h */,
+				FA86FDF316475ED500CDB5E0 /* Sequel.cpp */,
 				FA86FDCD1646F0D400CDB5E0 /* main.cpp */,
 				FA86FDCE1646F0D400CDB5E0 /* Telemetry.1 */,
 			);
@@ -117,6 +191,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA86FDCF1646F0D400CDB5E0 /* main.cpp in Sources */,
+				FA86FDE51647508600CDB5E0 /* SHA1.cpp in Sources */,
+				FA86FDE61647508600CDB5E0 /* SqlCommon.cpp in Sources */,
+				FA86FDE71647508600CDB5E0 /* SqlDatabase.cpp in Sources */,
+				FA86FDE81647508600CDB5E0 /* SqlField.cpp in Sources */,
+				FA86FDE91647508600CDB5E0 /* SqlFieldSet.cpp in Sources */,
+				FA86FDEA1647508600CDB5E0 /* sqlite3.c in Sources */,
+				FA86FDEB1647508600CDB5E0 /* SqlRecord.cpp in Sources */,
+				FA86FDEC1647508600CDB5E0 /* SqlRecordSet.cpp in Sources */,
+				FA86FDED1647508600CDB5E0 /* SqlTable.cpp in Sources */,
+				FA86FDEE1647508600CDB5E0 /* SqlValue.cpp in Sources */,
+				FA86FDF516475ED500CDB5E0 /* Sequel.cpp in Sources */,
+				FA86FDF916475F3E00CDB5E0 /* Logger.cpp in Sources */,
+				FA86FDFC16475F9A00CDB5E0 /* Packet.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

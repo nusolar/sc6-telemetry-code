@@ -7,15 +7,20 @@
 //
 
 #include <iostream>
+#include <sstream>
 
-struct packet {
-	int CAN_ID;
-	int length;
-	struct data;
-};
+#include "Packet.h"
+#include "Sequel.h"
+
+using namespace std;
+
+void consumePacket(Packet &p) {
+	Sequel db;
+	db.addPacket(p);
+}
 
 int main(int argc, const char * argv[])
 {
-	std::cout << "Hello, World!\n";
+	cout << "Hello, World!\n";
     return 0;
 }
