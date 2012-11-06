@@ -11,10 +11,12 @@
 
 #include <iostream>
 #include <fstream>
-#include <chrono>
+
 #include "Packet.h"
+#include "Platform.h"
 
 struct Logger {
+	
 	static void logPacket(Packet &packet);
 	static void logError(std::string message);
 };

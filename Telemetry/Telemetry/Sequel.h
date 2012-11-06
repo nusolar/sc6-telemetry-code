@@ -11,22 +11,23 @@
 
 #include <vector>
 
-#include "easySQLite/SqlCommon.h"
-#include "easySQLite/SqlField.h"
-#include "easySQLite/SqlDatabase.h"
-#include "easySQLite/SqlTable.h"
+#include "../easySQLite/SqlCommon.h"
+#include "../easySQLite/SqlField.h"
+#include "../easySQLite/SqlDatabase.h"
+#include "../easySQLite/SqlTable.h"
 
 #include "Packet.h"
 #include "Logger.h"
 
 class Sequel {
-	static const char *dbfile;
-	static sql::Field defPacket[7];
+	static sql::string dbname;
+	static sql::string dbfile();
+	static sql::Field defPacket[6];
 	sql::Database cxn;
 public:
 	long addPacket(Packet &packet);
 	void packetSent(long key);
-	std::vector<Packet> allocateUnsentPackets();
+	std::vector<Packet> unsentPackets();
 	//static Sequel db;
 };
 

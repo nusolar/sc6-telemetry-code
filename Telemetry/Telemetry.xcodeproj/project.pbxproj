@@ -8,19 +8,81 @@
 
 /* Begin PBXBuildFile section */
 		FA86FDCF1646F0D400CDB5E0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDCD1646F0D400CDB5E0 /* main.cpp */; };
-		FA86FDE51647508600CDB5E0 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD11647508600CDB5E0 /* SHA1.cpp */; };
-		FA86FDE61647508600CDB5E0 /* SqlCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD31647508600CDB5E0 /* SqlCommon.cpp */; };
-		FA86FDE71647508600CDB5E0 /* SqlDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD51647508600CDB5E0 /* SqlDatabase.cpp */; };
-		FA86FDE81647508600CDB5E0 /* SqlField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD71647508600CDB5E0 /* SqlField.cpp */; };
-		FA86FDE91647508600CDB5E0 /* SqlFieldSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDD91647508600CDB5E0 /* SqlFieldSet.cpp */; };
-		FA86FDEA1647508600CDB5E0 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDDB1647508600CDB5E0 /* sqlite3.c */; };
-		FA86FDEB1647508600CDB5E0 /* SqlRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDDD1647508600CDB5E0 /* SqlRecord.cpp */; };
-		FA86FDEC1647508600CDB5E0 /* SqlRecordSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDDF1647508600CDB5E0 /* SqlRecordSet.cpp */; };
-		FA86FDED1647508600CDB5E0 /* SqlTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDE11647508600CDB5E0 /* SqlTable.cpp */; };
-		FA86FDEE1647508600CDB5E0 /* SqlValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDE31647508600CDB5E0 /* SqlValue.cpp */; };
 		FA86FDF516475ED500CDB5E0 /* Sequel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDF316475ED500CDB5E0 /* Sequel.cpp */; };
 		FA86FDF916475F3E00CDB5E0 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDF716475F3E00CDB5E0 /* Logger.cpp */; };
 		FA86FDFC16475F9A00CDB5E0 /* Packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FDFA16475F9A00CDB5E0 /* Packet.cpp */; };
+		FA86FE0316483A2100CDB5E0 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86FE0116483A2100CDB5E0 /* Platform.cpp */; };
+		FAC3703716492DAD00DB7432 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3702316492DAD00DB7432 /* SHA1.cpp */; };
+		FAC3703816492DAD00DB7432 /* SqlCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3702516492DAD00DB7432 /* SqlCommon.cpp */; };
+		FAC3703916492DAD00DB7432 /* SqlDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3702716492DAD00DB7432 /* SqlDatabase.cpp */; };
+		FAC3703A16492DAD00DB7432 /* SqlField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3702916492DAD00DB7432 /* SqlField.cpp */; };
+		FAC3703B16492DAD00DB7432 /* SqlFieldSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3702B16492DAD00DB7432 /* SqlFieldSet.cpp */; };
+		FAC3703C16492DAD00DB7432 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = FAC3702D16492DAD00DB7432 /* sqlite3.c */; };
+		FAC3703D16492DAD00DB7432 /* SqlRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3702F16492DAD00DB7432 /* SqlRecord.cpp */; };
+		FAC3703E16492DAD00DB7432 /* SqlRecordSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3703116492DAD00DB7432 /* SqlRecordSet.cpp */; };
+		FAC3703F16492DAD00DB7432 /* SqlTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3703316492DAD00DB7432 /* SqlTable.cpp */; };
+		FAC3704016492DAD00DB7432 /* SqlValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3703516492DAD00DB7432 /* SqlValue.cpp */; };
+		FAC3704316492DD000DB7432 /* MsgSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3704116492DD000DB7432 /* MsgSender.cpp */; };
+		FAC370D516492E8900DB7432 /* address.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3704516492E8900DB7432 /* address.cpp */; };
+		FAC370D616492E8900DB7432 /* clock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3704B16492E8900DB7432 /* clock.cpp */; };
+		FAC370D716492E8900DB7432 /* ctx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3704F16492E8900DB7432 /* ctx.cpp */; };
+		FAC370D816492E8900DB7432 /* dealer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3705116492E8900DB7432 /* dealer.cpp */; };
+		FAC370D916492E8900DB7432 /* decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3705316492E8900DB7432 /* decoder.cpp */; };
+		FAC370DA16492E8900DB7432 /* devpoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3705516492E8900DB7432 /* devpoll.cpp */; };
+		FAC370DB16492E8900DB7432 /* dist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3705716492E8900DB7432 /* dist.cpp */; };
+		FAC370DC16492E8900DB7432 /* encoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3705916492E8900DB7432 /* encoder.cpp */; };
+		FAC370DD16492E8900DB7432 /* epoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3705B16492E8900DB7432 /* epoll.cpp */; };
+		FAC370DE16492E8900DB7432 /* err.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3705D16492E8900DB7432 /* err.cpp */; };
+		FAC370DF16492E8900DB7432 /* fq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3706016492E8900DB7432 /* fq.cpp */; };
+		FAC370E016492E8900DB7432 /* io_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3706816492E8900DB7432 /* io_object.cpp */; };
+		FAC370E116492E8900DB7432 /* io_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3706A16492E8900DB7432 /* io_thread.cpp */; };
+		FAC370E216492E8900DB7432 /* ip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3706C16492E8900DB7432 /* ip.cpp */; };
+		FAC370E316492E8900DB7432 /* ipc_address.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3706E16492E8900DB7432 /* ipc_address.cpp */; };
+		FAC370E416492E8900DB7432 /* ipc_connecter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3707016492E8900DB7432 /* ipc_connecter.cpp */; };
+		FAC370E516492E8900DB7432 /* ipc_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3707216492E8900DB7432 /* ipc_listener.cpp */; };
+		FAC370E616492E8900DB7432 /* kqueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3707416492E8900DB7432 /* kqueue.cpp */; };
+		FAC370E716492E8900DB7432 /* lb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3707616492E8900DB7432 /* lb.cpp */; };
+		FAC370E816492E8900DB7432 /* mailbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3707A16492E8900DB7432 /* mailbox.cpp */; };
+		FAC370E916492E8900DB7432 /* msg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3707E16492E8900DB7432 /* msg.cpp */; };
+		FAC370EA16492E8900DB7432 /* mtrie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708016492E8900DB7432 /* mtrie.cpp */; };
+		FAC370EB16492E8900DB7432 /* object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708316492E8900DB7432 /* object.cpp */; };
+		FAC370EC16492E8900DB7432 /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708516492E8900DB7432 /* options.cpp */; };
+		FAC370ED16492E8900DB7432 /* own.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708716492E8900DB7432 /* own.cpp */; };
+		FAC370EE16492E8900DB7432 /* pair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708916492E8900DB7432 /* pair.cpp */; };
+		FAC370EF16492E8900DB7432 /* pgm_receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708B16492E8900DB7432 /* pgm_receiver.cpp */; };
+		FAC370F016492E8900DB7432 /* pgm_sender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708D16492E8900DB7432 /* pgm_sender.cpp */; };
+		FAC370F116492E8900DB7432 /* pgm_socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3708F16492E8900DB7432 /* pgm_socket.cpp */; };
+		FAC370F216492E8900DB7432 /* pipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3709116492E8900DB7432 /* pipe.cpp */; };
+		FAC370F316492E8900DB7432 /* poll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3709416492E8900DB7432 /* poll.cpp */; };
+		FAC370F416492E8900DB7432 /* poller_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3709716492E8900DB7432 /* poller_base.cpp */; };
+		FAC370F516492E8900DB7432 /* precompiled.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3709916492E8900DB7432 /* precompiled.cpp */; };
+		FAC370F616492E8900DB7432 /* proxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3709B16492E8900DB7432 /* proxy.cpp */; };
+		FAC370F716492E8900DB7432 /* pub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3709D16492E8900DB7432 /* pub.cpp */; };
+		FAC370F816492E8900DB7432 /* pull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC3709F16492E8900DB7432 /* pull.cpp */; };
+		FAC370F916492E8900DB7432 /* push.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370A116492E8900DB7432 /* push.cpp */; };
+		FAC370FA16492E8900DB7432 /* random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370A316492E8900DB7432 /* random.cpp */; };
+		FAC370FB16492E8900DB7432 /* reaper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370A516492E8900DB7432 /* reaper.cpp */; };
+		FAC370FC16492E8900DB7432 /* rep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370A716492E8900DB7432 /* rep.cpp */; };
+		FAC370FD16492E8900DB7432 /* req.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370A916492E8900DB7432 /* req.cpp */; };
+		FAC370FE16492E8900DB7432 /* router.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370AB16492E8900DB7432 /* router.cpp */; };
+		FAC370FF16492E8900DB7432 /* select.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370AD16492E8900DB7432 /* select.cpp */; };
+		FAC3710016492E8900DB7432 /* session_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370AF16492E8900DB7432 /* session_base.cpp */; };
+		FAC3710116492E8900DB7432 /* signaler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370B116492E8900DB7432 /* signaler.cpp */; };
+		FAC3710216492E8900DB7432 /* socket_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370B316492E8900DB7432 /* socket_base.cpp */; };
+		FAC3710316492E8900DB7432 /* stream_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370B616492E8900DB7432 /* stream_engine.cpp */; };
+		FAC3710416492E8900DB7432 /* sub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370B816492E8900DB7432 /* sub.cpp */; };
+		FAC3710516492E8900DB7432 /* tcp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370BA16492E8900DB7432 /* tcp.cpp */; };
+		FAC3710616492E8900DB7432 /* tcp_address.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370BC16492E8900DB7432 /* tcp_address.cpp */; };
+		FAC3710716492E8900DB7432 /* tcp_connecter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370BE16492E8900DB7432 /* tcp_connecter.cpp */; };
+		FAC3710816492E8900DB7432 /* tcp_listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370C016492E8900DB7432 /* tcp_listener.cpp */; };
+		FAC3710916492E8900DB7432 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370C216492E8900DB7432 /* thread.cpp */; };
+		FAC3710A16492E8900DB7432 /* trie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370C416492E8900DB7432 /* trie.cpp */; };
+		FAC3710B16492E8900DB7432 /* v1_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370C616492E8900DB7432 /* v1_decoder.cpp */; };
+		FAC3710C16492E8900DB7432 /* v1_encoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370C816492E8900DB7432 /* v1_encoder.cpp */; };
+		FAC3710D16492E8900DB7432 /* xpub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370CD16492E8900DB7432 /* xpub.cpp */; };
+		FAC3710E16492E8900DB7432 /* xsub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370CF16492E8900DB7432 /* xsub.cpp */; };
+		FAC3710F16492E8900DB7432 /* zmq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370D316492E8900DB7432 /* zmq.cpp */; };
+		FAC3711016492E8900DB7432 /* zmq_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC370D416492E8900DB7432 /* zmq_utils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,33 +100,184 @@
 /* Begin PBXFileReference section */
 		FA86FDCD1646F0D400CDB5E0 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Telemetry/main.cpp; sourceTree = SOURCE_ROOT; };
 		FA86FDCE1646F0D400CDB5E0 /* Telemetry.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = Telemetry.1; path = Telemetry/Telemetry.1; sourceTree = SOURCE_ROOT; };
-		FA86FDD11647508600CDB5E0 /* SHA1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SHA1.cpp; sourceTree = "<group>"; };
-		FA86FDD21647508600CDB5E0 /* SHA1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA1.h; sourceTree = "<group>"; };
-		FA86FDD31647508600CDB5E0 /* SqlCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlCommon.cpp; sourceTree = "<group>"; };
-		FA86FDD41647508600CDB5E0 /* SqlCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlCommon.h; sourceTree = "<group>"; };
-		FA86FDD51647508600CDB5E0 /* SqlDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlDatabase.cpp; sourceTree = "<group>"; };
-		FA86FDD61647508600CDB5E0 /* SqlDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlDatabase.h; sourceTree = "<group>"; };
-		FA86FDD71647508600CDB5E0 /* SqlField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlField.cpp; sourceTree = "<group>"; };
-		FA86FDD81647508600CDB5E0 /* SqlField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlField.h; sourceTree = "<group>"; };
-		FA86FDD91647508600CDB5E0 /* SqlFieldSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlFieldSet.cpp; sourceTree = "<group>"; };
-		FA86FDDA1647508600CDB5E0 /* SqlFieldSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlFieldSet.h; sourceTree = "<group>"; };
-		FA86FDDB1647508600CDB5E0 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
-		FA86FDDC1647508600CDB5E0 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
-		FA86FDDD1647508600CDB5E0 /* SqlRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlRecord.cpp; sourceTree = "<group>"; };
-		FA86FDDE1647508600CDB5E0 /* SqlRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlRecord.h; sourceTree = "<group>"; };
-		FA86FDDF1647508600CDB5E0 /* SqlRecordSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlRecordSet.cpp; sourceTree = "<group>"; };
-		FA86FDE01647508600CDB5E0 /* SqlRecordSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlRecordSet.h; sourceTree = "<group>"; };
-		FA86FDE11647508600CDB5E0 /* SqlTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlTable.cpp; sourceTree = "<group>"; };
-		FA86FDE21647508600CDB5E0 /* SqlTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlTable.h; sourceTree = "<group>"; };
-		FA86FDE31647508600CDB5E0 /* SqlValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlValue.cpp; sourceTree = "<group>"; };
-		FA86FDE41647508600CDB5E0 /* SqlValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlValue.h; sourceTree = "<group>"; };
 		FA86FDF316475ED500CDB5E0 /* Sequel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sequel.cpp; path = Telemetry/Sequel.cpp; sourceTree = SOURCE_ROOT; };
 		FA86FDF416475ED500CDB5E0 /* Sequel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sequel.h; path = Telemetry/Sequel.h; sourceTree = SOURCE_ROOT; };
 		FA86FDF716475F3E00CDB5E0 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = Telemetry/Logger.cpp; sourceTree = SOURCE_ROOT; };
 		FA86FDF816475F3E00CDB5E0 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = Telemetry/Logger.h; sourceTree = SOURCE_ROOT; };
 		FA86FDFA16475F9A00CDB5E0 /* Packet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Packet.cpp; path = Telemetry/Packet.cpp; sourceTree = SOURCE_ROOT; };
 		FA86FDFB16475F9A00CDB5E0 /* Packet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Packet.h; path = Telemetry/Packet.h; sourceTree = SOURCE_ROOT; };
+		FA86FE0116483A2100CDB5E0 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = Telemetry/Platform.cpp; sourceTree = SOURCE_ROOT; };
+		FA86FE0216483A2100CDB5E0 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = Telemetry/Platform.h; sourceTree = SOURCE_ROOT; };
 		FA8B1F89163DECDA00F66ED6 /* Telemetry */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Telemetry; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAC3702316492DAD00DB7432 /* SHA1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SHA1.cpp; sourceTree = "<group>"; };
+		FAC3702416492DAD00DB7432 /* SHA1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA1.h; sourceTree = "<group>"; };
+		FAC3702516492DAD00DB7432 /* SqlCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlCommon.cpp; sourceTree = "<group>"; };
+		FAC3702616492DAD00DB7432 /* SqlCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlCommon.h; sourceTree = "<group>"; };
+		FAC3702716492DAD00DB7432 /* SqlDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlDatabase.cpp; sourceTree = "<group>"; };
+		FAC3702816492DAD00DB7432 /* SqlDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlDatabase.h; sourceTree = "<group>"; };
+		FAC3702916492DAD00DB7432 /* SqlField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlField.cpp; sourceTree = "<group>"; };
+		FAC3702A16492DAD00DB7432 /* SqlField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlField.h; sourceTree = "<group>"; };
+		FAC3702B16492DAD00DB7432 /* SqlFieldSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlFieldSet.cpp; sourceTree = "<group>"; };
+		FAC3702C16492DAD00DB7432 /* SqlFieldSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlFieldSet.h; sourceTree = "<group>"; };
+		FAC3702D16492DAD00DB7432 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		FAC3702E16492DAD00DB7432 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		FAC3702F16492DAD00DB7432 /* SqlRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlRecord.cpp; sourceTree = "<group>"; };
+		FAC3703016492DAD00DB7432 /* SqlRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlRecord.h; sourceTree = "<group>"; };
+		FAC3703116492DAD00DB7432 /* SqlRecordSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlRecordSet.cpp; sourceTree = "<group>"; };
+		FAC3703216492DAD00DB7432 /* SqlRecordSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlRecordSet.h; sourceTree = "<group>"; };
+		FAC3703316492DAD00DB7432 /* SqlTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlTable.cpp; sourceTree = "<group>"; };
+		FAC3703416492DAD00DB7432 /* SqlTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlTable.h; sourceTree = "<group>"; };
+		FAC3703516492DAD00DB7432 /* SqlValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqlValue.cpp; sourceTree = "<group>"; };
+		FAC3703616492DAD00DB7432 /* SqlValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqlValue.h; sourceTree = "<group>"; };
+		FAC3704116492DD000DB7432 /* MsgSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MsgSender.cpp; path = Telemetry/MsgSender.cpp; sourceTree = SOURCE_ROOT; };
+		FAC3704216492DD000DB7432 /* MsgSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgSender.h; path = Telemetry/MsgSender.h; sourceTree = SOURCE_ROOT; };
+		FAC3704516492E8900DB7432 /* address.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = address.cpp; sourceTree = "<group>"; };
+		FAC3704616492E8900DB7432 /* address.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = address.hpp; sourceTree = "<group>"; };
+		FAC3704716492E8900DB7432 /* array.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = array.hpp; sourceTree = "<group>"; };
+		FAC3704816492E8900DB7432 /* atomic_counter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = atomic_counter.hpp; sourceTree = "<group>"; };
+		FAC3704916492E8900DB7432 /* atomic_ptr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = atomic_ptr.hpp; sourceTree = "<group>"; };
+		FAC3704A16492E8900DB7432 /* blob.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = blob.hpp; sourceTree = "<group>"; };
+		FAC3704B16492E8900DB7432 /* clock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clock.cpp; sourceTree = "<group>"; };
+		FAC3704C16492E8900DB7432 /* clock.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = clock.hpp; sourceTree = "<group>"; };
+		FAC3704D16492E8900DB7432 /* command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = command.hpp; sourceTree = "<group>"; };
+		FAC3704E16492E8900DB7432 /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
+		FAC3704F16492E8900DB7432 /* ctx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ctx.cpp; sourceTree = "<group>"; };
+		FAC3705016492E8900DB7432 /* ctx.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ctx.hpp; sourceTree = "<group>"; };
+		FAC3705116492E8900DB7432 /* dealer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dealer.cpp; sourceTree = "<group>"; };
+		FAC3705216492E8900DB7432 /* dealer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dealer.hpp; sourceTree = "<group>"; };
+		FAC3705316492E8900DB7432 /* decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = decoder.cpp; sourceTree = "<group>"; };
+		FAC3705416492E8900DB7432 /* decoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = decoder.hpp; sourceTree = "<group>"; };
+		FAC3705516492E8900DB7432 /* devpoll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = devpoll.cpp; sourceTree = "<group>"; };
+		FAC3705616492E8900DB7432 /* devpoll.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = devpoll.hpp; sourceTree = "<group>"; };
+		FAC3705716492E8900DB7432 /* dist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dist.cpp; sourceTree = "<group>"; };
+		FAC3705816492E8900DB7432 /* dist.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dist.hpp; sourceTree = "<group>"; };
+		FAC3705916492E8900DB7432 /* encoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = encoder.cpp; sourceTree = "<group>"; };
+		FAC3705A16492E8900DB7432 /* encoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = encoder.hpp; sourceTree = "<group>"; };
+		FAC3705B16492E8900DB7432 /* epoll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = epoll.cpp; sourceTree = "<group>"; };
+		FAC3705C16492E8900DB7432 /* epoll.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = epoll.hpp; sourceTree = "<group>"; };
+		FAC3705D16492E8900DB7432 /* err.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = err.cpp; sourceTree = "<group>"; };
+		FAC3705E16492E8900DB7432 /* err.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = err.hpp; sourceTree = "<group>"; };
+		FAC3705F16492E8900DB7432 /* fd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fd.hpp; sourceTree = "<group>"; };
+		FAC3706016492E8900DB7432 /* fq.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fq.cpp; sourceTree = "<group>"; };
+		FAC3706116492E8900DB7432 /* fq.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fq.hpp; sourceTree = "<group>"; };
+		FAC3706216492E8900DB7432 /* i_decoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = i_decoder.hpp; sourceTree = "<group>"; };
+		FAC3706316492E8900DB7432 /* i_encoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = i_encoder.hpp; sourceTree = "<group>"; };
+		FAC3706416492E8900DB7432 /* i_engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = i_engine.hpp; sourceTree = "<group>"; };
+		FAC3706516492E8900DB7432 /* i_msg_sink.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = i_msg_sink.hpp; sourceTree = "<group>"; };
+		FAC3706616492E8900DB7432 /* i_msg_source.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = i_msg_source.hpp; sourceTree = "<group>"; };
+		FAC3706716492E8900DB7432 /* i_poll_events.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = i_poll_events.hpp; sourceTree = "<group>"; };
+		FAC3706816492E8900DB7432 /* io_object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = io_object.cpp; sourceTree = "<group>"; };
+		FAC3706916492E8900DB7432 /* io_object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = io_object.hpp; sourceTree = "<group>"; };
+		FAC3706A16492E8900DB7432 /* io_thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = io_thread.cpp; sourceTree = "<group>"; };
+		FAC3706B16492E8900DB7432 /* io_thread.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = io_thread.hpp; sourceTree = "<group>"; };
+		FAC3706C16492E8900DB7432 /* ip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ip.cpp; sourceTree = "<group>"; };
+		FAC3706D16492E8900DB7432 /* ip.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ip.hpp; sourceTree = "<group>"; };
+		FAC3706E16492E8900DB7432 /* ipc_address.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ipc_address.cpp; sourceTree = "<group>"; };
+		FAC3706F16492E8900DB7432 /* ipc_address.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ipc_address.hpp; sourceTree = "<group>"; };
+		FAC3707016492E8900DB7432 /* ipc_connecter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ipc_connecter.cpp; sourceTree = "<group>"; };
+		FAC3707116492E8900DB7432 /* ipc_connecter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ipc_connecter.hpp; sourceTree = "<group>"; };
+		FAC3707216492E8900DB7432 /* ipc_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ipc_listener.cpp; sourceTree = "<group>"; };
+		FAC3707316492E8900DB7432 /* ipc_listener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ipc_listener.hpp; sourceTree = "<group>"; };
+		FAC3707416492E8900DB7432 /* kqueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kqueue.cpp; sourceTree = "<group>"; };
+		FAC3707516492E8900DB7432 /* kqueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kqueue.hpp; sourceTree = "<group>"; };
+		FAC3707616492E8900DB7432 /* lb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lb.cpp; sourceTree = "<group>"; };
+		FAC3707716492E8900DB7432 /* lb.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lb.hpp; sourceTree = "<group>"; };
+		FAC3707816492E8900DB7432 /* libzmq.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libzmq.pc.in; sourceTree = "<group>"; };
+		FAC3707916492E8900DB7432 /* likely.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = likely.hpp; sourceTree = "<group>"; };
+		FAC3707A16492E8900DB7432 /* mailbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mailbox.cpp; sourceTree = "<group>"; };
+		FAC3707B16492E8900DB7432 /* mailbox.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mailbox.hpp; sourceTree = "<group>"; };
+		FAC3707C16492E8900DB7432 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		FAC3707D16492E8900DB7432 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		FAC3707E16492E8900DB7432 /* msg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = msg.cpp; sourceTree = "<group>"; };
+		FAC3707F16492E8900DB7432 /* msg.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = msg.hpp; sourceTree = "<group>"; };
+		FAC3708016492E8900DB7432 /* mtrie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mtrie.cpp; sourceTree = "<group>"; };
+		FAC3708116492E8900DB7432 /* mtrie.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mtrie.hpp; sourceTree = "<group>"; };
+		FAC3708216492E8900DB7432 /* mutex.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mutex.hpp; sourceTree = "<group>"; };
+		FAC3708316492E8900DB7432 /* object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = object.cpp; sourceTree = "<group>"; };
+		FAC3708416492E8900DB7432 /* object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = object.hpp; sourceTree = "<group>"; };
+		FAC3708516492E8900DB7432 /* options.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = options.cpp; sourceTree = "<group>"; };
+		FAC3708616492E8900DB7432 /* options.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = options.hpp; sourceTree = "<group>"; };
+		FAC3708716492E8900DB7432 /* own.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = own.cpp; sourceTree = "<group>"; };
+		FAC3708816492E8900DB7432 /* own.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = own.hpp; sourceTree = "<group>"; };
+		FAC3708916492E8900DB7432 /* pair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pair.cpp; sourceTree = "<group>"; };
+		FAC3708A16492E8900DB7432 /* pair.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pair.hpp; sourceTree = "<group>"; };
+		FAC3708B16492E8900DB7432 /* pgm_receiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pgm_receiver.cpp; sourceTree = "<group>"; };
+		FAC3708C16492E8900DB7432 /* pgm_receiver.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pgm_receiver.hpp; sourceTree = "<group>"; };
+		FAC3708D16492E8900DB7432 /* pgm_sender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pgm_sender.cpp; sourceTree = "<group>"; };
+		FAC3708E16492E8900DB7432 /* pgm_sender.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pgm_sender.hpp; sourceTree = "<group>"; };
+		FAC3708F16492E8900DB7432 /* pgm_socket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pgm_socket.cpp; sourceTree = "<group>"; };
+		FAC3709016492E8900DB7432 /* pgm_socket.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pgm_socket.hpp; sourceTree = "<group>"; };
+		FAC3709116492E8900DB7432 /* pipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pipe.cpp; sourceTree = "<group>"; };
+		FAC3709216492E8900DB7432 /* pipe.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pipe.hpp; sourceTree = "<group>"; };
+		FAC3709416492E8900DB7432 /* poll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = poll.cpp; sourceTree = "<group>"; };
+		FAC3709516492E8900DB7432 /* poll.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = poll.hpp; sourceTree = "<group>"; };
+		FAC3709616492E8900DB7432 /* poller.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = poller.hpp; sourceTree = "<group>"; };
+		FAC3709716492E8900DB7432 /* poller_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = poller_base.cpp; sourceTree = "<group>"; };
+		FAC3709816492E8900DB7432 /* poller_base.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = poller_base.hpp; sourceTree = "<group>"; };
+		FAC3709916492E8900DB7432 /* precompiled.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = precompiled.cpp; sourceTree = "<group>"; };
+		FAC3709A16492E8900DB7432 /* precompiled.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = precompiled.hpp; sourceTree = "<group>"; };
+		FAC3709B16492E8900DB7432 /* proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proxy.cpp; sourceTree = "<group>"; };
+		FAC3709C16492E8900DB7432 /* proxy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = proxy.hpp; sourceTree = "<group>"; };
+		FAC3709D16492E8900DB7432 /* pub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pub.cpp; sourceTree = "<group>"; };
+		FAC3709E16492E8900DB7432 /* pub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pub.hpp; sourceTree = "<group>"; };
+		FAC3709F16492E8900DB7432 /* pull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pull.cpp; sourceTree = "<group>"; };
+		FAC370A016492E8900DB7432 /* pull.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pull.hpp; sourceTree = "<group>"; };
+		FAC370A116492E8900DB7432 /* push.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = push.cpp; sourceTree = "<group>"; };
+		FAC370A216492E8900DB7432 /* push.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = push.hpp; sourceTree = "<group>"; };
+		FAC370A316492E8900DB7432 /* random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = random.cpp; sourceTree = "<group>"; };
+		FAC370A416492E8900DB7432 /* random.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = random.hpp; sourceTree = "<group>"; };
+		FAC370A516492E8900DB7432 /* reaper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = reaper.cpp; sourceTree = "<group>"; };
+		FAC370A616492E8900DB7432 /* reaper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = reaper.hpp; sourceTree = "<group>"; };
+		FAC370A716492E8900DB7432 /* rep.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rep.cpp; sourceTree = "<group>"; };
+		FAC370A816492E8900DB7432 /* rep.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rep.hpp; sourceTree = "<group>"; };
+		FAC370A916492E8900DB7432 /* req.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = req.cpp; sourceTree = "<group>"; };
+		FAC370AA16492E8900DB7432 /* req.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = req.hpp; sourceTree = "<group>"; };
+		FAC370AB16492E8900DB7432 /* router.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = router.cpp; sourceTree = "<group>"; };
+		FAC370AC16492E8900DB7432 /* router.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = router.hpp; sourceTree = "<group>"; };
+		FAC370AD16492E8900DB7432 /* select.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = select.cpp; sourceTree = "<group>"; };
+		FAC370AE16492E8900DB7432 /* select.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = select.hpp; sourceTree = "<group>"; };
+		FAC370AF16492E8900DB7432 /* session_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = session_base.cpp; sourceTree = "<group>"; };
+		FAC370B016492E8900DB7432 /* session_base.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = session_base.hpp; sourceTree = "<group>"; };
+		FAC370B116492E8900DB7432 /* signaler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = signaler.cpp; sourceTree = "<group>"; };
+		FAC370B216492E8900DB7432 /* signaler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = signaler.hpp; sourceTree = "<group>"; };
+		FAC370B316492E8900DB7432 /* socket_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = socket_base.cpp; sourceTree = "<group>"; };
+		FAC370B416492E8900DB7432 /* socket_base.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = socket_base.hpp; sourceTree = "<group>"; };
+		FAC370B516492E8900DB7432 /* stdint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = stdint.hpp; sourceTree = "<group>"; };
+		FAC370B616492E8900DB7432 /* stream_engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stream_engine.cpp; sourceTree = "<group>"; };
+		FAC370B716492E8900DB7432 /* stream_engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = stream_engine.hpp; sourceTree = "<group>"; };
+		FAC370B816492E8900DB7432 /* sub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sub.cpp; sourceTree = "<group>"; };
+		FAC370B916492E8900DB7432 /* sub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sub.hpp; sourceTree = "<group>"; };
+		FAC370BA16492E8900DB7432 /* tcp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tcp.cpp; sourceTree = "<group>"; };
+		FAC370BB16492E8900DB7432 /* tcp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tcp.hpp; sourceTree = "<group>"; };
+		FAC370BC16492E8900DB7432 /* tcp_address.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tcp_address.cpp; sourceTree = "<group>"; };
+		FAC370BD16492E8900DB7432 /* tcp_address.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tcp_address.hpp; sourceTree = "<group>"; };
+		FAC370BE16492E8900DB7432 /* tcp_connecter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tcp_connecter.cpp; sourceTree = "<group>"; };
+		FAC370BF16492E8900DB7432 /* tcp_connecter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tcp_connecter.hpp; sourceTree = "<group>"; };
+		FAC370C016492E8900DB7432 /* tcp_listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tcp_listener.cpp; sourceTree = "<group>"; };
+		FAC370C116492E8900DB7432 /* tcp_listener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tcp_listener.hpp; sourceTree = "<group>"; };
+		FAC370C216492E8900DB7432 /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = thread.cpp; sourceTree = "<group>"; };
+		FAC370C316492E8900DB7432 /* thread.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = thread.hpp; sourceTree = "<group>"; };
+		FAC370C416492E8900DB7432 /* trie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trie.cpp; sourceTree = "<group>"; };
+		FAC370C516492E8900DB7432 /* trie.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = trie.hpp; sourceTree = "<group>"; };
+		FAC370C616492E8900DB7432 /* v1_decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = v1_decoder.cpp; sourceTree = "<group>"; };
+		FAC370C716492E8900DB7432 /* v1_decoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = v1_decoder.hpp; sourceTree = "<group>"; };
+		FAC370C816492E8900DB7432 /* v1_encoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = v1_encoder.cpp; sourceTree = "<group>"; };
+		FAC370C916492E8900DB7432 /* v1_encoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = v1_encoder.hpp; sourceTree = "<group>"; };
+		FAC370CA16492E8900DB7432 /* v1_protocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = v1_protocol.hpp; sourceTree = "<group>"; };
+		FAC370CB16492E8900DB7432 /* windows.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = windows.hpp; sourceTree = "<group>"; };
+		FAC370CC16492E8900DB7432 /* wire.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = wire.hpp; sourceTree = "<group>"; };
+		FAC370CD16492E8900DB7432 /* xpub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpub.cpp; sourceTree = "<group>"; };
+		FAC370CE16492E8900DB7432 /* xpub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xpub.hpp; sourceTree = "<group>"; };
+		FAC370CF16492E8900DB7432 /* xsub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xsub.cpp; sourceTree = "<group>"; };
+		FAC370D016492E8900DB7432 /* xsub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xsub.hpp; sourceTree = "<group>"; };
+		FAC370D116492E8900DB7432 /* ypipe.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ypipe.hpp; sourceTree = "<group>"; };
+		FAC370D216492E8900DB7432 /* yqueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = yqueue.hpp; sourceTree = "<group>"; };
+		FAC370D316492E8900DB7432 /* zmq.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zmq.cpp; sourceTree = "<group>"; };
+		FAC370D416492E8900DB7432 /* zmq_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zmq_utils.cpp; sourceTree = "<group>"; };
+		FAC3711316492F5C00DB7432 /* platform.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
+		FAC3711516492FA100DB7432 /* zmq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zmq.h; sourceTree = "<group>"; };
+		FAC3711616492FA100DB7432 /* zmq_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zmq_utils.h; sourceTree = "<group>"; };
+		FAC371171649329400DB7432 /* zmq.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = zmq.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,38 +291,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		FA86FDD01647508600CDB5E0 /* easySQLite */ = {
-			isa = PBXGroup;
-			children = (
-				FA86FDD11647508600CDB5E0 /* SHA1.cpp */,
-				FA86FDD21647508600CDB5E0 /* SHA1.h */,
-				FA86FDD31647508600CDB5E0 /* SqlCommon.cpp */,
-				FA86FDD41647508600CDB5E0 /* SqlCommon.h */,
-				FA86FDD51647508600CDB5E0 /* SqlDatabase.cpp */,
-				FA86FDD61647508600CDB5E0 /* SqlDatabase.h */,
-				FA86FDD71647508600CDB5E0 /* SqlField.cpp */,
-				FA86FDD81647508600CDB5E0 /* SqlField.h */,
-				FA86FDD91647508600CDB5E0 /* SqlFieldSet.cpp */,
-				FA86FDDA1647508600CDB5E0 /* SqlFieldSet.h */,
-				FA86FDDB1647508600CDB5E0 /* sqlite3.c */,
-				FA86FDDC1647508600CDB5E0 /* sqlite3.h */,
-				FA86FDDD1647508600CDB5E0 /* SqlRecord.cpp */,
-				FA86FDDE1647508600CDB5E0 /* SqlRecord.h */,
-				FA86FDDF1647508600CDB5E0 /* SqlRecordSet.cpp */,
-				FA86FDE01647508600CDB5E0 /* SqlRecordSet.h */,
-				FA86FDE11647508600CDB5E0 /* SqlTable.cpp */,
-				FA86FDE21647508600CDB5E0 /* SqlTable.h */,
-				FA86FDE31647508600CDB5E0 /* SqlValue.cpp */,
-				FA86FDE41647508600CDB5E0 /* SqlValue.h */,
-			);
-			name = easySQLite;
-			path = Telemetry/easySQLite;
-			sourceTree = "<group>";
-		};
 		FA8B1F7E163DECDA00F66ED6 = {
 			isa = PBXGroup;
 			children = (
-				FA86FDD01647508600CDB5E0 /* easySQLite */,
+				FAC3711416492FA000DB7432 /* include */,
+				FAC3704416492E8900DB7432 /* zeromq */,
+				FAC3702216492DAD00DB7432 /* easySQLite */,
 				FA8B1F8C163DECDA00F66ED6 /* Telemetry */,
 				FA8B1F8A163DECDA00F66ED6 /* Products */,
 			);
@@ -126,17 +313,209 @@
 		FA8B1F8C163DECDA00F66ED6 /* Telemetry */ = {
 			isa = PBXGroup;
 			children = (
+				FA86FE0216483A2100CDB5E0 /* Platform.h */,
+				FA86FE0116483A2100CDB5E0 /* Platform.cpp */,
 				FA86FDF816475F3E00CDB5E0 /* Logger.h */,
 				FA86FDF716475F3E00CDB5E0 /* Logger.cpp */,
-				FA86FDFB16475F9A00CDB5E0 /* Packet.h */,
-				FA86FDFA16475F9A00CDB5E0 /* Packet.cpp */,
 				FA86FDF416475ED500CDB5E0 /* Sequel.h */,
 				FA86FDF316475ED500CDB5E0 /* Sequel.cpp */,
+				FA86FDFB16475F9A00CDB5E0 /* Packet.h */,
+				FA86FDFA16475F9A00CDB5E0 /* Packet.cpp */,
+				FAC3704216492DD000DB7432 /* MsgSender.h */,
+				FAC3704116492DD000DB7432 /* MsgSender.cpp */,
 				FA86FDCD1646F0D400CDB5E0 /* main.cpp */,
 				FA86FDCE1646F0D400CDB5E0 /* Telemetry.1 */,
 			);
 			name = Telemetry;
 			path = Telepo;
+			sourceTree = "<group>";
+		};
+		FAC3702216492DAD00DB7432 /* easySQLite */ = {
+			isa = PBXGroup;
+			children = (
+				FAC3702316492DAD00DB7432 /* SHA1.cpp */,
+				FAC3702416492DAD00DB7432 /* SHA1.h */,
+				FAC3702516492DAD00DB7432 /* SqlCommon.cpp */,
+				FAC3702616492DAD00DB7432 /* SqlCommon.h */,
+				FAC3702716492DAD00DB7432 /* SqlDatabase.cpp */,
+				FAC3702816492DAD00DB7432 /* SqlDatabase.h */,
+				FAC3702916492DAD00DB7432 /* SqlField.cpp */,
+				FAC3702A16492DAD00DB7432 /* SqlField.h */,
+				FAC3702B16492DAD00DB7432 /* SqlFieldSet.cpp */,
+				FAC3702C16492DAD00DB7432 /* SqlFieldSet.h */,
+				FAC3702D16492DAD00DB7432 /* sqlite3.c */,
+				FAC3702E16492DAD00DB7432 /* sqlite3.h */,
+				FAC3702F16492DAD00DB7432 /* SqlRecord.cpp */,
+				FAC3703016492DAD00DB7432 /* SqlRecord.h */,
+				FAC3703116492DAD00DB7432 /* SqlRecordSet.cpp */,
+				FAC3703216492DAD00DB7432 /* SqlRecordSet.h */,
+				FAC3703316492DAD00DB7432 /* SqlTable.cpp */,
+				FAC3703416492DAD00DB7432 /* SqlTable.h */,
+				FAC3703516492DAD00DB7432 /* SqlValue.cpp */,
+				FAC3703616492DAD00DB7432 /* SqlValue.h */,
+			);
+			path = easySQLite;
+			sourceTree = "<group>";
+		};
+		FAC3704416492E8900DB7432 /* zeromq */ = {
+			isa = PBXGroup;
+			children = (
+				FAC3704516492E8900DB7432 /* address.cpp */,
+				FAC3704616492E8900DB7432 /* address.hpp */,
+				FAC3704716492E8900DB7432 /* array.hpp */,
+				FAC3704816492E8900DB7432 /* atomic_counter.hpp */,
+				FAC3704916492E8900DB7432 /* atomic_ptr.hpp */,
+				FAC3704A16492E8900DB7432 /* blob.hpp */,
+				FAC3704B16492E8900DB7432 /* clock.cpp */,
+				FAC3704C16492E8900DB7432 /* clock.hpp */,
+				FAC3704D16492E8900DB7432 /* command.hpp */,
+				FAC3704E16492E8900DB7432 /* config.hpp */,
+				FAC3704F16492E8900DB7432 /* ctx.cpp */,
+				FAC3705016492E8900DB7432 /* ctx.hpp */,
+				FAC3705116492E8900DB7432 /* dealer.cpp */,
+				FAC3705216492E8900DB7432 /* dealer.hpp */,
+				FAC3705316492E8900DB7432 /* decoder.cpp */,
+				FAC3705416492E8900DB7432 /* decoder.hpp */,
+				FAC3705516492E8900DB7432 /* devpoll.cpp */,
+				FAC3705616492E8900DB7432 /* devpoll.hpp */,
+				FAC3705716492E8900DB7432 /* dist.cpp */,
+				FAC3705816492E8900DB7432 /* dist.hpp */,
+				FAC3705916492E8900DB7432 /* encoder.cpp */,
+				FAC3705A16492E8900DB7432 /* encoder.hpp */,
+				FAC3705B16492E8900DB7432 /* epoll.cpp */,
+				FAC3705C16492E8900DB7432 /* epoll.hpp */,
+				FAC3705D16492E8900DB7432 /* err.cpp */,
+				FAC3705E16492E8900DB7432 /* err.hpp */,
+				FAC3705F16492E8900DB7432 /* fd.hpp */,
+				FAC3706016492E8900DB7432 /* fq.cpp */,
+				FAC3706116492E8900DB7432 /* fq.hpp */,
+				FAC3706216492E8900DB7432 /* i_decoder.hpp */,
+				FAC3706316492E8900DB7432 /* i_encoder.hpp */,
+				FAC3706416492E8900DB7432 /* i_engine.hpp */,
+				FAC3706516492E8900DB7432 /* i_msg_sink.hpp */,
+				FAC3706616492E8900DB7432 /* i_msg_source.hpp */,
+				FAC3706716492E8900DB7432 /* i_poll_events.hpp */,
+				FAC3706816492E8900DB7432 /* io_object.cpp */,
+				FAC3706916492E8900DB7432 /* io_object.hpp */,
+				FAC3706A16492E8900DB7432 /* io_thread.cpp */,
+				FAC3706B16492E8900DB7432 /* io_thread.hpp */,
+				FAC3706C16492E8900DB7432 /* ip.cpp */,
+				FAC3706D16492E8900DB7432 /* ip.hpp */,
+				FAC3706E16492E8900DB7432 /* ipc_address.cpp */,
+				FAC3706F16492E8900DB7432 /* ipc_address.hpp */,
+				FAC3707016492E8900DB7432 /* ipc_connecter.cpp */,
+				FAC3707116492E8900DB7432 /* ipc_connecter.hpp */,
+				FAC3707216492E8900DB7432 /* ipc_listener.cpp */,
+				FAC3707316492E8900DB7432 /* ipc_listener.hpp */,
+				FAC3707416492E8900DB7432 /* kqueue.cpp */,
+				FAC3707516492E8900DB7432 /* kqueue.hpp */,
+				FAC3707616492E8900DB7432 /* lb.cpp */,
+				FAC3707716492E8900DB7432 /* lb.hpp */,
+				FAC3707816492E8900DB7432 /* libzmq.pc.in */,
+				FAC3707916492E8900DB7432 /* likely.hpp */,
+				FAC3707A16492E8900DB7432 /* mailbox.cpp */,
+				FAC3707B16492E8900DB7432 /* mailbox.hpp */,
+				FAC3707C16492E8900DB7432 /* Makefile.am */,
+				FAC3707D16492E8900DB7432 /* Makefile.in */,
+				FAC3707E16492E8900DB7432 /* msg.cpp */,
+				FAC3707F16492E8900DB7432 /* msg.hpp */,
+				FAC3708016492E8900DB7432 /* mtrie.cpp */,
+				FAC3708116492E8900DB7432 /* mtrie.hpp */,
+				FAC3708216492E8900DB7432 /* mutex.hpp */,
+				FAC3708316492E8900DB7432 /* object.cpp */,
+				FAC3708416492E8900DB7432 /* object.hpp */,
+				FAC3708516492E8900DB7432 /* options.cpp */,
+				FAC3708616492E8900DB7432 /* options.hpp */,
+				FAC3708716492E8900DB7432 /* own.cpp */,
+				FAC3708816492E8900DB7432 /* own.hpp */,
+				FAC3708916492E8900DB7432 /* pair.cpp */,
+				FAC3708A16492E8900DB7432 /* pair.hpp */,
+				FAC3708B16492E8900DB7432 /* pgm_receiver.cpp */,
+				FAC3708C16492E8900DB7432 /* pgm_receiver.hpp */,
+				FAC3708D16492E8900DB7432 /* pgm_sender.cpp */,
+				FAC3708E16492E8900DB7432 /* pgm_sender.hpp */,
+				FAC3708F16492E8900DB7432 /* pgm_socket.cpp */,
+				FAC3709016492E8900DB7432 /* pgm_socket.hpp */,
+				FAC3709116492E8900DB7432 /* pipe.cpp */,
+				FAC3709216492E8900DB7432 /* pipe.hpp */,
+				FAC3711316492F5C00DB7432 /* platform.hpp */,
+				FAC3709416492E8900DB7432 /* poll.cpp */,
+				FAC3709516492E8900DB7432 /* poll.hpp */,
+				FAC3709616492E8900DB7432 /* poller.hpp */,
+				FAC3709716492E8900DB7432 /* poller_base.cpp */,
+				FAC3709816492E8900DB7432 /* poller_base.hpp */,
+				FAC3709916492E8900DB7432 /* precompiled.cpp */,
+				FAC3709A16492E8900DB7432 /* precompiled.hpp */,
+				FAC3709B16492E8900DB7432 /* proxy.cpp */,
+				FAC3709C16492E8900DB7432 /* proxy.hpp */,
+				FAC3709D16492E8900DB7432 /* pub.cpp */,
+				FAC3709E16492E8900DB7432 /* pub.hpp */,
+				FAC3709F16492E8900DB7432 /* pull.cpp */,
+				FAC370A016492E8900DB7432 /* pull.hpp */,
+				FAC370A116492E8900DB7432 /* push.cpp */,
+				FAC370A216492E8900DB7432 /* push.hpp */,
+				FAC370A316492E8900DB7432 /* random.cpp */,
+				FAC370A416492E8900DB7432 /* random.hpp */,
+				FAC370A516492E8900DB7432 /* reaper.cpp */,
+				FAC370A616492E8900DB7432 /* reaper.hpp */,
+				FAC370A716492E8900DB7432 /* rep.cpp */,
+				FAC370A816492E8900DB7432 /* rep.hpp */,
+				FAC370A916492E8900DB7432 /* req.cpp */,
+				FAC370AA16492E8900DB7432 /* req.hpp */,
+				FAC370AB16492E8900DB7432 /* router.cpp */,
+				FAC370AC16492E8900DB7432 /* router.hpp */,
+				FAC370AD16492E8900DB7432 /* select.cpp */,
+				FAC370AE16492E8900DB7432 /* select.hpp */,
+				FAC370AF16492E8900DB7432 /* session_base.cpp */,
+				FAC370B016492E8900DB7432 /* session_base.hpp */,
+				FAC370B116492E8900DB7432 /* signaler.cpp */,
+				FAC370B216492E8900DB7432 /* signaler.hpp */,
+				FAC370B316492E8900DB7432 /* socket_base.cpp */,
+				FAC370B416492E8900DB7432 /* socket_base.hpp */,
+				FAC370B516492E8900DB7432 /* stdint.hpp */,
+				FAC370B616492E8900DB7432 /* stream_engine.cpp */,
+				FAC370B716492E8900DB7432 /* stream_engine.hpp */,
+				FAC370B816492E8900DB7432 /* sub.cpp */,
+				FAC370B916492E8900DB7432 /* sub.hpp */,
+				FAC370BA16492E8900DB7432 /* tcp.cpp */,
+				FAC370BB16492E8900DB7432 /* tcp.hpp */,
+				FAC370BC16492E8900DB7432 /* tcp_address.cpp */,
+				FAC370BD16492E8900DB7432 /* tcp_address.hpp */,
+				FAC370BE16492E8900DB7432 /* tcp_connecter.cpp */,
+				FAC370BF16492E8900DB7432 /* tcp_connecter.hpp */,
+				FAC370C016492E8900DB7432 /* tcp_listener.cpp */,
+				FAC370C116492E8900DB7432 /* tcp_listener.hpp */,
+				FAC370C216492E8900DB7432 /* thread.cpp */,
+				FAC370C316492E8900DB7432 /* thread.hpp */,
+				FAC370C416492E8900DB7432 /* trie.cpp */,
+				FAC370C516492E8900DB7432 /* trie.hpp */,
+				FAC370C616492E8900DB7432 /* v1_decoder.cpp */,
+				FAC370C716492E8900DB7432 /* v1_decoder.hpp */,
+				FAC370C816492E8900DB7432 /* v1_encoder.cpp */,
+				FAC370C916492E8900DB7432 /* v1_encoder.hpp */,
+				FAC370CA16492E8900DB7432 /* v1_protocol.hpp */,
+				FAC370CB16492E8900DB7432 /* windows.hpp */,
+				FAC370CC16492E8900DB7432 /* wire.hpp */,
+				FAC370CD16492E8900DB7432 /* xpub.cpp */,
+				FAC370CE16492E8900DB7432 /* xpub.hpp */,
+				FAC370CF16492E8900DB7432 /* xsub.cpp */,
+				FAC370D016492E8900DB7432 /* xsub.hpp */,
+				FAC370D116492E8900DB7432 /* ypipe.hpp */,
+				FAC370D216492E8900DB7432 /* yqueue.hpp */,
+				FAC370D316492E8900DB7432 /* zmq.cpp */,
+				FAC370D416492E8900DB7432 /* zmq_utils.cpp */,
+			);
+			path = zeromq;
+			sourceTree = "<group>";
+		};
+		FAC3711416492FA000DB7432 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				FAC371171649329400DB7432 /* zmq.hpp */,
+				FAC3711516492FA100DB7432 /* zmq.h */,
+				FAC3711616492FA100DB7432 /* zmq_utils.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,19 +570,81 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA86FDCF1646F0D400CDB5E0 /* main.cpp in Sources */,
-				FA86FDE51647508600CDB5E0 /* SHA1.cpp in Sources */,
-				FA86FDE61647508600CDB5E0 /* SqlCommon.cpp in Sources */,
-				FA86FDE71647508600CDB5E0 /* SqlDatabase.cpp in Sources */,
-				FA86FDE81647508600CDB5E0 /* SqlField.cpp in Sources */,
-				FA86FDE91647508600CDB5E0 /* SqlFieldSet.cpp in Sources */,
-				FA86FDEA1647508600CDB5E0 /* sqlite3.c in Sources */,
-				FA86FDEB1647508600CDB5E0 /* SqlRecord.cpp in Sources */,
-				FA86FDEC1647508600CDB5E0 /* SqlRecordSet.cpp in Sources */,
-				FA86FDED1647508600CDB5E0 /* SqlTable.cpp in Sources */,
-				FA86FDEE1647508600CDB5E0 /* SqlValue.cpp in Sources */,
 				FA86FDF516475ED500CDB5E0 /* Sequel.cpp in Sources */,
 				FA86FDF916475F3E00CDB5E0 /* Logger.cpp in Sources */,
 				FA86FDFC16475F9A00CDB5E0 /* Packet.cpp in Sources */,
+				FA86FE0316483A2100CDB5E0 /* Platform.cpp in Sources */,
+				FAC3703716492DAD00DB7432 /* SHA1.cpp in Sources */,
+				FAC3703816492DAD00DB7432 /* SqlCommon.cpp in Sources */,
+				FAC3703916492DAD00DB7432 /* SqlDatabase.cpp in Sources */,
+				FAC3703A16492DAD00DB7432 /* SqlField.cpp in Sources */,
+				FAC3703B16492DAD00DB7432 /* SqlFieldSet.cpp in Sources */,
+				FAC3703C16492DAD00DB7432 /* sqlite3.c in Sources */,
+				FAC3703D16492DAD00DB7432 /* SqlRecord.cpp in Sources */,
+				FAC3703E16492DAD00DB7432 /* SqlRecordSet.cpp in Sources */,
+				FAC3703F16492DAD00DB7432 /* SqlTable.cpp in Sources */,
+				FAC3704016492DAD00DB7432 /* SqlValue.cpp in Sources */,
+				FAC3704316492DD000DB7432 /* MsgSender.cpp in Sources */,
+				FAC370D516492E8900DB7432 /* address.cpp in Sources */,
+				FAC370D616492E8900DB7432 /* clock.cpp in Sources */,
+				FAC370D716492E8900DB7432 /* ctx.cpp in Sources */,
+				FAC370D816492E8900DB7432 /* dealer.cpp in Sources */,
+				FAC370D916492E8900DB7432 /* decoder.cpp in Sources */,
+				FAC370DA16492E8900DB7432 /* devpoll.cpp in Sources */,
+				FAC370DB16492E8900DB7432 /* dist.cpp in Sources */,
+				FAC370DC16492E8900DB7432 /* encoder.cpp in Sources */,
+				FAC370DD16492E8900DB7432 /* epoll.cpp in Sources */,
+				FAC370DE16492E8900DB7432 /* err.cpp in Sources */,
+				FAC370DF16492E8900DB7432 /* fq.cpp in Sources */,
+				FAC370E016492E8900DB7432 /* io_object.cpp in Sources */,
+				FAC370E116492E8900DB7432 /* io_thread.cpp in Sources */,
+				FAC370E216492E8900DB7432 /* ip.cpp in Sources */,
+				FAC370E316492E8900DB7432 /* ipc_address.cpp in Sources */,
+				FAC370E416492E8900DB7432 /* ipc_connecter.cpp in Sources */,
+				FAC370E516492E8900DB7432 /* ipc_listener.cpp in Sources */,
+				FAC370E616492E8900DB7432 /* kqueue.cpp in Sources */,
+				FAC370E716492E8900DB7432 /* lb.cpp in Sources */,
+				FAC370E816492E8900DB7432 /* mailbox.cpp in Sources */,
+				FAC370E916492E8900DB7432 /* msg.cpp in Sources */,
+				FAC370EA16492E8900DB7432 /* mtrie.cpp in Sources */,
+				FAC370EB16492E8900DB7432 /* object.cpp in Sources */,
+				FAC370EC16492E8900DB7432 /* options.cpp in Sources */,
+				FAC370ED16492E8900DB7432 /* own.cpp in Sources */,
+				FAC370EE16492E8900DB7432 /* pair.cpp in Sources */,
+				FAC370EF16492E8900DB7432 /* pgm_receiver.cpp in Sources */,
+				FAC370F016492E8900DB7432 /* pgm_sender.cpp in Sources */,
+				FAC370F116492E8900DB7432 /* pgm_socket.cpp in Sources */,
+				FAC370F216492E8900DB7432 /* pipe.cpp in Sources */,
+				FAC370F316492E8900DB7432 /* poll.cpp in Sources */,
+				FAC370F416492E8900DB7432 /* poller_base.cpp in Sources */,
+				FAC370F516492E8900DB7432 /* precompiled.cpp in Sources */,
+				FAC370F616492E8900DB7432 /* proxy.cpp in Sources */,
+				FAC370F716492E8900DB7432 /* pub.cpp in Sources */,
+				FAC370F816492E8900DB7432 /* pull.cpp in Sources */,
+				FAC370F916492E8900DB7432 /* push.cpp in Sources */,
+				FAC370FA16492E8900DB7432 /* random.cpp in Sources */,
+				FAC370FB16492E8900DB7432 /* reaper.cpp in Sources */,
+				FAC370FC16492E8900DB7432 /* rep.cpp in Sources */,
+				FAC370FD16492E8900DB7432 /* req.cpp in Sources */,
+				FAC370FE16492E8900DB7432 /* router.cpp in Sources */,
+				FAC370FF16492E8900DB7432 /* select.cpp in Sources */,
+				FAC3710016492E8900DB7432 /* session_base.cpp in Sources */,
+				FAC3710116492E8900DB7432 /* signaler.cpp in Sources */,
+				FAC3710216492E8900DB7432 /* socket_base.cpp in Sources */,
+				FAC3710316492E8900DB7432 /* stream_engine.cpp in Sources */,
+				FAC3710416492E8900DB7432 /* sub.cpp in Sources */,
+				FAC3710516492E8900DB7432 /* tcp.cpp in Sources */,
+				FAC3710616492E8900DB7432 /* tcp_address.cpp in Sources */,
+				FAC3710716492E8900DB7432 /* tcp_connecter.cpp in Sources */,
+				FAC3710816492E8900DB7432 /* tcp_listener.cpp in Sources */,
+				FAC3710916492E8900DB7432 /* thread.cpp in Sources */,
+				FAC3710A16492E8900DB7432 /* trie.cpp in Sources */,
+				FAC3710B16492E8900DB7432 /* v1_decoder.cpp in Sources */,
+				FAC3710C16492E8900DB7432 /* v1_encoder.cpp in Sources */,
+				FAC3710D16492E8900DB7432 /* xpub.cpp in Sources */,
+				FAC3710E16492E8900DB7432 /* xsub.cpp in Sources */,
+				FAC3710F16492E8900DB7432 /* zmq.cpp in Sources */,
+				FAC3711016492E8900DB7432 /* zmq_utils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,13 +10,17 @@
 #define __Telemetry__Packet__
 
 #include <iostream>
+#include <chrono>
+
 struct Packet {
 	short CAN_ID = 0;
 	double data = 1.0;
+	long time_ms = 0;
 	
-	char *bytes;
+	static const size_t nbytes = sizeof(CAN_ID) + sizeof(data) + sizeof(time_ms);
+	char bytes[nbytes];
 	char *serialize();
-	~Packet();
+	Packet(short can = 0, double d = 1.0);
 };
 
 #endif /* defined(__Telemetry__Packet__) */

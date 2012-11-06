@@ -10,10 +10,15 @@
 
 using namespace sql;
 
-const char *Sequel::dbfile = "/Users/alex/sqlite.db";
-Field Sequel::defPacket[7] = {
+string Sequel::dbfile() {
+	string dbname = Platform::var();
+	dbname.append("sqlite.db");
+	return dbname;
+};
+
+Field Sequel::defPacket[6] = {
 	Field(FIELD_KEY),
-	Field("pid", type_int, flag_primary_key),
+	//Field("pid", type_int, flag_primary_key),
 	Field("CAN_ID", type_int, flag_not_null),
 	Field("data", type_float, flag_not_null),
 	Field("time", type_time, flag_not_null),
@@ -24,7 +29,7 @@ Field Sequel::defPacket[7] = {
 long Sequel::addPacket(Packet &packet) {
 	Logger::logPacket(packet);
 	try {
-		cxn.open(string(dbfile));
+		cxn.open(dbfile());
 		Table tbPacket(cxn.getHandle(), "packet", defPacket);
 		if (!tbPacket.exists())
 			tbPacket.create();
@@ -46,7 +51,7 @@ long Sequel::addPacket(Packet &packet) {
 
 void Sequel::packetSent(long key) {
 	try {
-		cxn.open(string(dbfile));
+		cxn.open(dbfile());
 		Table tbPacket(cxn.getHandle(), "packet", defPacket);
 		if (!tbPacket.exists())
 			Logger::logError("Warning: table doesn't exist");
@@ -62,10 +67,10 @@ void Sequel::packetSent(long key) {
 	}
 }
 
-std::vector<Packet> Sequel::allocateUnsentPackets() {
+std::vector<Packet> Sequel::unsentPackets() {
 	std::vector<Packet> unsents;
 	try {
-		cxn.open(string(dbfile));
+		cxn.open(dbfile());
 		Table tbPacket(cxn.getHandle(), "packet", defPacket);
 		if (!tbPacket.exists())
 			Logger::logError("Warning: table doesn't exist");

@@ -11,16 +11,22 @@
 
 #include "Packet.h"
 #include "Sequel.h"
+#include "Platform.h"
 
 using namespace std;
 
 void consumePacket(Packet &p) {
-	Sequel db;
+	static Sequel db;
 	db.addPacket(p);
 }
 
 int main(int argc, const char * argv[])
 {
+	Packet ex = Packet(7, 1111111.1);
+	consumePacket(ex);
+	consumePacket(ex);
+	
 	cout << "Hello, World!\n";
+	
     return 0;
 }
