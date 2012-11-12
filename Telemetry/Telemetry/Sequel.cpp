@@ -49,7 +49,7 @@ long Sequel::addPacket(Packet &packet) {
 	} return -1;
 }
 
-void Sequel::packetSent(long key) {
+void Sequel::acknowledgePacket(int64_t key) {
 	try {
 		cxn.open(dbfile());
 		Table tbPacket(cxn.getHandle(), "packet", defPacket);

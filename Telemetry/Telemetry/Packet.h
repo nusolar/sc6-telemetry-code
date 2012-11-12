@@ -13,12 +13,12 @@
 #include <chrono>
 
 struct Packet {
-	short CAN_ID = 0;
+	int16_t CAN_ID = 0;
 	double data = 1.0;
-	long time_ms = 0;
+	int64_t time_ms = 0;
 	
-	static const size_t nbytes = sizeof(CAN_ID) + sizeof(data) + sizeof(time_ms);
-	char bytes[nbytes];
+	static const size_t length = sizeof(CAN_ID) + sizeof(data) + sizeof(time_ms);
+	char bytes[length];
 	char *serialize();
 	Packet(short can = 0, double d = 1.0);
 };

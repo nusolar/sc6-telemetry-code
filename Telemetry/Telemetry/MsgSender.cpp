@@ -16,18 +16,22 @@ void MsgSender::send() {
 	zmq::context_t context (1);
 	zmq::socket_t socket (context, ZMQ_REP);
 	cout << "Connecting to server...\n";
-	socket.connect("tcp://localhost:5555");
+	socket.connect("tcp://elder.chandel.net:5555");
 	
 	while (true) {
-		zmq::message_t request (Packet::nbytes);
-		//should append
 		blob = db.unsentPackets();
-		memcpy((void *)request.data(), & blob[0], Packet::nbytes);
+		
+		zmq::message_t request (Packet::length);
+		memcpy((void *)request.data(), & blob[0], Packet::length); //should append
 		socket.send(request);
 		
 		zmq::message_t reply;
 		socket.recv(&reply);
-		//remove ACK'd packets
+		memcpy((void *)packets, reply.data(), reply.size());
+		
+		for (int i = 0; i<reply.size(); i++) {
+			db.acknowledgePacket(packets[i]);
+		}
 	}
 	return;
 }

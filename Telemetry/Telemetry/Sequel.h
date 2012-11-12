@@ -26,7 +26,7 @@ class Sequel {
 	sql::Database cxn;
 public:
 	long addPacket(Packet &packet);
-	void packetSent(long key);
+	void acknowledgePacket(int64_t key);
 	std::vector<Packet> unsentPackets();
 	//static Sequel db;
 };

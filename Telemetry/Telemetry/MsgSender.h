@@ -19,6 +19,7 @@
 struct MsgSender {
 	void send();
 	std::vector<Packet> blob;
+	int64_t *packets;
 };
 
 #endif /* defined(__Telemetry__MsgSender__) */
