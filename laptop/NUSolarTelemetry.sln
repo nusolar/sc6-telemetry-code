@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NUSolarTelemetry", "NUSolarTelemetry\NUSolarTelemetry.vbproj", "{2DD2B4E0-7489-4454-A98C-B116E3EFC10A}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NUSolarTelemetryServer", "NUSolarTelemetryServer\NUSolarTelemetryServer.vbproj", "{D661F118-3D7F-47E0-8474-63C778E08044}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NUSolarCarSimulator", "NUSolarCarSimulator\NUSolarCarSimulator.vbproj", "{15A272A2-8135-4BE1-B918-55667ACD7EA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DD2B4E0-7489-4454-A98C-B116E3EFC10A}.Debug|x86.ActiveCfg = Debug|x86
+		{2DD2B4E0-7489-4454-A98C-B116E3EFC10A}.Debug|x86.Build.0 = Debug|x86
+		{2DD2B4E0-7489-4454-A98C-B116E3EFC10A}.Release|x86.ActiveCfg = Release|x86
+		{2DD2B4E0-7489-4454-A98C-B116E3EFC10A}.Release|x86.Build.0 = Release|x86
+		{D661F118-3D7F-47E0-8474-63C778E08044}.Debug|x86.ActiveCfg = Debug|x86
+		{D661F118-3D7F-47E0-8474-63C778E08044}.Debug|x86.Build.0 = Debug|x86
+		{D661F118-3D7F-47E0-8474-63C778E08044}.Release|x86.ActiveCfg = Release|x86
+		{D661F118-3D7F-47E0-8474-63C778E08044}.Release|x86.Build.0 = Release|x86
+		{15A272A2-8135-4BE1-B918-55667ACD7EA4}.Debug|x86.ActiveCfg = Debug|x86
+		{15A272A2-8135-4BE1-B918-55667ACD7EA4}.Debug|x86.Build.0 = Debug|x86
+		{15A272A2-8135-4BE1-B918-55667ACD7EA4}.Release|x86.ActiveCfg = Release|x86
+		{15A272A2-8135-4BE1-B918-55667ACD7EA4}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
