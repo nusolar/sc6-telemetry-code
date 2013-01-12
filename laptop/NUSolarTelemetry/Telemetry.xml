@@ -5,7 +5,7 @@
 		<field name="ts1" type="System.DateTime" format="T" description ="" tag="TS01" nocharting="true" nosave="false" />
 		<field name="Latitude" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="LATI" nocharting="false" nosave="false" />
 		<field name="Longitude" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="LONG" nocharting="false" nosave="false" />
-		<field name="Speed" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="SPEED" nocharting="false" nosave="false" scale="2.23693629"/>
+		<field name="Speed" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="SPEED" nocharting="false" nosave="false" scale="2.23693629" />
 		<field name="Course" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="CORS" nocharting="false" nosave="false" />
 		<field name="Altitude" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="ALTI" nocharting="false" nosave="false" />
 		<field name="SattelitesSeen" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="SATT" nocharting="false" nosave="false" />
@@ -14,7 +14,7 @@
 		<field name="PDOP" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="PDOP" nocharting="false" nosave="false" />
 		<field name="CurrentMotor" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="CMOT" nocharting="false" nosave="false" />
 		<field name="CurrentArray" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="CARR" nocharting="false" nosave="false" />
-		<field name="CurrentBattery" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="CBAT" nocharting="false" nosave="false" offset="0.0"/>
+		<field name="CurrentBattery" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="CBAT" nocharting="false" nosave="false" offset="0.0" />
 		<field name="VoltageMax" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="VMAX" nocharting="false" nosave="false" />
 		<field name="VoltageAvg" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="VAVG" nocharting="false" nosave="false" />
 		<field name="VoltageMin" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="VMIN" nocharting="false" nosave="false" />
@@ -107,7 +107,7 @@
 		<field name="Odometer" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="ODO" nocharting="false" nosave="false" />
 		<field name="EnableCruise" type="System.Int16" format="#,##0;#,##0" description ="" tag="CRUS" nocharting="false" nosave="false" />
 		<field name="EnableRegen" type="System.Int16" format="#,##0;#,##0" description ="" tag="RGEN" nocharting="false" nosave="false" />
-		<field name="VelocityCruise" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="CRSP" nocharting="false" nosave="false" scale="2.23693629"/>
+		<field name="VelocityCruise" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="CRSP" nocharting="false" nosave="false" scale="2.23693629" />
 		<field name="PotBrake" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="BRPT" nocharting="false" nosave="false" />
 		<field name="PotAccel" type="System.Double" format="#,##0.00;-#,##0.00" description ="" tag="ACPT" nocharting="false" nosave="false" />
 	</dataitems>

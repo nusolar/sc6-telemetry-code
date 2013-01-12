@@ -7,16 +7,10 @@ Public Class Server
     Private _listener As TcpListener = Nothing
     Private _ClientConnected As New Threading.ManualResetEvent(False)
 
-    Private Sub DoAcceptTcpClientCallback(ar As IAsyncResult)
-        If Not ar Is Nothing Then
-            Dim listener As TcpListener = CType(ar.AsyncState, TcpListener)
-            Try
-                Dim client As TcpClient = listener.EndAcceptTcpClient(ar)
-                _Owner.AddClient(client)
-                _ClientConnected.Set()
-            Catch
-            End Try
-        End If
+    Public Sub New(ByVal Owner As ServerMain, ByVal Address As String, ByVal Port As Integer)
+        _Owner = Owner
+        _Address = IPAddress.Parse(Address)
+        _Port = Port
     End Sub
     Public Sub Listen()
         Try
@@ -37,9 +31,15 @@ Public Class Server
             MessageBox.Show("Unexpected error: " & ex.Message & " while processing server requests", "Unexpected error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-    Public Sub New(ByVal Owner As ServerMain, ByVal Address As String, ByVal Port As Integer)
-        _Owner = Owner
-        _Address = IPAddress.Parse(Address)
-        _Port = Port
+    Private Sub DoAcceptTcpClientCallback(ar As IAsyncResult)
+        If Not ar Is Nothing Then
+            Dim listener As TcpListener = CType(ar.AsyncState, TcpListener)
+            Try
+                Dim client As TcpClient = listener.EndAcceptTcpClient(ar)
+                _Owner.AddClient(client)
+                _ClientConnected.Set()
+            Catch
+            End Try
+        End If
     End Sub
 End Class

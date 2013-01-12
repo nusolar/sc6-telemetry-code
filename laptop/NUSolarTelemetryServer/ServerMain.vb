@@ -1,9 +1,7 @@
-﻿Imports System.Net
-Imports System.Net.Sockets
-Imports System.Data
-Imports System.Data.Common
-Imports System.Data.Odbc
+﻿Imports System.Data.Odbc
 Imports System.IO
+Imports System.Net
+Imports System.Net.Sockets
 Imports System.Text
 Imports System.Threading
 Public Class ServerMain
@@ -147,6 +145,16 @@ Public Class ServerMain
             _Port = Port
         End Sub
     End Class
+
+    Public Sub New()
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        ' ...jump to Main_Load handler
+    End Sub
+
     Public Sub WriteProtocolLog(ByVal buffer As String, ByVal Inbound As Boolean)
         Try
             If Me.InvokeRequired Then
@@ -260,6 +268,7 @@ Public Class ServerMain
             WriteErrorLog(ex.Message & " while adding a new client")
         End Try
     End Sub
+    ''' <summary>Read in the program configuration and setup the key/value store</summary>
     Private Sub ConfigureBuffer()
         Dim TelemetryConfiguration As String = File.ReadAllText("Telemetry.xml", System.Text.Encoding.GetEncoding("iso-8859-1"))
         _CurrentTelemetry = New Telemetry(TelemetryConfiguration)
@@ -295,15 +304,22 @@ Public Class ServerMain
         _ServerThread.Abort()
         _ServerThread = Nothing
     End Sub
+    ''' <summary> Program entry point
+    ''' </summary>
     Private Sub Main_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        ' not ready yet, so hide everything
         Visible = False
         ConfigureBuffer()
+        ' load program settings
         chkWriteNewRows.Checked = My.Settings.SaveToDatabase
         chkLogProtocol.Checked = My.Settings.LogProtocol
         chkLogMessages.Checked = My.Settings.LogMessages
+
+        ' start a server in a separate thread
         _Server = New Server(Me, My.Settings.ServerAddress, My.Settings.ServerPort)
         _ServerThread = New System.Threading.Thread(AddressOf _Server.Listen)
         _ServerThread.Start()
+
         Timer1.Interval = 1
         HelloTimer.Interval = 2500
         HelloTimer.Enabled = True
@@ -336,7 +352,7 @@ Public Class ServerMain
                 End If
                 Dim data As [Byte]() = System.Text.Encoding.ASCII.GetBytes(_CurrentTelemetry.Serialized)
                 If WriteNewRows Then
-                    Dim cn As OdbcConnection = New OdbcConnection(My.Settings.DSN)
+                    Dim cn As New OdbcConnection(My.Settings.DSN)
                     cn.Open()
                     _CurrentTelemetry.InsertRow(cn)
                     cn.Close()

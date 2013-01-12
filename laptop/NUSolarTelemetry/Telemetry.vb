@@ -1,8 +1,12 @@
-﻿Public Class Telemetry
+﻿Imports System.Text
+
+''' <summary>Key/value store for all the telemetry fields we can retrieve.
+''' Also used to write the key/value pairs to the DB.
+''' </summary>
+''' <remarks></remarks>
+Public Class Telemetry
     Const k_Delimeter As String = ","
     Private Class DataValue
-        Private _value As Object
-        Private _MyType As String
         Public Name As String = ""
         Public Description As String = ""
         Public DisplayFormat As String = ""
@@ -12,6 +16,12 @@
         Public ChartMe As Boolean = False
         Public Offset As Double = 0
         Public Scale As Double = 1
+        Private _value As Object
+        Private _MyType As String
+        Sub New(ByVal MyName As String, ByVal MyType As String)
+            Name = MyName
+            _MyType = MyType
+        End Sub
         Public Property Value As Object
             Get
                 Select Case _MyType
@@ -86,14 +96,10 @@
                 End Select
             End Get
         End Property
-        Sub New(ByVal MyName As String, ByVal MyType As String)
-            Name = MyName
-            _MyType = MyType
-        End Sub
     End Class
+    Public NewData As Boolean = False
     Private _DataValues As New Collection
     Public Event ChartSelectionsChanged(ByVal Parameter As String, ByVal ChartParameter As Boolean)
-    Public NewData As Boolean = False
     Public Sub New()
         _DataValues = New Collection
     End Sub
@@ -203,28 +209,24 @@
             Next
         End Set
     End Property
-    Public Sub InsertRow(ByVal Connection As System.Data.Odbc.OdbcConnection)
-        Dim sql As String = "INSERT INTO History ("
-        For Each o As DataValue In _DataValues
-            If Not o.NoSave Then
-                sql &= o.Name & ","
-            End If
-        Next
-        sql = sql.Remove(sql.Length - 1)
-        sql &= ") VALUES ("
-        For Each o As DataValue In _DataValues
-            If Not o.NoSave Then
-                sql &= "'" & o.ValueAsString & "',"
-            End If
-        Next
-        sql = sql.Remove(sql.Length - 1)
-        sql &= ")"
-        Dim cmd As New Odbc.OdbcCommand(sql)
-        With cmd
-            .Connection = Connection
-            .CommandType = CommandType.Text
-            .ExecuteNonQuery()
+    Public Sub InsertRow(connection As Data.Odbc.OdbcConnection)
+        Dim sql As New StringBuilder("INSERT INTO History (")
+        With sql
+            Dim dv = _DataValues.Cast(Of DataValue)()
+            .Append(String.Join(",", dv.Where(Function(x) Not x.NoSave)))
+            .Append(") VALUES (")
+            Dim s = (From o In dv.Cast(Of DataValue)()
+                     Where Not o.NoSave
+                     Select "'" & o.ValueAsString & "'")
+            .Append(String.Join(",", s))
+            .Append(")")
         End With
-
+        Using cmd As New Odbc.OdbcCommand(sql.ToString)
+            With cmd
+                .Connection = connection
+                .CommandType = CommandType.Text
+                .ExecuteNonQuery()
+            End With
+        End Using
     End Sub
 End Class

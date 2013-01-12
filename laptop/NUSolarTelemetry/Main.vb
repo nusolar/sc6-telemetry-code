@@ -6,7 +6,6 @@ Imports System.IO
 Imports System.Threading
 
 Public Class Main
-
     Private Const k_VelocityField = "VelocityVehicle"
     Private Const k_MotorAmpField = "CurrentBus"
 
@@ -21,8 +20,50 @@ Public Class Main
     Private _BPCTripVoltageWarning As Double = _BPCTripVoltage * My.Settings.BPCTripVoltageWarning
     Private _Client As Client = Nothing
     Private _RecentHistory As New Collection
+
+    Public Sub New()
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+    End Sub
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
+
     Private Delegate Sub ProcessUpdateDelegate(ByVal buffer As String)
     Private Delegate Sub ConnectionLostDelegate(ByVal Connected As Boolean)
+
+    Public Property Zoomable As Boolean
+        Get
+            Zoomable = chartMain.ChartAreas(0).AxisX.ScaleView.Zoomable
+        End Get
+        Set(ByVal value As Boolean)
+            For Each area As DataVisualization.Charting.ChartArea In chartMain.ChartAreas
+                area.CursorX.IsUserEnabled = value
+                area.CursorX.IsUserSelectionEnabled = value
+                area.AxisX.ScaleView.Zoomable = value
+                area.AxisX.ScrollBar.IsPositionedInside = value
+                area.CursorY.IsUserEnabled = value
+                area.CursorY.IsUserSelectionEnabled = value
+                area.AxisY.ScaleView.Zoomable = value
+                area.AxisY.ScrollBar.IsPositionedInside = value
+                If value Then
+                    area.CursorX.LineColor = Color.Red
+                    area.CursorY.LineColor = Color.Red
+                Else
+                    area.CursorX.LineColor = Color.Transparent
+                    area.CursorY.LineColor = Color.Transparent
+                End If
+            Next
+        End Set
+    End Property
+    Private ReadOnly Property SummaryChartVisible(ByVal ChartName As String) As Boolean
+        Get
+            SummaryChartVisible = CType(btnInclude.DropDownItems(ChartName), ToolStripMenuItem).CheckState = CheckState.Checked
+        End Get
+    End Property
+
     Public Sub ConnectionStatusChange(ByVal Connected As Boolean)
         '
         '   If called on the wrong thread, invoke self to get onto the correct thread
@@ -181,6 +222,13 @@ Public Class Main
             _data = Nothing
             Me.Cursor = Cursors.Default
         End Try
+    End Sub
+    Private Sub SetChartVisibilities()
+        If chartMain.ChartAreas.Count = 3 Then
+            chartMain.ChartAreas("Current").Visible = SummaryChartVisible("ID_Current")
+            chartMain.ChartAreas("Speed").Visible = SummaryChartVisible("ID_Speed")
+            chartMain.ChartAreas("Battery").Visible = SummaryChartVisible("ID_Battery")
+        End If
     End Sub
     Private Sub ConfigureControls()
         Try
@@ -465,43 +513,6 @@ Public Class Main
             Next
         End With
     End Sub
-    Public Property Zoomable As Boolean
-        Get
-            Zoomable = chartMain.ChartAreas(0).AxisX.ScaleView.Zoomable
-        End Get
-        Set(ByVal value As Boolean)
-            For Each area As DataVisualization.Charting.ChartArea In chartMain.ChartAreas
-                area.CursorX.IsUserEnabled = value
-                area.CursorX.IsUserSelectionEnabled = value
-                area.AxisX.ScaleView.Zoomable = value
-                area.AxisX.ScrollBar.IsPositionedInside = value
-                area.CursorY.IsUserEnabled = value
-                area.CursorY.IsUserSelectionEnabled = value
-                area.AxisY.ScaleView.Zoomable = value
-                area.AxisY.ScrollBar.IsPositionedInside = value
-                If value Then
-                    area.CursorX.LineColor = Color.Red
-                    area.CursorY.LineColor = Color.Red
-                Else
-                    area.CursorX.LineColor = Color.Transparent
-                    area.CursorY.LineColor = Color.Transparent
-                End If
-            Next
-        End Set
-    End Property
-    Private ReadOnly Property SummaryChartVisible(ByVal ChartName As String) As Boolean
-        Get
-            SummaryChartVisible = CType(btnInclude.DropDownItems(ChartName), ToolStripMenuItem).CheckState = CheckState.Checked
-        End Get
-    End Property
-    Private Sub SetChartVisibilities()
-        If chartMain.ChartAreas.Count = 3 Then
-            chartMain.ChartAreas("Current").Visible = SummaryChartVisible("ID_Current")
-            chartMain.ChartAreas("Speed").Visible = SummaryChartVisible("ID_Speed")
-            chartMain.ChartAreas("Battery").Visible = SummaryChartVisible("ID_Battery")
-        End If
-    End Sub
-
     Private Sub UpdateCharts(ByVal TelemetryObject As Telemetry)
         '
         '   Update Charts
@@ -644,11 +655,11 @@ Public Class Main
             gridTelemetry.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
     End Sub
-    Private Sub _CurrentTelemetry_ChartSelectionsChanged(ByVal Parameter As String, ByVal ChartParameter As Boolean) Handles _CurrentTelemetry.ChartSelectionsChanged
-        If ChartParameter Then
-            AddUserSelectedChart(Parameter)
+    Private Sub _CurrentTelemetry_ChartSelectionsChanged(ByVal parameter As String, ByVal chartParameter As Boolean) Handles _CurrentTelemetry.ChartSelectionsChanged
+        If chartParameter Then
+            AddUserSelectedChart(parameter)
         Else
-            RemoveUserSelectedChart(Parameter)
+            RemoveUserSelectedChart(parameter)
         End If
     End Sub
     Private Sub chartBatteryStatus_FormatNumber(ByVal sender As Object, ByVal e As System.Windows.Forms.DataVisualization.Charting.FormatNumberEventArgs) Handles chartBatteryStatus.FormatNumber
@@ -677,15 +688,12 @@ Public Class Main
                 ID_RetrieveData.Enabled = True
         End Select
     End Sub
-
     Private Sub ID_RetrieveData_Click(sender As Object, e As System.EventArgs) Handles ID_RetrieveData.Click
         LoadData()
     End Sub
-
     Private Sub tbZoomable_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles tbZoomable.CheckedChanged
         Zoomable = (tbZoomable.Checked)
     End Sub
-
     Private Sub ID_Current_CheckStateChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ID_Current.CheckStateChanged, ID_Battery.CheckStateChanged, ID_Speed.CheckStateChanged
         SetChartVisibilities()
     End Sub

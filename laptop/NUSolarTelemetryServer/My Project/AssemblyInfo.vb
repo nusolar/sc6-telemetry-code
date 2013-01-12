@@ -1,6 +1,7 @@
 ﻿Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
+Imports System.Resources
 
 ' General Information about an assembly is controlled through the following 
 ' set of attributes. Change these attribute values to modify the information
@@ -14,8 +15,10 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyProduct("NUSolarTelemetryServer")> 
 <Assembly: AssemblyCopyright("Copyright © DMAXX, LLC 2011")> 
 <Assembly: AssemblyTrademark("")> 
+<Assembly: NeutralResourcesLanguage("en-US")> 
+<Assembly: CLSCompliant(True)> 
 
-<Assembly: ComVisible(False)>
+<Assembly: ComVisible(False)> 
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("55112e94-d748-4a9e-9fb2-b70be01c7f9e")> 
