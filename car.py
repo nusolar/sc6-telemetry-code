@@ -1,35 +1,29 @@
 #!/usr/bin/env python
+import serial, io, time, pika, os, sys
 
-import pika
-def sendPika(packet):
-	connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-	channel = connection.channel()
-	channel.queue_declare(queue='hello')
-	if True:
-		channel.basic_publish(exchange='',routing_key='hello',body=packet)
-	print " [x] Sent '%'" % packet
-	connection.close()
-
-import serial, time
 def listen:
+	connection = pika.BlockingConnection(pika.ConnectionParameters(host='mbr.chandel.net'))
+	channel = connection.channel()
+	channel.queue_declare(queue='telemetry')
+	
 	ser = serial.Serial(device())
-	ser.baudrate = 9600
-	ser.write('S8\rO\r')
 	if !ser.isOpen():
-		print("Error: couldn't open serial cxn!")
+		print("Error: couldn't open serial connection!")
+	ser.write('S8\rO\r')
 	sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
-	while ser.readable():
-		line = readline()
-		if line[0]!='t':
-			print("warning: received non-T packet, discarding")
+	while sio.readable():
+		line = sio.readline()
+		if line[0] != 't':
 			continue
 		line = str(time.time()) + line
+		channel.basic_publish(exchange='',routing_key='hello',body=packet)
+	
 	sio.close()
 	ser.close()
+	connection.close()
 
-import os, sys
 def device:
-	files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB0'}
+	files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB1'}
 	if !os.path.exists(file[sys.platform]):
-		print("Error: /dev file doesn't exist!")
+		print("Error: device file doesn't exist!")
 	return files[sys.platform]
