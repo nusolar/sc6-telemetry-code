@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 import serial, io, time, pika, os, sys
-
-def listen:
+# flow: loop( not_serial.serialutil.SerialException(loop( not_pika.exceptions.AMQPConnectionError(send) wait, reconnect)) wait, recheck)
+def listen():
 	connection = pika.BlockingConnection(pika.ConnectionParameters(host='mbr.chandel.net'))
 	channel = connection.channel()
 	channel.queue_declare(queue='telemetry')
 	
 	ser = serial.Serial(device())
-	if !ser.isOpen():
+	if not ser.isOpen():
 		print("Error: couldn't open serial connection!")
 	ser.write('S8\rO\r')
 	
@@ -23,8 +23,8 @@ def listen:
 	ser.close()
 	connection.close()
 
-def device:
+def device():
 	files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB1'}
-	if !os.path.exists(file[sys.platform]):
+	if not os.path.exists(files[sys.platform]):
 		print("Error: device file doesn't exist!")
 	return files[sys.platform]
