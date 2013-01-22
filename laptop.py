@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, threading, pika, sqlite3, Tkinter as tk, ttk
+import os, threading, subprocess, pika, sqlite3, Tkinter as tk, ttk
 
 conn = sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db') #make DbConn factory
 c = conn.cursor()
@@ -50,7 +50,7 @@ def speed_analytics:
 	
 
 class can:
-	bases = [0x200, 0x210, 0x300, 0x310, 0x500, 0x500, 0x710, 0x770, 0x110, 0x500]
+	bases = [0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500]
 	roots = ['_'.join([t,m,'']) for t in ('bms','sw','ws20','mppt','dc') for m in ('rx','tx')]
 	groups= [['trip','reset_cc_batt','reset_cc_array','reset_cc_mppt1',
 			 'reset_cc_mppt2','reset_cc_mppt3', 'reset_wh','reset_all'],
@@ -81,5 +81,6 @@ def quit:
 	t_receive.join()
 
 if __name__ == '__main__':
+	subprocess.Popen('rabbitmq-server')
 	c.execute("CREATE TABLE packets(date real, cid integer, data text) IF NOT EXISTS ")
 	t_receive.start()

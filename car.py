@@ -10,13 +10,14 @@ def listen:
 	if !ser.isOpen():
 		print("Error: couldn't open serial connection!")
 	ser.write('S8\rO\r')
+	
 	sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
 	while sio.readable():
 		line = sio.readline()
 		if line[0] != 't':
 			continue
 		line = str(time.time()) + line
-		channel.basic_publish(exchange='',routing_key='hello',body=packet)
+		channel.basic_publish(exchange='',routing_key='telemetry',body=packet)
 	
 	sio.close()
 	ser.close()
