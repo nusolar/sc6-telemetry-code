@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import serial, io, time, pika, os, sys
 
-def loop(fun):
+def loop(fun, xcpn):
 	while True:
 		try: fun()
-		except: pass
+		except (xcpn): pass
 		time.sleep(5)
 
 def listen(ser):
@@ -20,15 +20,14 @@ def listen(ser):
 		if line[0] != 't': continue
 		line = str(time.time()) + line
 		channel.basic_publish(exchange='',routing_key='telemetry',body=line)
-	
+	connection.close()
 	sio.close()
 	ser.close()
-	connection.close()
 
 def device():
 	files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB1'}
 	ser = serial.Serial(files[sys.platform])
-	loop(lambda: listen(ser))
+	loop(lambda: listen(ser), pika.exceptions.AMQPError)
 
 if __name__ == '__main__':
-	loop(device)
+	loop(device, BaseException)
