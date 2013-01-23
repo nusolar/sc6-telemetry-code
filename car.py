@@ -22,12 +22,12 @@ def listen(ser):
 		channel.basic_publish(exchange='',routing_key='telemetry',body=line)
 	connection.close()
 	sio.close()
-	ser.close()
 
 def device():
 	files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB1'}
 	ser = serial.Serial(files[sys.platform])
 	loop(lambda: listen(ser), pika.exceptions.AMQPError)
+	ser.close()
 
 if __name__ == '__main__':
 	loop(device, BaseException)
