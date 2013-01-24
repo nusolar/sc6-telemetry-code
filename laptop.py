@@ -1,26 +1,6 @@
 #!/usr/bin/env python
 
-import threading, subprocess, pika, psutil, db
-
-
-halt = False
-def receive():
-	con = db.con()
-	connection = pika.BlockingConnection(pika.ConnectionParameters(host='mbr.chandel.net'))
-	channel = connection.channel()
-	channel.queue_declare(queue='telemetry')
-	def callback(ch, method, properties, pkt):
-		t = pkt.find('t')
-		v = (float(pkt[0:t]),int('0x'+pkt[t+1:t+4],16),int('0x'+pkt[t+5:],16))
-		print v
-		con.execute("INSERT INTO packets VALUES (?,?,?)", v)
-		con.commit()
-		if halt: channel.close()
-	channel.basic_consume(callback,queue='telemetry',no_ack=True)
-	try: channel.start_consuming()
-	except: channel.close()
-
-
+import consumer, analysis, threading, subprocess, psutil, db
 
 class workers:
 	con = db.con()
@@ -40,13 +20,13 @@ class workers:
 		consumer_t.isAlive()
 	def consumer_start():
 		if not consumer() and db() and (rabbitmq() or rabbitmq_start()):
-			halt = False
-			consumer_t = threading.Thread(target = receive)
+			consumer.halt = False
+			consumer_t = threading.Thread(target = consumer.receive)
 			consumer_t.start()
 	def consumer_stop():
-		if consumer(): halt = True
+		if consumer(): consumer.halt = True
 	def quit():
 		consumer_stop()
-		consumer.con.close()
+		consumer.con.close() #should also kill RMQ conn
 		rabbitmq_stop()
 		analysis.con.close()

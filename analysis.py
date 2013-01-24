@@ -23,9 +23,9 @@ def all_bms_volts():
 def all_bms_temps():
 	return packets('bms_tx_temp')
 def all_speeds():
-	return packets('ws20_tx_motor_velocity_msmt')
+	return packets('ws20_tx_motor_velocity')
 def all_motor_currents():
-	return packets('ws20_tx_current_vector_msmt')
+	return packets('ws20_tx_current_vector')
 
 def array_current():
 	bms_array_c = packet('bms_tx_current')[2] #Right packet for array current?
@@ -38,6 +38,6 @@ def bms_temps():
 	temps = packet('bms_tx_temp')[2] #ERROR ignoring data processing
 	return (temps, max(temps), min(temps), sum(temps)/len(temps))
 def motor_info():
-	speed = packet('ws20_tx_motor_velocity_msmt')[2]
-	current = packet('ws20_tx_current_vector_msmt')[2]
+	speed = packet('ws20_tx_motor_velocity')[2]
+	current = packet('ws20_tx_current_vector')[2]
 	return (speed, current, current/speed)
