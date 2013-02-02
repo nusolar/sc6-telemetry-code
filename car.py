@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import pika, serial, io, time, sys, multiprocessing as mp, threading at th
+import pika, serial, io, time, sys, multiprocessing as mp, threading as th
 
 def loop(fun, xcpn = BaseException):
 	while True:
