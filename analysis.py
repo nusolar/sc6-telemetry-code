@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 
-import db, can
+import db
 
 con = db.con() #USE DIFFERENT SQL CONNECTION?
 def cids():
 	c = con.execute("select DISTINCT cid from packets")
 	return c.fetchall().sort()
 def packets(cid):
-	if type(cid) is str: cid = can.addr[cid]
+	if type(cid) is str: cid = db.addr[cid]
 	c = con.execute("select * from packets where cid==? order by date asc", (cid,))
 	return c.fetchall()
 def packet(cid):
-	if type(cid) is str: cid = can.addr[cid]
+	if type(cid) is str: cid = db.addr[cid]
 	c = con.execute("select * from packets where cid==? order by date desc", (cid,))
 	return c.fetchone()
 def time():
