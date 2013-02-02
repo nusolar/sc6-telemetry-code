@@ -7,6 +7,11 @@ def loop(fun, xcpn = BaseException):
 		except (xcpn) as e: print e
 		time.sleep(4)
 
+def process(func):
+	p = mp.Process(target=func)
+	p.start()
+	p.join()
+
 def hammer():
 	files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB0'}
 	ser = serial.Serial(files[sys.platform], baudrate=9600)
@@ -20,8 +25,8 @@ def hammer():
 		print line #DEBUG
 		channel.basic_publish(exchange='',routing_key='telemetry',body=line)
 def hephaestus():
-	connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-	channel = connection.channel()
+	con = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+	channel = con.channel()
 	channel.queue_declare(queue='telemetry')
 	loop(hammer, serial.SerialException)
 
@@ -37,7 +42,7 @@ def hermes():
 	channel.basic_consume(callback,queue='telemetry',no_ack=True)
 	try: chan1.start_consuming()
 	except: chan2.close()
-	
+
 if __name__ == '__main__':
-	th.Thread(target = lambda:mp.Process(target = hephaestus).start()).start()
-	th.Thread(target = lambda:mp.Process(target = hermes).start()).start()
+	for job in (hephaestus, hermes):
+		th.Thread(target = lambda: loop(process(job))).start()
