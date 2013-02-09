@@ -9,26 +9,25 @@ whoami = ->
 		this.page = 0
 		this.hash = toc[page]
 
-
 $ ->
 	em = Number($('body').css('font-size')[0..$('body').css('font-size').indexOf('p')-1])
 	whoami()
-	$(window).resize resize
+	$(window).resize redraw
 	$('.tabs').tabs
 		activate:	(event, ui) ->
 			window.location.hash = ui.newPanel.attr('id')
 			window.scrollTo(0, 0)
 			whoami()
-			resize()
+			redraw()
 	populate()
 	$('footer').prepend "Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
-	window.setInterval resize, 1000
+	window.setInterval redraw, 1000
 
 populate = ->
 	populateCar()
 	populatePlots()
 	populateSend()
-	resize()
+	redraw()
 populateCar = ->
 	$('#driverSvg').load 'css/driver.svg', null
 	$('#bboxSvg').load 'css/bbox.svg', drawCar
@@ -41,7 +40,8 @@ populateSend = ->
 	$('#pktName')[0].options.add(new Option(g[0],g[1])) for g in groups
 	$('#pktName')[0].onchange = drawSend
 
-resize = ->
+#Redraw UI with centered, updated data
+redraw = ->
 	centerTabs()
 	[drawCar, drawPlots, drawStrategy , (->), drawSend][page]()
 centerTabs = ->
