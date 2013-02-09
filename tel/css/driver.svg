@@ -1,0 +1,40 @@
+<svg width="510" height="290" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <title>Tiffany</title>
+ <defs>
+  <radialGradient id="svg_3" spreadMethod="pad">
+   <stop stop-color="#ffd4aa" offset="0"/>
+   <stop stop-color="#ffeddd" stop-opacity="0.99219" offset="1"/>
+  </radialGradient>
+  <radialGradient id="svg_4" spreadMethod="pad">
+   <stop stop-color="#ffd4aa" offset="0"/>
+   <stop stop-color="#fff3e8" stop-opacity="0.99609" offset="1"/>
+  </radialGradient>
+  <radialGradient spreadMethod="pad" id="svg_1">
+   <stop offset="0" stop-color="#ffd4aa"/>
+   <stop offset="1" stop-opacity="0.996094" stop-color="#fff3e8"/>
+  </radialGradient>
+  <radialGradient spreadMethod="pad" id="svg_5">
+   <stop offset="0" stop-color="#ffd4aa"/>
+   <stop offset="1" stop-opacity="0.99609" stop-color="#fff3e8"/>
+  </radialGradient>
+  <radialGradient id="svg_8" spreadMethod="pad" cx="0.5" cy="0.5" r="0.5">
+   <stop stop-color="#ffe2c6" offset="0" stop-opacity="0.996094"/>
+   <stop stop-color="#fff9f4" stop-opacity="0.988281" offset="1"/>
+  </radialGradient>
+  <radialGradient id="svg_9" spreadMethod="pad">
+   <stop stop-color="#ededed" stop-opacity="0.996094" offset="0"/>
+   <stop stop-color="#3b5b7a" offset="1"/>
+  </radialGradient>
+ </defs>
+ <g display="inline">
+  <title>Car Base</title>
+  <rect stroke="#000000" fill="url(#svg_8)" x="0" y="0" width="510" height="290" id="svg_2"/>
+  <rect fill="#ffd57c" stroke="#000000" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="430" y="820" width="80" height="0" id="svg_7"/>
+ </g>
+ <g>
+  <title>Driver</title>
+  <rect stroke="#b7b7b7" height="30" width="140" y="10" x="10" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" fill="#ffffff" id="svg_vel"/>
+  <rect stroke="#b7b7b7" height="30" width="140" y="50" x="10" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" fill="#ffffff" id="svg_eff"/>
+ </g>
+</svg>

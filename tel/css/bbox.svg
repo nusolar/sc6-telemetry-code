@@ -1,0 +1,75 @@
+<svg width="510" height="310" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <title>Tiffany</title>
+ <defs>
+  <radialGradient id="svg_3" spreadMethod="pad">
+   <stop stop-color="#ffd4aa" offset="0"/>
+   <stop stop-color="#ffeddd" stop-opacity="0.99219" offset="1"/>
+  </radialGradient>
+  <radialGradient id="svg_4" spreadMethod="pad">
+   <stop stop-color="#ffd4aa" offset="0"/>
+   <stop stop-color="#fff3e8" stop-opacity="0.99609" offset="1"/>
+  </radialGradient>
+  <radialGradient spreadMethod="pad" id="svg_1">
+   <stop offset="0" stop-color="#ffd4aa"/>
+   <stop offset="1" stop-opacity="0.996094" stop-color="#fff3e8"/>
+  </radialGradient>
+  <radialGradient spreadMethod="pad" id="svg_5">
+   <stop offset="0" stop-color="#ffd4aa"/>
+   <stop offset="1" stop-opacity="0.99609" stop-color="#fff3e8"/>
+  </radialGradient>
+  <radialGradient id="svg_8" spreadMethod="pad" cx="0.5" cy="0.5" r="0.5">
+   <stop stop-color="#ffe2c6" offset="0" stop-opacity="0.996094"/>
+   <stop stop-color="#fff9f4" stop-opacity="0.988281" offset="1"/>
+  </radialGradient>
+  <radialGradient id="svg_9" spreadMethod="pad">
+   <stop stop-color="#ededed" stop-opacity="0.996094" offset="0"/>
+   <stop stop-color="#3b5b7a" offset="1"/>
+  </radialGradient>
+ </defs>
+ <g display="inline">
+  <title>Car Base</title>
+  <rect stroke="#000000" fill="url(#svg_8)" x="0" y="0" width="510" height="310" id="svg_2"/>
+  <rect fill="#ffd57c" stroke="#000000" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="430" y="820" width="80" height="0" id="svg_7"/>
+ </g>
+ <g>
+  <title>BBox</title>
+  <rect id="svg_6" fill="#ededed" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="10" y="10" width="490" height="290" stroke="#000000"/>
+ </g>
+ <g>
+  <title>Batteries</title>
+  <rect id="bat31" height="30" width="70" y="60" x="20" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat30" height="30" width="70" y="100" x="20" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat29" height="30" width="70" y="140" x="20" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat28" height="30" width="70" y="180" x="20" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat27" height="30" width="70" y="220" x="20" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat26" height="30" width="70" y="260" x="20" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat32" height="30" width="70" y="20" x="20" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat21" height="30" width="70" y="100" x="100" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat22" height="30" width="70" y="140" x="100" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat23" height="30" width="70" y="180" x="100" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat24" height="30" width="70" y="220" x="100" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat25" height="30" width="70" y="260" x="100" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat16" height="30" width="70" y="260" x="180" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat17" height="30" width="70" y="220" x="180" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat18" height="30" width="70" y="180" x="180" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat19" height="30" width="70" y="140" x="180" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat20" height="30" width="70" y="100" x="180" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat15" height="30" width="70" y="260" x="260" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat14" height="30" width="70" y="220" x="260" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat13" height="30" width="70" y="180" x="260" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat12" height="30" width="70" y="140" x="260" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat11" height="30" width="70" y="100" x="260" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat10" height="30" width="70" y="100" x="340" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat9" height="30" width="70" y="140" x="340" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat8" height="30" width="70" y="180" x="340" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat7" height="30" width="70" y="220" x="340" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect id="bat6" height="30" width="70" y="260" x="340" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff"/>
+  <rect height="30" width="70" y="100" x="420" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff" id="bat1"/>
+  <rect height="30" width="70" y="140" x="420" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff" id="bat2"/>
+  <rect height="30" width="70" y="180" x="420" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff" id="bat3"/>
+  <rect height="30" width="70" y="220" x="420" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff" id="bat4"/>
+  <rect height="30" width="70" y="260" x="420" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff" id="bat5"/>
+  <rect height="30" width="70" y="20" x="340" stroke-linecap="null" stroke-linejoin="round" stroke-dasharray="null" stroke="#b7b7b7" fill="#ffffff" id="svg_10"/>
+ </g>
+</svg>
