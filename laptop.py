@@ -20,16 +20,14 @@ class workers:
 		def stop():
 			if p.is_alive(): sp.Popen(['rabbitmqctl','stop'])
 	
-	consumer_t = None
-	def consumer():
-		consumer_t.isAlive()
-	def consumer_start():
-		if db.ready() and not consumer(): #rabbitmq()
-			consumer.halt = False
-			consumer_t = threading.Thread(target = consumer.receive)
-			consumer_t.start()
-	def consumer_stop():
-		if consumer(): consumer.halt = True
+	class consumer:
+		p = mp.Process()
+		def on(): return p.is_alive()
+		def start():
+			if db.ready() and rmq.on() and not on():
+				p = mp.Process(target = consumer.receive)
+				p.start()
+		def stop(): p.terminate()
 	
 	def begin():
 		pass
