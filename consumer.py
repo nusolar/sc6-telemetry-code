@@ -15,28 +15,25 @@ tabulae = ((('trip',), 'trips'),
 		   (('',), 'other'))
 
 def descr(time, name, data): #[4 char, uint32]
-	row = (time, name, data[0:8].decode('hex'), int(data[8:],16))
-	con.execute("INSERT INTO descr VALUES (?,?,?,?)", row)
-def trips(time, name, data): #TODO
+	return ("descr", (time, name, data[0:8].decode('hex'), int(data[8:],16)))
+def trips(time, name, data): #TODO trip member orders
 	pass
 def modules(time, name, data): #assume [uint32, float], 16 CHAR TOTAL!!!
-	row = (time, name, int(data[0:8],16), float.fromhex(data[8:]))
-	con.execute("INSERT INTO modules VALUES (?,?,?,?)", row)
+	return ("modules", time, name, int(data[0:8],16), float.fromhex(data[8:]))
 def circuit_d(time, cid, data): #[double count]
 	pass #could add to modules table
 def can_bms_tx_current(time, cid, data): #[float array, float batt]
 	pass #+-> modules table?
-def sw(time, cid, data): pass #COMPLICATED TODO
-def cmds(time, cid, data): #TODO [float, float]?
-	row = (time, name, float.fromhex(data[0:8]), float.fromhex(data[8:]))
-	con.execute("INSERT INTO cmds VALUES (?,?,?,?)", row) 
+def sw(time, cid, data):
+	pass #COMPLICATED TODO
+def cmds(time, cid, data): #[float, float] TODO
+	return ("cmds",  (time, name, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 def motor(time, name, data): #[float Re, float Im]
-	row = (time, name, float.fromhex(data[0:8]), float.fromhex(data[8:]))
-	con.execute("INSERT INTO motor VALUES (?,?,?,?)", row)
+	return ("motor", (time, name, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 def motor_swapped(time, name, data): #[float Im, float Re]
-	row = (time, name, float.fromhex(data[8:]), float.fromhex(data[0:8]))
-	con.execute("INSERT INTO motor VALUES (?,?,?,?)", row)
-def mppt(): pass #COMPLICATED TODO
+	return ("motor", (time, name, float.fromhex(data[8:]), float.fromhex(data[0:8])))
+def mppt():
+	pass #COMPLICATED TODO
 tables = ((('_heartbeat','_id'),descr),
 		  (('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules),
 		  (('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d),
@@ -46,21 +43,20 @@ tables = ((('_heartbeat','_id'),descr),
 		  (('ws20_tx_',),motor),)
 
 def receive():
-	connection = pika.BlockingConnection(pika.ConnectionParameters(host='mbr.chandel.net'))
-	channel = connection.channel()
+	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))
+	channel = cxn.channel()
 	channel.queue_declare(queue='telemetry')
 	
 	def quit():
-		connection.close(); sys.exit()
-
+		cxn.close(); sys.exit()
 	def callback(ch, method, properties, pkt):
 		t = pkt.find('t')
-		v = [float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+5:],16)]
-		#   [float timestamp, int can_address, int data]
-		for pair in tabulae:
+		v = [float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:]]
+		for pair in tables:
 			if any(x in db.name[v[1]] for x in pair[0]):
-				table = pair[1]; break #get table from second element
-		con.execute("INSERT INTO %s VALUES (?,?,?)" % table, v)
+				v.append(pair[1](v[0],v[1],v[3])) #(time, id, str)
+		v[4][1][1] = v[1]
+		con.execute("INSERT INTO %s VALUES (?,?,?,?)" % v[4][0], v[4][1])
 		con.commit()
 		if halt: quit()
 	
