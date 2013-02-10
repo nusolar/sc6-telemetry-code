@@ -1,19 +1,24 @@
 #!/usr/bin/env python
 
-import consumer, analysis, threading, subprocess, psutil, db
+import consumer, analysis, threading, multiprocessing as mp, subprocess as sp, psutil, db
 
 class workers:
 	con = db.con()
 
-	def rabbitmq():
-		for p in psutil.process_iter():
-			if p.name == 'rabbitmq-server': return True
-		return False
-	def rabbitmq_start():
-		if db.ready():
-			subprocess.Popen('rabbitmq-server')
-	def rabbitmq_stop():
-		if rabbitmq() and not consumer(): subprocess.Popen(['rabbitmqctl','stop'])
+	class rmq:
+		p = mp.Process()
+		def on():
+			if p.is_alive():
+				return p.pid
+			for ps in psutil.process_iter(): 
+				if ps.name == 'rabbitmq-server': return True
+			return False
+		def start():
+			if db.ready() and not on():
+				p = mp.Process(target = lambda: sp.Popen(['rabbitmq-server']).wait())
+				p.start()
+		def stop():
+			if p.is_alive(): sp.Popen(['rabbitmqctl','stop'])
 	
 	consumer_t = None
 	def consumer():
@@ -26,6 +31,9 @@ class workers:
 	def consumer_stop():
 		if consumer(): consumer.halt = True
 	
+	def begin():
+		pass
+
 	def quit():
 		consumer_stop()
 		consumer.con.close() #should also kill RMQ conn
