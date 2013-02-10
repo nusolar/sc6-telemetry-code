@@ -1,8 +1,8 @@
 #!/usr/bin/env python
+# Copyright Alex Chandel, 2013. All rights reserved.
 import os, sqlite3
 
 def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db')
-
 def ready():
 	con = con()
 	con.execute("CREATE TABLE IF NOT EXISTS descr(time real, cid int, name text, data int)")

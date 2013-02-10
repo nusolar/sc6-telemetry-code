@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright Alex Chandel, 2013. All rights reserved.
 import pika, serial, io, time, sys, multiprocessing as mp, threading as th
 
 def loop(fun, xcpn = BaseException):

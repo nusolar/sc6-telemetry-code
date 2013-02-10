@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# Copyright Alex Chandel, 2013. All rights reserved.
 import consumer, analysis, multiprocessing as mp, subprocess as sp, psutil, db
 
 class workers:

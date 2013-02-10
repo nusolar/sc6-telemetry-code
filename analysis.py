@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# Copyright Alex Chandel, 2013. All rights reserved.
 import db
 
 con = db.con() #USE DIFFERENT SQL CONNECTION?
