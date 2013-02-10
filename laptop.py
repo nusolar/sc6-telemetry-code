@@ -25,14 +25,13 @@ class workers:
 				p = mp.Process(target = consumer.receive)
 				p.start()
 		def stop(): p.terminate()
+	# Need to hire a JsonServer and an Analyst
 	
 	roll = [rmq, rmq_consumer]
 	def begin():
 		for worker in roll: worker.start()
-	def join():
-		for worker in roll: worker.join()
 	def quit():
 		for worker in roll: worker.stop()
 
 if __name__ == '__main__':
-	workers.begin() #Python will wait for every Process to complete
+	workers.begin() #now Python chills until all worker Processes terminate
