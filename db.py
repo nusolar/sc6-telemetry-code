@@ -4,20 +4,20 @@ import os, sqlite3
 
 def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db')
 def ready():
-	con = con()
-	con.execute("CREATE TABLE IF NOT EXISTS descr(time real, cid int, name text, data int)")
-	con.execute("CREATE TABLE IF NOT EXISTS modules(time real, cid int, module int, value real)")
-	con.execute("CREATE TABLE IF NOT EXISTS cmds(time real, cid int, vel real, cur real)")
-	con.execute("CREATE TABLE IF NOT EXISTS motor(time real, cid int, re real, im real)")
+	sql = con()
+	sql.execute("CREATE TABLE IF NOT EXISTS descr(time real, cid int, name text, data int)")
+	sql.execute("CREATE TABLE IF NOT EXISTS modules(time real, cid int, module int, value real)")
+	sql.execute("CREATE TABLE IF NOT EXISTS cmds(time real, cid int, vel real, cur real)")
+	sql.execute("CREATE TABLE IF NOT EXISTS motor(time real, cid int, re real, im real)")
 
-	con.execute("CREATE TABLE IF NOT EXISTS volts(date real, cid integer, data integer)")
-	con.execute("CREATE TABLE IF NOT EXISTS temps(date real, cid integer, data integer)")
-	con.execute("CREATE TABLE IF NOT EXISTS currents(date real, cid integer, data integer)")
-	con.execute("CREATE TABLE IF NOT EXISTS energies(date real, cid integer, data integer)")
-	con.execute("CREATE TABLE IF NOT EXISTS trips(date real, cid integer, data integer)")
-	con.execute("CREATE TABLE IF NOT EXISTS motorinfo(date real, cid integer, data integer)")
-	con.execute("CREATE TABLE IF NOT EXISTS carinfo(date real, cid integer, data integer)")
-	con.execute("CREATE TABLE IF NOT EXISTS other(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS volts(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS temps(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS currents(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS energies(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS trips(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS motorinfo(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS carinfo(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS other(date real, cid integer, data integer)")
 
 #CAN_ADDRESSES.h
 bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)
