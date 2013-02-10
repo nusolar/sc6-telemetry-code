@@ -2,6 +2,12 @@
 import os, sqlite3
 
 def ready():
+	con = con()
+	con.execute("CREATE TABLE IF NOT EXISTS descr(time real, cid int, name text, data int)")
+	con.execute("CREATE TABLE IF NOT EXISTS modules(time real, cid int, module int, value real)")
+	con.execute("CREATE TABLE IF NOT EXISTS cmds(time real, cid int, vel real, cur real)")
+	con.execute("CREATE TABLE IF NOT EXISTS motor(time real, cid int, re real, im real)")
+
 	con.execute("CREATE TABLE IF NOT EXISTS volts(date real, cid integer, data integer)")
 	con.execute("CREATE TABLE IF NOT EXISTS temps(date real, cid integer, data integer)")
 	con.execute("CREATE TABLE IF NOT EXISTS currents(date real, cid integer, data integer)")
