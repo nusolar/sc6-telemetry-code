@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-import consumer, analysis, threading, multiprocessing as mp, subprocess as sp, psutil, db
+import consumer, analysis, multiprocessing as mp, subprocess as sp, psutil, db
 
 class workers:
-	con = db.con()
-
 	class rmq:
 		p = mp.Process()
 		def on():
@@ -19,8 +17,7 @@ class workers:
 				p.start()
 		def stop():
 			if p.is_alive(): sp.Popen(['rabbitmqctl','stop'])
-	
-	class consumer:
+	class rmq_consumer:
 		p = mp.Process()
 		def on(): return p.is_alive()
 		def start():
@@ -29,11 +26,13 @@ class workers:
 				p.start()
 		def stop(): p.terminate()
 	
+	roll = [rmq, rmq_consumer]
 	def begin():
-		pass
-
+		for worker in roll: worker.start()
+	def join():
+		for worker in roll: worker.join()
 	def quit():
-		consumer_stop()
-		consumer.con.close() #should also kill RMQ conn
-		#rabbitmq_stop()
-		analysis.con.close()
+		for worker in roll: worker.stop()
+
+if __name__ == '__main__':
+	workers.begin() #Python will wait for every Process to complete
