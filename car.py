@@ -4,7 +4,7 @@ import pika, serial, io, time, sys, multiprocessing as mp, threading as th
 
 def loop(fun, xcpn = BaseException):
 	while True:
-		try: fun()
+		try: sys.tracebacklimit = 1; fun()
 		except (xcpn) as e:	print type(e).__name__+" on "+fun.func_name+": "+str(e)
 		time.sleep(4)
 
@@ -47,4 +47,4 @@ def hermes():
 
 if __name__ == '__main__':
 	for job in (hephaestus, hermes):
-		th.Thread(target = lambda: loop(lambda: process(job)) ).start()
+		th.Thread(target = lambda:loop( lambda:process(job) ) ).start()
