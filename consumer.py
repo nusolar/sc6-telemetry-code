@@ -36,7 +36,7 @@ def motor_swapped(time, addr, data): #[float Im, float Re]
 def mppt(time, addr, data):
 	pass #TODO
 def dc(time, addr, data):
-	pass
+	pass #TODO
 def other(time, addr, data): #should never be called
 	print "Unrecognized CAN packet: "+db.name[addr]+" ("+addr+")."
 	return ("other", (time, addr, data, None))

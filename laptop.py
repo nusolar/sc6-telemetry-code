@@ -25,7 +25,7 @@ class rmq_consumer:
 			p.start()
 	def stop(self): p.terminate()
 # Need to hire a JsonServer
-# Hire an Analyst
+# Maybe an Analyst too
 
 roll = [rmq(), rmq_consumer()]
 def begin():
