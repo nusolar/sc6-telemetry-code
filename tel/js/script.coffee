@@ -1,3 +1,4 @@
+# Copyright Alex Chandel 2013. All rights reserved.
 this.em = 16
 this.toc = ["telemetry","plots","strategy","alerts","send"]
 whoami = ->
@@ -103,7 +104,7 @@ drawStrategy = ->
 drawSend = ->
 	$('#pktAddr').val($('#pktName').val())
 
-
+grab = (key) -> 
 
 
 
