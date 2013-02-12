@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika, db, sys
+import pika, db, sys, bitarray as ba
 
 halt = False
 con = db.con()
@@ -14,18 +14,31 @@ tabulae = ((('trip',), 'trips'),
 		   (('horn','signals','cruise','lights'), 'carinfo'),
 		   (('',), 'other'))
 
+def bitfield(pktStr):
+	a = ba.bitarray()
+	for x in bin(int(pktStr,16))[2:]: a.append(1 if x=='1' else 0)
+	return a
+
 def descr(time, addr, data): #[4 char, uint32]
 	return ("descr", (time, addr, data[0:8].decode('hex'), int(data[8:],16)))
-def trips(time, addr, data): #TODO trip member orders
+def trips(time, addr, data): #PROBLEM signed ints
 	pass
-def can_bms_tx_current(time, cid, data): #[float array, float batt]
-	pass #+-> modules table?
 def modules(time, addr, data): #assume [uint32, float], 16 CHAR TOTAL!!!
 	return ("modules", (time, addr, int(data[0:8],16), float.fromhex(data[8:])))
 def circuit_d(time, addr, data): #[double count]
 	return ("modules", (time, addr, 0, float.fromhex(data)))
+def can_bms_tx_current(time, addr, data): #[float array, float batt]
+	row = ("modules", (time, addr, 0, float.fromhex(data[0:8])))
+	con.execute("INSERT INTO %s VALUES (?,?,?,?)" % row[0], row[1])
+	row[1][3] = float.fromhex(data[8:])
+	return row
 def sw(time, addr, data):
-	pass #COMPLICATED TODO
+	bits = bin(int(data,16))[2:] #bin -> "0b0123456789AB..."
+	variants = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
+		"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown") #12 lights
+	opts = variants['lights' in db.name[addr]].split(' ')
+	flags = ' '.join(opt for (bit,opt) in zip(bits[:len(opts)],opts) if bit=='1')
+	return ("sw", (time, addr, bits, flags))
 def cmds(time, addr, data): #[float, float] TODO
 	return ("cmds",  (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 def motor(time, addr, data): #[float Re, float Im]
@@ -34,10 +47,11 @@ def motor_swapped(time, addr, data): #[float Im, float Re]
 	return ("motor", (time, addr, float.fromhex(data[8:]), float.fromhex(data[0:8])))
 def mppt(time, addr, data):
 	pass #COMPLICATED TODO
-handlers = ((('_heartbeat','_id'),descr),
+handlers = ((('_heartbeat','_id','_error'),descr), #Error?
 		  (('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules),
 		  (('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d),
 		  (('can_bms_tx_current',), can_bms_tx_current),
+		  (('sw_',),sw), #3 packed structs
 		  (('_cmd', 'dc_rx_cruise_'),cmds),
 		  (('_phase','_vector','_backemf',),motor_swapped),
 		  (('ws20_tx_',),motor),)
