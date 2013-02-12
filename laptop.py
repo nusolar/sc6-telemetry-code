@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
 import subprocess as sp, consumer, server, multiprocessing as mp, psutil
-import db, os, signal
+import db, sys, os, signal
 
 class rmq:
 	def __init__(self): self.p = mp.Process()
@@ -48,6 +48,7 @@ def quit():
 	for worker in roll: worker.stop()
 
 if __name__ == '__main__':
+	sys.tracebacklimit = 3
 	try: begin() #now Python chills until all worker Processes terminate
 	except (KeyboardInterrupt, SystemExit): quit()
 	finally: pass
