@@ -49,16 +49,19 @@ def motor_swapped(time, addr, data): #[float Im, float Re]
 	return ("motor", (time, addr, float.fromhex(data[8:]), float.fromhex(data[0:8])))
 def mppt(time, addr, data):
 	pass #TODO
-handlers = ((('_heartbeat','_id','_error'),descr), #Error?
-		  (('bms_tx_trip_pt_',), tripPt),
-		  (('_trip', '_batt_bypass', '_last_reset'), trips),
-		  (('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules),
-		  (('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d),
-		  (('can_bms_tx_current',), can_bms_tx_current),
-		  (('sw_',),sw), #3 packed structs
-		  (('_cmd', 'dc_rx_cruise_'),cmds),
-		  (('_phase','_vector','_backemf',),motor_swapped),
-		  (('ws20_tx_',),motor),)
+handlers = ((('_heartbeat','_id','_error'),descr), #all hb, id, errors?
+		  (('bms_tx_trip_pt_',), tripPt), #3 trip_pt
+		  (('_trip', '_batt_bypass', '_last_reset'), trips), #int32 codes
+
+		  (('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules), #float bms
+		  (('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d), #double bms
+		  (('can_bms_tx_current',), can_bms_tx_current), #float*2 bms (last bms)
+
+		  (('sw_',),sw), #remaining sw
+		  (('_cmd', 'dc_rx_cruise_velocity_current'),cmds), #ws cmds,
+		  (('_phase','_vector','_backemf',),motor_swapped), #backwards ws
+		  (('ws20_tx_',),motor), #remaining ws
+		  (('mppt_'),mppt), ) #WARNING mppt_rx unhandled
 
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))

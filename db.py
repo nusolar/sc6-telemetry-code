@@ -14,7 +14,8 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS cmds(time real, cid int, vel real, cur real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS sw(time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS motor(time real, cid int, re real, im real)")
-
+	sql.execute("CREATE TABLE IF NOT EXISTS mppt(time real, cid int, bits text, flags text)")
+	
 	sql.execute("CREATE TABLE IF NOT EXISTS volts(date real, cid integer, data integer)")
 	sql.execute("CREATE TABLE IF NOT EXISTS temps(date real, cid integer, data integer)")
 	sql.execute("CREATE TABLE IF NOT EXISTS currents(date real, cid integer, data integer)")
