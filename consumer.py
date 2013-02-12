@@ -1,23 +1,9 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika, db, sys, bitarray as ba
+import pika, db, sys
 
 halt = False
 con = db.con()
-
-tabulae = ((('trip',), 'trips'),
-		   (('voltage',), 'volts'),
-		   (('temp',), 'temps'),
-		   (('bms_tx_current','ws20_tx_current_vector'), 'currents'),
-		   (('tx_cc_','tx_wh_'), 'energies'),
-		   (('ws20_',), 'motorinfo'),
-		   (('horn','signals','cruise','lights'), 'carinfo'),
-		   (('',), 'other'))
-
-def bitfield(pktStr): #UNUSED to be deleted
-	a = ba.bitarray()
-	for x in bin(int(pktStr,16))[2:]: a.append(1 if x=='1' else 0)
-	return a
 
 def descr(time, addr, data): #[char*4, uint32] 16 HEX'S TOTAL!!!
 	return ("descr", (time, addr, data[0:8].decode('hex'), int(data[8:],16)))
@@ -49,6 +35,12 @@ def motor_swapped(time, addr, data): #[float Im, float Re]
 	return ("motor", (time, addr, float.fromhex(data[8:]), float.fromhex(data[0:8])))
 def mppt(time, addr, data):
 	pass #TODO
+def dc(time, addr, data):
+	pass
+def other(time, addr, data): #should never be called
+	print "Unrecognized CAN packet: "+db.name[addr]+" ("+addr+")."
+	return ("other", (time, addr, data, None))
+
 handlers = ((('_heartbeat','_id','_error'),descr), #all hb, id, errors?
 		  (('bms_tx_trip_pt_',), tripPt), #3 trip_pt
 		  (('_trip', '_batt_bypass', '_last_reset'), trips), #int32 codes
@@ -61,7 +53,9 @@ handlers = ((('_heartbeat','_id','_error'),descr), #all hb, id, errors?
 		  (('_cmd', 'dc_rx_cruise_velocity_current'),cmds), #ws cmds,
 		  (('_phase','_vector','_backemf',),motor_swapped), #backwards ws
 		  (('ws20_tx_',),motor), #remaining ws
-		  (('mppt_'),mppt), ) #WARNING mppt_rx unhandled
+		  (('mppt_'),mppt), #WARNING mppt_rx unhandled
+		  (('dc_'),dc), #remaining dc
+		  ((''),other), ) #should never catch anything
 
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))

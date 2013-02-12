@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
 import os, sqlite3
+from collections import defaultdict
 
 def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db')
 def ready():
@@ -15,15 +16,7 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS sw(time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS motor(time real, cid int, re real, im real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS mppt(time real, cid int, bits text, flags text)")
-	
-	sql.execute("CREATE TABLE IF NOT EXISTS volts(date real, cid integer, data integer)")
-	sql.execute("CREATE TABLE IF NOT EXISTS temps(date real, cid integer, data integer)")
-	sql.execute("CREATE TABLE IF NOT EXISTS currents(date real, cid integer, data integer)")
-	sql.execute("CREATE TABLE IF NOT EXISTS energies(date real, cid integer, data integer)")
-	sql.execute("CREATE TABLE IF NOT EXISTS trips(date real, cid integer, data integer)")
-	sql.execute("CREATE TABLE IF NOT EXISTS motorinfo(date real, cid integer, data integer)")
-	sql.execute("CREATE TABLE IF NOT EXISTS carinfo(date real, cid integer, data integer)")
-	sql.execute("CREATE TABLE IF NOT EXISTS other(date real, cid integer, data integer)")
+	sql.execute("CREATE TABLE IF NOT EXISTS other(date real, cid integer, data text, unused null)")
 
 #CAN_ADDRESSES.h
 bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)
@@ -54,6 +47,6 @@ groups= (['trip','reset_cc_batt','reset_cc_array','reset_cc_mppt1',
 
 temp = [[(r+end,id) for end,id in zip(gs,range(n,n+len(gs))) ] for r,gs,n in zip(roots,groups,bases)]
 idList = [canid for group in temp for canid in group]
-
+#TODO change addr & name to collections.defaultdict
 addr = dict(idList) #can.addr[x] returns numerical address for name
 name = {v:k for k,v in addr.items()} #returns name for int address
