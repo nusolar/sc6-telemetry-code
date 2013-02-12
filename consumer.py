@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika, db, sys
+import pika, db, sys, time
 
 halt = False
 con = db.con()
@@ -78,3 +78,8 @@ def receive():
 	channel.basic_consume(callback,queue='telemetry',no_ack=True)
 	try: channel.start_consuming()
 	except: quit()
+
+def run():
+	try: receive()
+	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(4)
+	finally: pass

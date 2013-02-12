@@ -1,37 +1,53 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import consumer, analysis, multiprocessing as mp, subprocess as sp, psutil, db
+import subprocess as sp, consumer, server, multiprocessing as mp, psutil
+import db, os, signal
 
 class rmq:
-	p = mp.Process()
+	def __init__(self): self.p = mp.Process()
 	def on(self):
-		if p.is_alive():
-			return p.pid
+		if self.p.is_alive():
+			return self.p.pid
 		for ps in psutil.process_iter(): 
 			if ps.name == 'rabbitmq-server': return True
 		return False
-	def start(self):
-		if db.ready() and not on():
-			p = mp.Process(target = lambda: sp.Popen(['rabbitmq-server']).wait())
-			p.start()
+	def start(self, group):
+		if db.ready() and not self.on():
+			self.p = mp.Process(target = lambda: sp.Popen(['rabbitmq-server']).wait())
+			self.p.start()
 	def stop(self):
-		if p.is_alive(): sp.Popen(['rabbitmqctl','stop'])
+		if self.p.is_alive(): sp.Popen(['rabbitmqctl','stop'])
+
 class rmq_consumer:
-	p = mp.Process()
-	def on(self): return p.is_alive()
-	def start(self):
-		if db.ready() and rmq.on() and not on():
-			p = mp.Process(target = consumer.receive)
-			p.start()
-	def stop(self): p.terminate()
-# Need to hire a JsonServer
+	def __init__(self): self.p = mp.Process()
+	def on(self): return self.p.is_alive()
+	def start(self, group):
+		if db.ready() and group[0].on() and not self.on():
+			self.p = mp.Process(target = consumer.receive)
+			self.p.start()
+	def stop(self):
+		if self.on(): os.kill(self.p.pid, signal.SIGINT)
+
+class json_server:
+	def __init__(self): self.p = mp.Process()
+	def on(self): return self.p.is_alive()
+	def start(self, group):
+		if db.ready() and not self.on():
+			self.p = mp.Process(target = server.run)
+			self.p.start()
+	def stop(self):
+		if self.on(): os.kill(self.p.pid, signal.SIGINT)
 # Maybe an Analyst too
 
-roll = [rmq(), rmq_consumer()]
+roll = [rmq(), rmq_consumer(), json_server()]
 def begin():
-	for worker in roll: worker.start()
+	for worker in roll:
+		worker.start(roll)
+		print worker.on()
 def quit():
 	for worker in roll: worker.stop()
 
 if __name__ == '__main__':
-	begin() #now Python chills until all worker Processes terminate
+	try: begin() #now Python chills until all worker Processes terminate
+	except (KeyboardInterrupt, SystemExit): quit()
+	finally: pass

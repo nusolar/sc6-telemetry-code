@@ -17,6 +17,7 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS motor(time real, cid int, re real, im real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS mppt(time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS other(date real, cid integer, data text, unused null)")
+	return True
 
 #CAN_ADDRESSES.h
 bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)
