@@ -14,16 +14,18 @@ tabulae = ((('trip',), 'trips'),
 		   (('horn','signals','cruise','lights'), 'carinfo'),
 		   (('',), 'other'))
 
-def bitfield(pktStr):
+def bitfield(pktStr): #UNUSED to be deleted
 	a = ba.bitarray()
 	for x in bin(int(pktStr,16))[2:]: a.append(1 if x=='1' else 0)
 	return a
 
-def descr(time, addr, data): #[4 char, uint32]
+def descr(time, addr, data): #[char*4, uint32] 16 HEX'S TOTAL!!!
 	return ("descr", (time, addr, data[0:8].decode('hex'), int(data[8:],16)))
-def trips(time, addr, data): #PROBLEM signed ints
-	pass
-def modules(time, addr, data): #assume [uint32, float], 16 CHAR TOTAL!!!
+def tripPt(time, addr, data): #[float low, float high]
+	return ("tripPt", (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
+def trips(time, addr, data): #[int32, uint32] ERROR Signed Int NOT HANDLED
+	return ("trips", (time, addr, int(data[0:8],16), int(data[8:],16)))
+def modules(time, addr, data): # [uint32, float]
 	return ("modules", (time, addr, int(data[0:8],16), float.fromhex(data[8:])))
 def circuit_d(time, addr, data): #[double count]
 	return ("modules", (time, addr, 0, float.fromhex(data)))
@@ -32,7 +34,7 @@ def can_bms_tx_current(time, addr, data): #[float array, float batt]
 	con.execute("INSERT INTO %s VALUES (?,?,?,?)" % row[0], row[1])
 	row[1][3] = float.fromhex(data[8:])
 	return row
-def sw(time, addr, data):
+def sw(time, addr, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
 	bits = bin(int(data,16))[2:] #bin -> "0b0123456789AB..."
 	variants = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
 		"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown") #12 lights
@@ -46,8 +48,10 @@ def motor(time, addr, data): #[float Re, float Im]
 def motor_swapped(time, addr, data): #[float Im, float Re]
 	return ("motor", (time, addr, float.fromhex(data[8:]), float.fromhex(data[0:8])))
 def mppt(time, addr, data):
-	pass #COMPLICATED TODO
+	pass #TODO
 handlers = ((('_heartbeat','_id','_error'),descr), #Error?
+		  (('bms_tx_trip_pt_',), tripPt),
+		  (('_trip', '_batt_bypass', '_last_reset'), trips),
 		  (('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules),
 		  (('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d),
 		  (('can_bms_tx_current',), can_bms_tx_current),

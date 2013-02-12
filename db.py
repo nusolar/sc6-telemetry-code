@@ -6,6 +6,10 @@ def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db
 def ready():
 	sql = con()
 	sql.execute("CREATE TABLE IF NOT EXISTS descr(time real, cid int, name text, data int)")
+	#NOTE: TRIP CODE IS SIGNED INT
+	sql.execute("CREATE TABLE IF NOT EXISTS tripPt(time real, cid int, low real, high real)")
+	sql.execute("CREATE TABLE IF NOT EXISTS trips(time real, cid int, code int, module int)")
+
 	sql.execute("CREATE TABLE IF NOT EXISTS modules(time real, cid int, module int, value real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS cmds(time real, cid int, vel real, cur real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS sw(time real, cid int, bits text, flags text)")
