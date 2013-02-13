@@ -20,9 +20,16 @@ $ ->
 			window.scrollTo(0, 0)
 			whoami()
 			redraw()
+	window.pops = {}
+	window.pops.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
+	grabSet('packets', grab)
 	populate()
 	$('footer').prepend "Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
 	window.setInterval redraw, 1000
+
+grab = (json) ->
+	window.pops.send = json
+	populate()
 
 populate = ->
 	populateCar()
@@ -37,8 +44,8 @@ populatePlots = ->
 	$('#dataset')[0].options.add(new Option(g)) for g in groups
 	$('#dataset')[0].onchange = drawPlots
 populateSend = ->
-	groups = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
-	$('#pktName')[0].options.add(new Option(g[0],g[1])) for g in groups
+	#groups = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
+	$('#pktName')[0].options.add(new Option(g[0],g[1])) for g in window.pops.send
 	$('#pktName')[0].onchange = drawSend
 
 #Redraw UI with centered, updated data
@@ -104,7 +111,13 @@ drawStrategy = ->
 drawSend = ->
 	$('#pktAddr').val($('#pktName').val())
 
-grab = (key) -> 
+grabSet = (key, dest) ->
+	$.ajax
+		url: 'http://127.0.0.1:8080/'+key
+		jsonpCallback:'callback'
+		dataType:'jsonp'
+		success: dest
+
 
 
 

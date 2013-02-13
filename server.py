@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import BaseHTTPServer, time
+import BaseHTTPServer, time, db, json
+
+def packets():
+	return db.addr.items()
+
+api = {"packets": packets}
 
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 	def do_HEAD(s):
@@ -13,8 +18,8 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		s.send_header("Content-type", "application/json")
 		s.end_headers()
 		# "http://www.example.com/foo/bar/" --> s.path == "/foo/bar/"
-		s.wfile.write('{ "example": "%s" }' % s.path)
-
+		val = json.dumps( api[s.path.split('?')[0].split('/')[1]]() )
+		s.wfile.write('callback( %s )' % val)
 def run():
 	httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', 8080), Handler)
 	print time.asctime(), "Server Starts"
