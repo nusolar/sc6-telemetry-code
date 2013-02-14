@@ -41,21 +41,21 @@ def other(time, addr, data): #should never be called
 	print "Unrecognized CAN packet: "+db.name[addr]+" ("+addr+")."
 	return ("other", (time, addr, data, None))
 
-handlers = ((('_heartbeat','_id','_error'),descr), #all hb, id, errors?
-		  (('bms_tx_trip_pt_',), tripPt), #3 trip_pt
-		  (('_trip', '_batt_bypass', '_last_reset'), trips), #int32 codes
+handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
+			(('bms_tx_trip_pt_',), tripPt), #3 trip_pt
+			(('_trip', '_batt_bypass', '_last_reset'), trips), #int32 codes
 
-		  (('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules), #float bms
-		  (('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d), #double bms
-		  (('can_bms_tx_current',), can_bms_tx_current), #float*2 bms (last bms)
+			(('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules), #float bms
+			(('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d), #double bms
+			(('can_bms_tx_current',), can_bms_tx_current), #float*2 bms (last bms)
 
-		  (('sw_',),sw), #remaining sw
-		  (('_cmd', 'dc_rx_cruise_velocity_current'),cmds), #ws cmds,
-		  (('_phase','_vector','_backemf',),motor_swapped), #backwards ws
-		  (('ws20_tx_',),motor), #remaining ws
-		  (('mppt_'),mppt), #WARNING mppt_rx unhandled
-		  (('dc_'),dc), #remaining dc
-		  ((''),other), ) #should never catch anything
+			(('sw_',), sw), #remaining sw
+			(('_cmd', 'dc_rx_cruise_velocity_current'), cmds), #ws cmds,
+			(('_phase','_vector','_backemf'), motor_swapped), #backwards ws
+			(('ws20_tx_',), motor), #remaining ws
+			(('mppt_',), mppt), #WARNING mppt_rx unhandled
+			(('dc_',), dc), #remaining dc
+			(('',), other), ) #should never catch anything
 
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))

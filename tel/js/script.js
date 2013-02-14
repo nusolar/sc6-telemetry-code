@@ -32,14 +32,24 @@
     });
     window.pops = {};
     window.pops.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd', 0x503]];
-    grabSet('packets', grab);
+    window.pops.plots = ["Velocity", "Example"];
+    grabSet('populate', grab);
     populate();
     $('footer').prepend("Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; ");
     return window.setInterval(redraw, 1000);
   });
 
+  grabSet = function(key, dest) {
+    return $.ajax({
+      url: window.location.origin + ':8080/' + key,
+      jsonpCallback: 'callback',
+      dataType: 'jsonp',
+      success: dest
+    });
+  };
+
   grab = function(json) {
-    window.pops.send = json;
+    window.pops.send = json.send;
     return populate();
   };
 
@@ -56,21 +66,21 @@
   };
 
   populatePlots = function() {
-    var g, groups, _i, _len;
-    groups = ["Velocity", "Example"];
-    for (_i = 0, _len = groups.length; _i < _len; _i++) {
-      g = groups[_i];
-      $('#dataset')[0].options.add(new Option(g));
+    var g, i, _i, _len, _ref;
+    _ref = window.pops.plots;
+    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+      g = _ref[i];
+      $('#dataset')[0].options[i] = new Option(g);
     }
     return $('#dataset')[0].onchange = drawPlots;
   };
 
   populateSend = function() {
-    var g, _i, _len, _ref;
+    var g, i, _i, _len, _ref;
     _ref = window.pops.send;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      g = _ref[_i];
-      $('#pktName')[0].options.add(new Option(g[0], g[1]));
+    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+      g = _ref[i];
+      $('#pktName')[0].options[i] = new Option(g[0], g[1]);
     }
     return $('#pktName')[0].onchange = drawSend;
   };
@@ -180,15 +190,6 @@
 
   drawSend = function() {
     return $('#pktAddr').val($('#pktName').val());
-  };
-
-  grabSet = function(key, dest) {
-    return $.ajax({
-      url: 'http://127.0.0.1:8080/' + key,
-      jsonpCallback: 'callback',
-      dataType: 'jsonp',
-      success: dest
-    });
   };
 
 }).call(this);

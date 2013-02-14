@@ -2,10 +2,10 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
 import BaseHTTPServer, time, db, json
 
-def packets():
-	return db.addr.items()
+def populate():
+	return {"send": db.addr.items()}
 
-api = {"packets": packets}
+api = {"populate": populate}
 
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 	def do_HEAD(s):
