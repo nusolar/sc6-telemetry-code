@@ -13,6 +13,14 @@ whoami = ->
 $ ->
 	em = Number($('body').css('font-size')[0..$('body').css('font-size').indexOf('p')-1])
 	whoami()
+	# populate() must run before redraw() is ever called
+	window.data = {}
+	window.data.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
+	window.data.plots = ["Example", "Velocity"]
+	window.data.ranges = ["1 day"]
+	window.data.telemetry = {"vel": 30, "eff": 30, "bms_V": [.421], "bms_T": [40]}
+	grabSet('populate', grabStatic)
+	populate()
 	$(window).resize redraw
 	$('.tabs').tabs
 		activate:	(event, ui) ->
@@ -20,14 +28,8 @@ $ ->
 			window.scrollTo(0, 0)
 			whoami()
 			redraw()
-	window.pops = {}
-	window.pops.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
-	window.pops.plots = ["Example", "Velocity"]
-	window.pops.ranges = ["1 day"]
-	grabSet('populate', grab)
-	populate()
 	$('footer').prepend "Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
-	window.setInterval redraw, 1000
+	window.setInterval tic, 1000
 
 grabSet = (key, dest) ->
 	$.ajax
@@ -36,8 +38,8 @@ grabSet = (key, dest) ->
 		dataType:'jsonp'
 		success: dest
 
-grab = (json) ->
-	window.pops.send = json.send
+grabStatic = (json) ->
+	data.send = json.send
 	populate()
 populate = ->
 	populateCar()
@@ -45,15 +47,15 @@ populate = ->
 	populateSend()
 	redraw()
 populateCar = ->
-	$('#driverSvg').load 'css/driver.svg', null
+	$('#driverSvg').load 'css/driver.svg', drawCar
 	$('#bboxSvg').load 'css/bbox.svg', drawCar
 populatePlots = ->
-	$('#dataset')[0].options[i] = new Option(g) for g, i in window.pops.plots
+	$('#dataset')[0].options[i] = new Option(g) for g, i in window.data.plots
 	$('#dataset')[0].onchange = drawPlots
-	$('#datatime')[0].options[0] = new Option(window.pops.ranges[0])
+	$('#datatime')[0].options[0] = new Option(window.data.ranges[0])
 	$('#datatime')[0].onchange = drawPlots
 populateSend = ->
-	$('#pktName')[0].options[i] = new Option(g[0],g[1]) for g,i in window.pops.send
+	$('#pktName')[0].options[i] = new Option(g[0],g[1]) for g,i in window.data.send
 	$('#pktName')[0].onchange = drawSend
 
 #Redraw UI with centered, updated data
@@ -69,34 +71,21 @@ drawCar = ->
 	maxH = $("#nonfooter").height()-$("header").height()-10 -$("#tabBar").height()-1 -(2 + 0.2)*em
 	ns = "http://www.w3.org/2000/svg"
 	$('#telemetry').find('text').remove()
-	#Draw Velocities
-	svg = $("#svg_vel")
-	vel = document.createElementNS(ns, 'text')
-	vel.textContent = "v = 30 m/s"
-	vel.setAttribute('font-size',14)
-	b = svg[0].getBBox()
-	vel.setAttribute('x',b.x + em)
-	vel.setAttribute('y',b.y + b.height/2 + 5 )
-	svg.parent().append(vel)
-	#Draw Efficiencies
-	svg = $("#svg_eff")
-	vel = document.createElementNS(ns, 'text')
-	vel.textContent = "eff = 30 m/C"
-	vel.setAttribute('font-size',14)
-	b = svg[0].getBBox()
-	vel.setAttribute('x',b.x + em)
-	vel.setAttribute('y',b.y + b.height/2 + 5 )
-	svg.parent().append(vel)
-	#Draw Battery data
-	for x in [1..32]
-		svg = $("#bat"+x)
+	setText = (selector, string, xoff) ->
+		svg = $(selector)
 		vel = document.createElementNS(ns, 'text')
-		vel.textContent = ".421V, 40ºC"
+		vel.textContent = string
 		vel.setAttribute('font-size',14)
 		b = svg[0].getBBox()
-		vel.setAttribute('x',b.x + em/3)
-		vel.setAttribute('y',b.y + b.height/2 + 5 )
+		vel.setAttribute('x', b.x + em/xoff)
+		vel.setAttribute('y', b.y + b.height/2 + 5)
 		svg.parent().append(vel)
+	#Draw Velocities, Efficiencies
+	setText("#svg_vel", "v = "+data.telemetry.vel+" m/s", 1)
+	setText("#svg_eff", "eff = "+data.telemetry.eff+" m/C", 1)
+	#Draw Battery data
+	for x in [1..32]
+		setText("#bat"+x, ".421V, "+data.telemetry.bms_T[0]+"ºC", 3)
 drawPlots = ->
 	maxH = $('#nonfooter').height()-$("header").height()-10 -$('#tabBar').height()-1 -(2 + 0.2 + 8)*em
 	height = $('#plotHolder').width() / 1.618
@@ -118,6 +107,13 @@ drawStrategy = ->
 	$.plot('#strategyHolder', [[0,1],[1,1.2]])
 drawSend = ->
 	$('#pktAddr').val($('#pktName').val())
+
+tic = ->
+	grabSet("telemetry", grabDynamic)
+	redraw()
+grabDynamic = (json) ->
+	data.telemetry = json.telemetry
+	redraw()
 
 
 

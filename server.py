@@ -4,10 +4,15 @@ import BaseHTTPServer, time, db, json
 
 def populate():
 	return {"send": [(k, db.addr[k]) for k in sorted(db.addr.iterkeys())]}
+def telemetry():
+	d = {"vel": 22, "eff": 31, "bms_V": [.421], "bms_T": [39]}
+	return {"telemetry": d}
 
-api = {"populate": populate}
+api = {"populate": populate, "telemetry": telemetry}
 
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
+	def log_request(self, code='-', size='-'):
+		pass
 	def do_HEAD(s):
 		s.send_response(200)
 		s.send_header("Content-type", "application/json")
@@ -29,3 +34,6 @@ def run():
 	finally: pass
 	httpd.server_close()
 	print time.asctime(), "Server Stops"
+
+if __name__ == '__main__':
+	run()

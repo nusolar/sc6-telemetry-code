@@ -14,12 +14,12 @@ def trips(time, addr, data): #[int32, uint32] ERROR Signed Int NOT HANDLED
 def modules(time, addr, data): # [uint32, float]
 	return ("modules", (time, addr, int(data[0:8],16), float.fromhex(data[8:])))
 def circuit_d(time, addr, data): #[double count]
+	if '_cc_array' in db.name[addr]:
+		addr = 100
 	return ("modules", (time, addr, 0, float.fromhex(data)))
 def can_bms_tx_current(time, addr, data): #[float array, float batt]
-	row = ("modules", (time, addr, 0, float.fromhex(data[0:8])))
-	con.execute("INSERT INTO %s VALUES (?,?,?,?)" % row[0], row[1])
-	row[1][3] = float.fromhex(data[8:])
-	return row
+	con.execute("INSERT INTO %s VALUES (?,?,?,?)" % "modules", (time, addr, 100, float.fromhex(data[0:8]))) #commit array
+	return ("modules", (time, addr, 0, float.fromhex(data[8:]))) #return batt
 def sw(time, addr, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
 	bits = bin(int(data,16))[2:] #bin -> "0b0123456789AB..."
 	variants = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
@@ -41,9 +41,10 @@ def other(time, addr, data): #should never be called
 	print "Unrecognized CAN packet: "+db.name[addr]+" ("+addr+")."
 	return ("other", (time, addr, data, None))
 
+#bms_rx_reset_ unhandled
 handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 			(('bms_tx_trip_pt_',), tripPt), #3 trip_pt
-			(('_trip', '_batt_bypass', '_last_reset'), trips), #int32 codes
+			(('_trip', '_batt_bypass', '_last_reset'), trips), #(int32, uint32) codes
 
 			(('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules), #float bms
 			(('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d), #double bms
