@@ -22,7 +22,8 @@ $ ->
 			redraw()
 	window.pops = {}
 	window.pops.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
-	window.pops.plots = ["Velocity", "Example"]
+	window.pops.plots = ["Example", "Velocity"]
+	window.pops.ranges = ["1 day"]
 	grabSet('populate', grab)
 	populate()
 	$('footer').prepend "Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
@@ -49,6 +50,8 @@ populateCar = ->
 populatePlots = ->
 	$('#dataset')[0].options[i] = new Option(g) for g, i in window.pops.plots
 	$('#dataset')[0].onchange = drawPlots
+	$('#datatime')[0].options[0] = new Option(window.pops.ranges[0])
+	$('#datatime')[0].onchange = drawPlots
 populateSend = ->
 	$('#pktName')[0].options[i] = new Option(g[0],g[1]) for g,i in window.pops.send
 	$('#pktName')[0].onchange = drawSend

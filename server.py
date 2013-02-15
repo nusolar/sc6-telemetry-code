@@ -3,7 +3,7 @@
 import BaseHTTPServer, time, db, json
 
 def populate():
-	return {"send": db.addr.items()}
+	return {"send": [(k, db.addr[k]) for k in sorted(db.addr.iterkeys())]}
 
 api = {"populate": populate}
 
