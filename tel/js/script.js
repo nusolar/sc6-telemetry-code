@@ -26,10 +26,34 @@
     window.data.plots = ["Example", "Velocity"];
     window.data.ranges = ["1 day"];
     window.data.telemetry = {
-      "vel": 30,
-      "eff": 30,
+      "bms": {
+        "I": 1,
+        "CC": 6,
+        "Wh": 7,
+        "uptime": 1
+      },
       "bms_V": [.421],
-      "bms_T": [40]
+      "bms_T": [39],
+      "bms_owV": [.421],
+      "array": {
+        "I": 3,
+        "CC": 8
+      },
+      "sw": {
+        "buttons": 0,
+        "lights": 0
+      },
+      "ws": {
+        "v": 22,
+        "I": 2,
+        "V": 20,
+        "T": 50,
+        "e": 31
+      },
+      "mppt": {
+        "T": 40,
+        "I": 1
+      }
     };
     grabSet('populate', grabStatic);
     populate();
@@ -43,7 +67,7 @@
       }
     });
     $('footer').prepend("Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; ");
-    return window.setInterval(tic, 1000);
+    return window.setInterval(tic, 5000);
   });
 
   grabSet = function(key, dest) {
@@ -131,8 +155,8 @@
       vel.setAttribute('y', b.y + b.height / 2 + 5);
       return svg.parent().append(vel);
     };
-    setText("#svg_vel", "v = " + data.telemetry.vel + " m/s", 1);
-    setText("#svg_eff", "eff = " + data.telemetry.eff + " m/C", 1);
+    setText("#svg_vel", "v = " + data.telemetry.ws.v + " m/s", 1);
+    setText("#svg_eff", "eff = " + data.telemetry.ws.e + " m/C", 1);
     _results = [];
     for (x = _i = 1; _i <= 32; x = ++_i) {
       _results.push(setText("#bat" + x, ".421V, " + data.telemetry.bms_T[0] + "ºC", 3));

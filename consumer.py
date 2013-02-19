@@ -38,8 +38,9 @@ def mppt(time, addr, data):
 def dc(time, addr, data):
 	pass #TODO
 def other(time, addr, data): #should never be called
-	print "Unrecognized CAN packet: "+db.name[addr]+" ("+addr+")."
+	print "Unrecognized CAN packet: "+db.name.get(addr,'?')+" ("+addr+")."
 	return ("other", (time, addr, data, None))
+
 
 #bms_rx_reset_ unhandled
 handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
@@ -69,7 +70,7 @@ def receive():
 		t = pkt.find('t')
 		v = [float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:]]
 		for pair in handlers:
-			if any(x in db.name[v[1]] for x in pair[0]):
+			if any(x in db.name.get(v[1],'') for x in pair[0]):
 				v.append(pair[1](v[0],v[1],v[3])) #(time, id, str)
 		if v[4][0] > '':
 			con.execute("INSERT INTO %s VALUES (?,?,?,?)" % v[4][0], v[4][1])

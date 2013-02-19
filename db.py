@@ -6,17 +6,17 @@ from collections import defaultdict
 def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db')
 def ready():
 	sql = con()
-	sql.execute("CREATE TABLE IF NOT EXISTS descr(time real, cid int, name text, data int)")
+	sql.execute("CREATE TABLE IF NOT EXISTS descr (time real, cid int, name text, data int)")
 	#NOTE: TRIP CODE IS SIGNED INT
 	sql.execute("CREATE TABLE IF NOT EXISTS tripPt(time real, cid int, low real, high real)")
-	sql.execute("CREATE TABLE IF NOT EXISTS trips(time real, cid int, code int, module int)")
-
+	sql.execute("CREATE TABLE IF NOT EXISTS trips (time real, cid int, code int, module int)")
+	#regular data
 	sql.execute("CREATE TABLE IF NOT EXISTS modules(time real, cid int, module int, value real)")
-	sql.execute("CREATE TABLE IF NOT EXISTS cmds(time real, cid int, vel real, cur real)")
-	sql.execute("CREATE TABLE IF NOT EXISTS sw(time real, cid int, bits text, flags text)")
-	sql.execute("CREATE TABLE IF NOT EXISTS motor(time real, cid int, re real, im real)")
-	sql.execute("CREATE TABLE IF NOT EXISTS mppt(time real, cid int, bits text, flags text)")
-	sql.execute("CREATE TABLE IF NOT EXISTS other(date real, cid integer, data text, unused null)")
+	sql.execute("CREATE TABLE IF NOT EXISTS cmds (time real, cid int, vel real, cur real)")
+	sql.execute("CREATE TABLE IF NOT EXISTS sw   (time real, cid int, bits text, flags text)")
+	sql.execute("CREATE TABLE IF NOT EXISTS motor (time real, cid int, re real, im real)")
+	sql.execute("CREATE TABLE IF NOT EXISTS mppt (time real, cid int, bits text, flags text)")
+	sql.execute("CREATE TABLE IF NOT EXISTS other(time real, cid int, data text, unused null)")
 	return True
 
 #CAN_ADDRESSES.h
@@ -45,9 +45,7 @@ groups= (['trip','reset_cc_batt','reset_cc_array','reset_cc_mppt1',
 		 
 		 ['horn','signals','cruise','cruise_velocity_current'],
 		 ['drv_id'])
-
 temp = [[(r+end,id) for end,id in zip(gs,range(n,n+len(gs))) ] for r,gs,n in zip(roots,groups,bases)]
 idList = [canid for group in temp for canid in group]
-#TODO change addr & name to collections.defaultdict
 addr = dict(idList) #can.addr[x] returns numerical address for name
 name = {v:k for k,v in addr.items()} #returns name for int address

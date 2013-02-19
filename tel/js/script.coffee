@@ -18,7 +18,8 @@ $ ->
 	window.data.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
 	window.data.plots = ["Example", "Velocity"]
 	window.data.ranges = ["1 day"]
-	window.data.telemetry = {"vel": 30, "eff": 30, "bms_V": [.421], "bms_T": [40]}
+	window.data.telemetry = { "bms":{"I":1, "CC":6, "Wh":7, "uptime":1}, "bms_V": [.421], "bms_T": [39], "bms_owV":[.421]
+	"array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0}, "ws": {"v":22, "I":2, "V":20, "T":50, "e":31}, "mppt":{"T":40, "I":1} }
 	grabSet('populate', grabStatic)
 	populate()
 	$(window).resize redraw
@@ -29,7 +30,7 @@ $ ->
 			whoami()
 			redraw()
 	$('footer').prepend "Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
-	window.setInterval tic, 1000
+	window.setInterval tic, 5000
 
 grabSet = (key, dest) ->
 	$.ajax
@@ -67,7 +68,7 @@ centerTabs = ->
 	margin = $('.ui-corner-top').map( -> $(this).width() ).get().reduce (l,r) -> l+r 
 	$('#t1').css('margin-left', ($('#tabBar').width() - margin)/2)
 drawCar = ->
-	return true unless $('#driverSvg').children().size() and $('#bboxSvg').children().size()
+	return true unless $('#driverSvg').children().size() && $('#bboxSvg').children().size()
 	maxH = $("#nonfooter").height()-$("header").height()-10 -$("#tabBar").height()-1 -(2 + 0.2)*em
 	ns = "http://www.w3.org/2000/svg"
 	$('#telemetry').find('text').remove()
@@ -81,8 +82,8 @@ drawCar = ->
 		vel.setAttribute('y', b.y + b.height/2 + 5)
 		svg.parent().append(vel)
 	#Draw Velocities, Efficiencies
-	setText("#svg_vel", "v = "+data.telemetry.vel+" m/s", 1)
-	setText("#svg_eff", "eff = "+data.telemetry.eff+" m/C", 1)
+	setText("#svg_vel", "v = "+data.telemetry.ws.v+" m/s", 1)
+	setText("#svg_eff", "eff = "+data.telemetry.ws.e+" m/C", 1)
 	#Draw Battery data
 	for x in [1..32]
 		setText("#bat"+x, ".421V, "+data.telemetry.bms_T[0]+"ºC", 3)

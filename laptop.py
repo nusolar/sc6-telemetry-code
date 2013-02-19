@@ -37,7 +37,6 @@ class json_server:
 			self.p.start()
 	def stop(self):
 		if self.on(): os.kill(self.p.pid, signal.SIGINT)
-# Maybe an Analyst too
 
 roll = [rmq(), rmq_consumer(), json_server()]
 def begin():
