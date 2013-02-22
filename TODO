@@ -5,6 +5,7 @@ We need to coalesce data packets into ∆t intervals.
 * What about packets sent every 5s?
 - Solution
 	A consumer will reshape each packet into a row element, and its timestamp is compared to the "working row". If ∆t<1s, the row is overlain by the element, and timestamps are met. If ∆t>1s, the row is committed, and the element forms a new row.
+- 
 
 New carside-datapoints:
 * GPS sensor?
@@ -16,7 +17,7 @@ New carside-datapoints:
 
 Other variables:
 * Track length
-	- yeah right. maybe from gps or manual
+	- maybe from gps, or manual
 * Air temperature
 * Time of Day
 * Driver
