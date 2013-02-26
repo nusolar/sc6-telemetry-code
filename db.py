@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
 import os, sqlite3
-from collections import defaultdict
 
 def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db')
 def ready():
@@ -18,13 +17,16 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS mppt (time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS other(time real, cid int, data text, unused null)")
 
-	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bmsI real, bmsCC real, bmsWh real, 
+	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bmsUptime real, bmsI real, bmsCC real, bmsWh real, 
 		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
 		V17 real, V18 real, V19 real, V20 real, V21 real, V22 real, V23 real, V24 real, V25 real, V26 real, V27 real, V28 real, V29 real, V30 real, V31 real, V32 real, \
 		T1 real, T2 real, T3 real, T4 real, T5 real, T6 real, T7 real, T8 real, T9 real, T10 real, T11 real, T12 real, T13 real, T14 real, T15 real, T16 real, \
 		T17 real, T18 real, T19 real, T20 real, T21 real, T22 real, T23 real, T24 real, T25 real, T26 real, T27 real, T28 real, T29 real, T30 real, T31 real, T32 real, \
 		arrayI real, arrayCC real, mcVel real, mcI real, mcV real, mcT real, mce real)""")
+	temp = sql.execute('PRAGMA table_info(data)').fetchall()
+	columns = [(x[1],x[0]) for x in temp]
 	return True
+columns = []
 
 #CAN_ADDRESSES.h
 bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)
