@@ -17,6 +17,13 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS motor (time real, cid int, re real, im real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS mppt (time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS other(time real, cid int, data text, unused null)")
+
+	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bmsI real, bmsCC real, bmsWh real, 
+		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
+		V17 real, V18 real, V19 real, V20 real, V21 real, V22 real, V23 real, V24 real, V25 real, V26 real, V27 real, V28 real, V29 real, V30 real, V31 real, V32 real, \
+		T1 real, T2 real, T3 real, T4 real, T5 real, T6 real, T7 real, T8 real, T9 real, T10 real, T11 real, T12 real, T13 real, T14 real, T15 real, T16 real, \
+		T17 real, T18 real, T19 real, T20 real, T21 real, T22 real, T23 real, T24 real, T25 real, T26 real, T27 real, T28 real, T29 real, T30 real, T31 real, T32 real, \
+		arrayI real, arrayCC real, mcVel real, mcI real, mcV real, mcT real, mce real)""")
 	return True
 
 #CAN_ADDRESSES.h

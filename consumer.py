@@ -41,6 +41,7 @@ def other(time, addr, data): #should never be called
 	print "Unrecognized CAN packet: "+db.name.get(addr,'?')+" ("+addr+")."
 	return ("other", (time, addr, data, None))
 
+temp = ()
 
 #bms_rx_reset_ unhandled
 handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
