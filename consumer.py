@@ -4,6 +4,7 @@ import pika, db, sys, time
 
 halt = False
 con = db.con()
+temp = (None,None)*(76/2)
 
 def descr(time, addr, data): #[char*4, uint32] 16 HEX'S TOTAL!!!
 	return ("descr", (time, addr, data[0:8].decode('hex'), int(data[8:],16)))
@@ -11,7 +12,8 @@ def tripPt(time, addr, data): #[float low, float high]
 	return ("tripPt", (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 def trips(time, addr, data): #[int32, uint32] ERROR Signed Int NOT HANDLED
 	return ("trips", (time, addr, int(data[0:8],16), int(data[8:],16)))
-def modules(time, addr, data): # [uint32, float]
+def modules(addr, data): # [uint32, float]
+
 	return ("modules", (time, addr, int(data[0:8],16), float.fromhex(data[8:])))
 def circuit_d(time, addr, data): #[double count]
 	if '_cc_array' in db.name[addr]:
@@ -41,8 +43,6 @@ def other(time, addr, data): #should never be called
 	print "Unrecognized CAN packet: "+db.name.get(addr,'?')+" ("+addr+")."
 	return ("other", (time, addr, data, None))
 
-temp = (None,None)*(76/2)
-
 #bms_rx_reset_ unhandled
 handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 			(('bms_tx_trip_pt_',), tripPt), #3 trip_pt
@@ -50,7 +50,7 @@ handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 
 			(('bms_tx_voltage','bms_tx_owvoltage','bms_tx_temp'), modules), #float bms
 			(('_uptime','_cc_array','_cc_batt','_wh_batt'), circuit_d), #double bms
-			(('can_bms_tx_current',), can_bms_tx_current), #float*2 bms (last bms)
+			(('bms_tx_current',), can_bms_tx_current), #float*2 bms (last bms)
 
 			(('sw_',), sw), #remaining sw
 			(('_cmd', 'dc_rx_cruise_velocity_current'), cmds), #ws cmds,
@@ -59,6 +59,23 @@ handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 			(('mppt_',), mppt), #WARNING mppt_rx unhandled
 			(('dc_',), dc), #remaining dc
 			(('',), other), ) #should never catch anything
+
+handlers2= (('_uptime', circuit_d, 'bmsUptime'),
+			('bms_tx_current',can_bms_tx_current, 'bmsI', 'arrayI'),
+			('_cc_batt', circuit_d, 'bmsCC'),
+			('_wh_batt', circuit_d, 'bmsWh'),
+			('bms_tx_voltage',	modules, 'V'),
+			('bms_tx_temp',		modules, 'T'),
+			('bms_tx_owvoltage',modules, 'owV'),
+			('_cc_array', circuit_d, 'arrayCC'),
+			)
+
+def handle(pkt):
+	t = pkt.find('t') #v = [time, addr, len, data]
+	v = (float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
+	name = db.name.get(v[1],'')
+
+	return
 
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))
