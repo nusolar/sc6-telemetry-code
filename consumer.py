@@ -12,29 +12,22 @@ def tripPt(time, addr, data): #[float low, float high]
 	return ("tripPt", (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 def trips(time, addr, data): #[int32, uint32] ERROR Signed Int NOT HANDLED
 	return ("trips", (time, addr, int(data[0:8],16), int(data[8:],16)))
-def modules(addr, data): # [uint32, float]
-
-	return ("modules", (time, addr, int(data[0:8],16), float.fromhex(data[8:])))
-def circuit_d(time, addr, data): #[double count]
-	if '_cc_array' in db.name[addr]:
-		addr = 100
-	return ("modules", (time, addr, 0, float.fromhex(data)))
-def can_bms_tx_current(time, addr, data): #[float array, float batt]
-	con.execute("INSERT INTO %s VALUES (?,?,?,?)" % "modules", (time, addr, 100, float.fromhex(data[0:8]))) #commit array
-	return ("modules", (time, addr, 0, float.fromhex(data[8:]))) #return batt
-def sw(time, addr, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
-	bits = bin(int(data,16))[2:] #bin -> "0b0123456789AB..."
-	variants = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
-		"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown") #12 lights
-	opts = variants['lights' in db.name[addr]].split(' ')
-	flags = ' '.join(opt for (bit,opt) in zip(bits[:len(opts)],opts) if bit=='1')
-	return ("sw", (time, addr, bits, flags))
+def modules(match, data): # [uint32, float]
+	column = match[2] + str(int(data[0:8],16))
+	temp[db.columns[column]] = float.fromhex(data[8:])
+def double(match, data): #[double count]
+	temp[db.columns[match[2]]] = float.fromhex(data)
+def float2(match, data): #[float array, float batt]
+	temp[db.columns[match[2]]] = float.fromhex(data[:8])
+	temp[db.columns[match[3]]] = float.fromhex(data[8:])
+def sw(match, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
+	temp[db.columns[match[2]]] = int(data,16)
+	#bits = bin(int(data,16))[2:] #bin -> "0b0123456789AB..."
+	#opts = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
+	#	"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown")['lights' in db.name[addr]].split(' ') #12 lights
+	#flags = ' '.join(opt for (bit,opt) in zip(bits[:len(opts)],opts) if bit=='1')
 def cmds(time, addr, data): #[float, float] TODO
 	return ("cmds",  (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
-def motor(time, addr, data): #[float Re, float Im]
-	return ("motor", (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
-def motor_swapped(time, addr, data): #[float Im, float Re]
-	return ("motor", (time, addr, float.fromhex(data[8:]), float.fromhex(data[0:8])))
 def mppt(time, addr, data):
 	pass #TODO
 def dc(time, addr, data):
@@ -60,14 +53,20 @@ handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 			(('dc_',), dc), #remaining dc
 			(('',), other), ) #should never catch anything
 
-handlers2= (('_uptime', circuit_d, 'bmsUptime'),
-			('bms_tx_current',can_bms_tx_current, 'bmsI', 'arrayI'),
-			('_cc_batt', circuit_d, 'bmsCC'),
-			('_wh_batt', circuit_d, 'bmsWh'),
+handlers2= (('_uptime', double, 'bms_Uptime'),
+			('bms_tx_current',float2, 'array_I', 'bms_I'),
+			('_cc_batt', double, 'bms_CC'),
+			('_wh_batt', double, 'bms_Wh'),
 			('bms_tx_voltage',	modules, 'V'),
 			('bms_tx_temp',		modules, 'T'),
 			('bms_tx_owvoltage',modules, 'owV'),
-			('_cc_array', circuit_d, 'arrayCC'),
+			('_cc_array', double, 'array_CC'),
+			('ws20_tx_velocity', float2, 'mc_Rpm', 'mc_Vel'),
+			('ws20_tx_voltage_vector', float2, 'mc_Vim', 'mc_Vre'),
+			('ws20_tx_current_vector', float2, 'mc_Iim', 'mc_Ire'),
+			('ws20_tx_backemf', float2, 'mc_emf', ''), #first
+			('ws20_tx_sink_temp', float2, 'mc_Tin', 'mc_Tsink'),
+			('sw_', sw, 'sw_l'),
 			)
 
 def handle(pkt):
