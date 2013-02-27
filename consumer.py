@@ -4,7 +4,7 @@ import pika, db, sys, time
 
 halt = False
 con = db.con()
-temp = (None,None)*(76/2)
+temp = tuple([None]*db.columns)
 
 def descr(time, addr, data): #[char*4, uint32] 16 HEX'S TOTAL!!!
 	return ("descr", (time, addr, data[0:8].decode('hex'), int(data[8:],16)))
@@ -28,8 +28,8 @@ def sw(match, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
 	#flags = ' '.join(opt for (bit,opt) in zip(bits[:len(opts)],opts) if bit=='1')
 def cmds(time, addr, data): #[float, float] TODO
 	return ("cmds",  (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
-def mppt(time, addr, data):
-	pass #TODO
+def mppt(match, data): #56 bits, int
+	temp[db.columns[match[2]]] = int(data,16)
 def dc(time, addr, data):
 	pass #TODO
 def other(time, addr, data): #should never be called
@@ -53,7 +53,7 @@ handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 			(('dc_',), dc), #remaining dc
 			(('',), other), ) #should never catch anything
 
-handlers2= (('_uptime', double, 'bms_Uptime'),
+handlers2= (('_uptime', double, 'bms_uptime'),
 			('bms_tx_current',float2, 'array_I', 'bms_I'),
 			('_cc_batt', double, 'bms_CC'),
 			('_wh_batt', double, 'bms_Wh'),
@@ -66,7 +66,9 @@ handlers2= (('_uptime', double, 'bms_Uptime'),
 			('ws20_tx_current_vector', float2, 'mc_Iim', 'mc_Ire'),
 			('ws20_tx_backemf', float2, 'mc_emf', ''), #first
 			('ws20_tx_sink_temp', float2, 'mc_Tin', 'mc_Tsink'),
+			('sw_', sw, 'sw_b'),
 			('sw_', sw, 'sw_l'),
+			('dc_rx_', dc, 'dc'),
 			)
 
 def handle(pkt):

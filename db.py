@@ -17,14 +17,15 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS mppt (time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS other(time real, cid int, data text, unused null)")
 
-	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bms_Uptime real, bms_I real, bms_CC real, bms_Wh real, \
+	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bms_uptime real, bms_I real, bms_CC real, bms_Wh real, \
 		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
 		V17 real, V18 real, V19 real, V20 real, V21 real, V22 real, V23 real, V24 real, V25 real, V26 real, V27 real, V28 real, V29 real, V30 real, V31 real, V32 real, \
 		T1 real, T2 real, T3 real, T4 real, T5 real, T6 real, T7 real, T8 real, T9 real, T10 real, T11 real, T12 real, T13 real, T14 real, T15 real, T16 real, \
 		T17 real, T18 real, T19 real, T20 real, T21 real, T22 real, T23 real, T24 real, T25 real, T26 real, T27 real, T28 real, T29 real, T30 real, T31 real, T32 real, \
 		array_I real, array_CC real, \
-		mc_Rpm real, mc_Vel real, mc_Iim real, mc_Ire real, mc_Vim real, mc_Vre real, mc_Tin real, mc_Tsink real, mc_emf real, mc_e real,
-		sw_b int, sw_l int)""")
+		mc_Rpm real, mc_Vel real, mc_Iim real, mc_Ire real, mc_Vim real, mc_Vre real, mc_Tin real, mc_Tsink real, mc_emf real, mc_e real, \
+		sw_b int, sw_l int, \
+		dc_horn boolean, dc_l boolean, dc_r boolean, dc_cruiseRev boolean, dc_cruiseEn boolean, dc_cruiseVel real, dc_cruiseI real)""")
 	temp = sql.execute('PRAGMA table_info(data)').fetchall()
 	columns = {name:num for name,num in ((x[1],x[0]) for x in temp)}
 	return True
