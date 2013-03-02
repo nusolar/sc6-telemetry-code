@@ -66,17 +66,6 @@ handlers2= (('_uptime', 		double, 'bms_uptime'),
 			('dc_rx_',	dc, 'dc'),
 			)
 
-def handle(ch, method, properties, pkt):
-	t = pkt.find('t') #v = [time, addr, len, data]
-	v = (float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
-	if row[0]!=None and v[0] >= (row[0]+1):
-		con.execute("INSERT INTO data VALUES (" + "?,"*(len(db.columns)-1) + "?)", row)
-	if row[0]==None or v[0] >= (row[0]+1):
-		row[0] = v[0]
-	for match in handlers:
-		if match[0] in db.name.get(v[1],''):
-			match[1](match, v[3])
-
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))
 	channel = cxn.channel()
