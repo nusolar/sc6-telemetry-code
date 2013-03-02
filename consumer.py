@@ -42,27 +42,28 @@ handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 			(('_trip', '_batt_bypass', '_last_reset'), trips), #(int32, uint32) codes
 
 			(('_cmd', 'dc_rx_cruise_velocity_current'), cmds), #ws cmds,
-			(('mppt_',), mppt), #WARNING mppt_rx unhandled
 			(('dc_',), dc), #remaining dc
 			(('',), other), ) #should never catch anything
 
-handlers2= (('_uptime', double, 'bms_uptime'),
-			('bms_tx_current',float2, 'array_I', 'bms_I'),
-			('_cc_batt', double, 'bms_CC'),
-			('_wh_batt', double, 'bms_Wh'),
+handlers2= (('_uptime', 		double, 'bms_uptime'),
+			('bms_tx_current',	float2, 'array_I', 'bms_I'),
+			('_cc_batt', 		double, 'bms_CC'),
+			('_wh_batt', 		double, 'bms_Wh'),
 			('bms_tx_voltage',	modules, 'V'),
 			('bms_tx_temp',		modules, 'T'),
 			('bms_tx_owvoltage',modules, 'owV'), #Unimplemented
-			('_cc_array', double, 'array_CC'),
-			('ws20_tx_velocity', float2, 'mc_Rpm', 'mc_Vel'),
+			('_cc_array', 		double, 'array_CC'),
+			('ws20_tx_velocity',	float2, 'mc_Rpm', 'mc_Vel'),
 			('ws20_tx_voltage_vector', float2, 'mc_Vim', 'mc_Vre'),
 			('ws20_tx_current_vector', float2, 'mc_Iim', 'mc_Ire'),
-			('ws20_tx_backemf', float2, 'mc_emf', ''), #first
-			('ws20_tx_sink_temp', float2, 'mc_Tin', 'mc_Tsink'),
-			('sw_', int64, 'sw_b'),
-			('sw_', int64, 'sw_l'),
-			('mppt_', mppt, 'mppt_tx'), #RX Caught but Unhandled
-			('dc_rx_', dc, 'dc'),
+			('ws20_tx_backemf',	float2, 'mc_emf', ''), #first
+			('ws20_tx_sink_temp',	float2, 'mc_Tin', 'mc_Tsink'),
+			('sw_',	int64, 'sw_b'),
+			('sw_',	int64, 'sw_l'),
+			('mppt_',	mppt, 'mppt_tx'), #WARNING mppt_rx Caught but Unhandled
+			('dc_rx_',	dc, 'dc'),
+			('dc_rx_cruise_velocity_current', float2, 'dc_cruiseVel', 'dc_cruiseI')
+			('dc_rx_',	dc, 'dc'),
 			)
 
 def handle(ch, method, properties, pkt):
