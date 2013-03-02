@@ -13,6 +13,7 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS mppt (time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS other(time real, cid int, data text, unused null)")
 
+	sql.execute("CREATE TABLE IF NOT EXISTS cmds (time real, cid int, data text)")
 	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bms_uptime real, bms_I real, bms_CC real, bms_Wh real, \
 		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
 		V17 real, V18 real, V19 real, V20 real, V21 real, V22 real, V23 real, V24 real, V25 real, V26 real, V27 real, V28 real, V29 real, V30 real, V31 real, V32 real, \

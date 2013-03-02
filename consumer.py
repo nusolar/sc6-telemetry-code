@@ -4,7 +4,7 @@ import pika, db, sys, time
 
 halt = False
 con = db.con()
-row = tuple([None]*len(db.columns))
+dataRow = tuple([None]*len(db.columns))
 
 def descr(time, addr, data): #[char*4, uint32] 16 HEX'S TOTAL!!!
 	return ("descr", (time, addr, data[0:8].decode('hex'), int(data[8:],16)))
@@ -14,14 +14,14 @@ def trips(time, addr, data): #[int32, uint32] ERROR Signed Int NOT HANDLED
 	return ("trips", (time, addr, int(data[0:8],16), int(data[8:],16)))
 def modules(match, data): # [uint32, float]
 	column = match[2] + str(int(data[0:8],16))
-	row[db.columns[column]] = float.fromhex(data[8:])
+	dataRow[db.columns[column]] = float.fromhex(data[8:])
 def double(match, data): #[double count]
-	row[db.columns[match[2]]] = float.fromhex(data)
+	dataRow[db.columns[match[2]]] = float.fromhex(data)
 def float2(match, data): #[float array, float batt]
-	row[db.columns[match[2]]] = float.fromhex(data[:8])
-	row[db.columns[match[3]]] = float.fromhex(data[8:])
+	dataRow[db.columns[match[2]]] = float.fromhex(data[:8])
+	dataRow[db.columns[match[3]]] = float.fromhex(data[8:])
 def int64(match, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
-	row[db.columns[match[2]]] = int(data,16)
+	dataRow[db.columns[match[2]]] = int(data,16)
 	#bits = bin(int(data,16))[2:] #bin -> "0b0123456789AB..."
 	#opts = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
 	#	"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown")['lights' in db.name[addr]].split(' ') #12 lights
@@ -29,7 +29,7 @@ def int64(match, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
 def cmds(time, addr, data): #[float, float] TODO
 	return ("cmds",  (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 def mppt(match, data): #56 bits, int
-	row[db.columns[match[2]]] = int(data,16)
+	dataRow[db.columns[match[2]]] = int(data,16)
 def dc(time, addr, data):
 	pass #TODO
 def other(time, addr, data): #should never be called
@@ -76,11 +76,11 @@ def receive():
 	def callback(ch, method, properties, pkt):
 		t = pkt.find('t') #v = [time, addr, len, data]
 		v = (float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
-		if row[0]!=None and v[0] >= (row[0]+1):
-			con.execute("INSERT INTO data VALUES (" + "?,"*(len(db.columns)-1) + "?)", row)
-		if row[0]==None or v[0] >= (row[0]+1):
-			row = tuple([None]*len(db.columns))
-			row[0] = v[0]
+		if dataRow[0]!=None and v[0] >= (dataRow[0]+1):
+			con.execute("INSERT INTO data VALUES (" + "?,"*(len(db.columns)-1) + "?)", dataRow)
+		if dataRow[0]==None or v[0] >= (dataRow[0]+1):
+			dataRow = tuple([None]*len(db.columns))
+			dataRow[0] = v[0]
 		for match in handlers:
 			if match[0] in db.name.get(v[1],''):
 				match[1](match, v[3])
