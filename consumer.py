@@ -42,9 +42,6 @@ def other(time, addr, data): #should never be called
 handlers = ((('_heartbeat','_id','_error'), descr), #all hb, id, errors?
 			(('bms_tx_trip_pt_',), tripPt), #3 trip_pt
 			(('_trip', '_batt_bypass', '_last_reset'), trips), #(int32, uint32) codes
-
-			(('_cmd', 'dc_rx_cruise_velocity_current'), cmds), #ws cmds,
-			(('dc_',), dc), #remaining dc
 			(('',), other), ) #should never catch anything
 
 handlers2= (('_uptime', 		double, 'bms_uptime'),
@@ -66,9 +63,11 @@ handlers2= (('_uptime', 		double, 'bms_uptime'),
 			('dc_rx_',	dc, 'dc'),
 			('dc_rx_cruise_velocity_current', float2, 'dc_cruiseVel', 'dc_cruiseI'),
 			('dc_rx_',	dc, 'dc'),
+			('_heartbeat',		other,	''),
+			('_id',				other,	''),
 			)
 
-commands= 	(('ws20_rx_driver_controls_id', other, ''),
+commands = (('ws20_rx_driver_controls_id', other, ''),
 			('ws20_rx_drive_cmd', float2, 'motorVelocity', 'motorCurrent'),
 			('ws20_rx_power_cmd', float2, '', 'busCurrent'),
 			('ws20_rx_reset_cmd', other, ''),
