@@ -8,6 +8,7 @@ telem
 *.pptx
 *.xls
 *.xlsx
+*.dia~
 
 # linux
 .*
