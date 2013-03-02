@@ -26,6 +26,8 @@ def int64(match, data): #[11 bits, 21 unused] or [12 bits, 20 unused]
 	#opts = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
 	#	"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown")['lights' in db.name[addr]].split(' ') #12 lights
 	#flags = ' '.join(opt for (bit,opt) in zip(bits[:len(opts)],opts) if bit=='1')
+def byte2():
+	pass
 def cmds(time, addr, data): #[float, float] TODO
 	return ("cmds",  (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 def mppt(match, data): #56 bits, int
