@@ -68,6 +68,17 @@ handlers2= (('_uptime', 		double, 'bms_uptime'),
 			('dc_rx_',	dc, 'dc'),
 			)
 
+commands= 	(('ws20_rx_driver_controls_id', other, ''),
+			('ws20_rx_drive_cmd', float2, 'motorVelocity', 'motorCurrent'),
+			('ws20_rx_power_cmd', float2, '', 'busCurrent'),
+			('ws20_rx_reset_cmd', other, ''),
+			('dc_rx_horn', int64, 'hornEnabled'),
+			('dc_rx_signals', byte2, 'dc_l', 'dc_r'),
+			('dc_rx_reverseEnable',int64, 'reverseEnabled'),
+			('dc_rx_cruise', int64, 'cruiseEnabled'),
+			('dc_rx_cruise_velocity_current', float2, 'dc_rx_velocity', 'dc_rx_current'),
+			)
+
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))
 	channel = cxn.channel()
