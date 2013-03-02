@@ -1,4 +1,10 @@
-#!/usr/bin/nano
+telem
+=====
+
+NUSolar SC6 telemetry code
+
+TODO
+----
 
 We need to coalesce data packets into ∆t intervals.
 * ∆t = 1s, for now.
@@ -35,5 +41,5 @@ End result:
 
 Other – Tests:
 * water spray. probably negligible. reflects light, evaporation cools cell.
-	- measure (x10) array power (watching luminosity) vs water spray
+	measure (x10) array power (watching luminosity) vs water spray
 
