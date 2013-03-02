@@ -10,10 +10,6 @@ def ready():
 	sql.execute("CREATE TABLE IF NOT EXISTS tripPt(time real, cid int, low real, high real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS trips (time real, cid int, code int, module int)")
 	#regular data
-	sql.execute("CREATE TABLE IF NOT EXISTS modules(time real, cid int, module int, value real)")
-	sql.execute("CREATE TABLE IF NOT EXISTS cmds (time real, cid int, vel real, cur real)")
-	sql.execute("CREATE TABLE IF NOT EXISTS sw   (time real, cid int, bits text, flags text)")
-	sql.execute("CREATE TABLE IF NOT EXISTS motor (time real, cid int, re real, im real)")
 	sql.execute("CREATE TABLE IF NOT EXISTS mppt (time real, cid int, bits text, flags text)")
 	sql.execute("CREATE TABLE IF NOT EXISTS other(time real, cid int, data text, unused null)")
 
@@ -23,11 +19,12 @@ def ready():
 		T1 real, T2 real, T3 real, T4 real, T5 real, T6 real, T7 real, T8 real, T9 real, T10 real, T11 real, T12 real, T13 real, T14 real, T15 real, T16 real, \
 		T17 real, T18 real, T19 real, T20 real, T21 real, T22 real, T23 real, T24 real, T25 real, T26 real, T27 real, T28 real, T29 real, T30 real, T31 real, T32 real, \
 		array_I real, array_CC real, \
+		mppt_tx real, \
 		mc_Rpm real, mc_Vel real, mc_Iim real, mc_Ire real, mc_Vim real, mc_Vre real, mc_Tin real, mc_Tsink real, mc_emf real, mc_e real, \
 		sw_b int, sw_l int, \
 		dc_horn boolean, dc_l boolean, dc_r boolean, dc_cruiseRev boolean, dc_cruiseEn boolean, dc_cruiseVel real, dc_cruiseI real)""")
-	temp = sql.execute('PRAGMA table_info(data)').fetchall()
-	columns = {name:num for name,num in ((x[1],x[0]) for x in temp)}
+	sqlColumns = sql.execute('PRAGMA table_info(data)').fetchall()
+	columns = {name:num for name,num in ((x[1],x[0]) for x in sqlColumns)}
 	return True
 columns = {}
 
