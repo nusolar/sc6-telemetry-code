@@ -62,22 +62,20 @@ handlers2= (('_uptime', 		double, 'bms_uptime'),
 			('sw_',	int64, 'sw_l'),
 			('mppt_',	mppt, 'mppt_tx'), #WARNING mppt_rx Caught but Unhandled
 			('dc_rx_',	dc, 'dc'),
-			('dc_rx_cruise_velocity_current', float2, 'dc_cruiseVel', 'dc_cruiseI')
+			('dc_rx_cruise_velocity_current', float2, 'dc_cruiseVel', 'dc_cruiseI'),
 			('dc_rx_',	dc, 'dc'),
 			)
 
 def handle(ch, method, properties, pkt):
 	t = pkt.find('t') #v = [time, addr, len, data]
 	v = (float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
-	name = db.name.get(v[1],'')
-	if v[0] < (row[0]+1):
-		for match in handlers:
-			if match[0] in name:
-				match[1](match, v[3])
-	if v[0] >= (row[0]+1):
-		insert = row
-		row = tuple([None]*len(db.columns))
-		con.execute("INSERT INTO data VALUES (" + "?,"*(len(db.columns)-1) + "?)", insert)
+	if row[0]!=None and v[0] >= (row[0]+1):
+		con.execute("INSERT INTO data VALUES (" + "?,"*(len(db.columns)-1) + "?)", row)
+	if row[0]==None or v[0] >= (row[0]+1):
+		row[0] = v[0]
+	for match in handlers:
+		if match[0] in db.name.get(v[1],''):
+			match[1](match, v[3])
 
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))
@@ -87,14 +85,16 @@ def receive():
 	def quit():
 		cxn.close(); sys.exit()
 	def callback(ch, method, properties, pkt):
-		t = pkt.find('t')
-		v = [float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:]]
-		for pair in handlers:
-			if any(x in db.name.get(v[1],'') for x in pair[0]):
-				v.append(pair[1](v[0],v[1],v[3])) #(time, id, str)
-		if v[4][0] > '':
-			con.execute("INSERT INTO %s VALUES (?,?,?,?)" % v[4][0], v[4][1])
-			con.commit()
+		t = pkt.find('t') #v = [time, addr, len, data]
+		v = (float(pkt[0:t]), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
+		if row[0]!=None and v[0] >= (row[0]+1):
+			con.execute("INSERT INTO data VALUES (" + "?,"*(len(db.columns)-1) + "?)", row)
+		if row[0]==None or v[0] >= (row[0]+1):
+			row = tuple([None]*len(db.columns))
+			row[0] = v[0]
+		for match in handlers:
+			if match[0] in db.name.get(v[1],''):
+				match[1](match, v[3])
 		if halt: quit()
 	
 	channel.basic_consume(callback,queue='telemetry', no_ack=True)
