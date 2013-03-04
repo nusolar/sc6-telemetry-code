@@ -1,5 +1,3 @@
-telem
-
 *.pdf
 
 *.doc
@@ -79,6 +77,10 @@ xcuserdata/
 profile
 *.moved-aside
 *~.nib
+
+#Sublime Text 2
+*.sublime-project
+*.sublime-workspace
 
 # C/C++
 ## object files

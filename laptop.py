@@ -48,6 +48,6 @@ def quit():
 
 if __name__ == '__main__':
 	sys.tracebacklimit = 3
-	try: begin() #now Python chills until all worker Processes terminate
+	try: begin() #now chill until all worker Processes terminate
 	except (KeyboardInterrupt, SystemExit): quit()
 	finally: pass
