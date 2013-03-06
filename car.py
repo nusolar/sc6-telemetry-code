@@ -34,16 +34,16 @@ def hephaestus():
 
 def hermes():
 	con1 = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-	chan1 = connection.channel()
+	chan1 = con1.channel()
 	chan1.queue_declare(queue='telemetry')
 	con2 = pika.BlockingConnection(pika.ConnectionParameters(host='mbr.chandel.net'))
-	chan2 = connection.channel()
+	chan2 = con2.channel()
 	chan2.queue_declare(queue='telemetry')
 	def callback(ch, method, properties, pkt):
 		chan2.basic_publish(exchange='',routing_key='telemetry',body=pkt)
-	channel.basic_consume(callback,queue='telemetry',no_ack=True)
+	chan1.basic_consume(callback,queue='telemetry',no_ack=True)
 	try: chan1.start_consuming()
-	except: chan2.close()
+	except: con1.close(); con2.close()
 
 if __name__ == '__main__':
 	for job in (hephaestus, hermes):

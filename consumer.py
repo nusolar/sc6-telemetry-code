@@ -41,7 +41,7 @@ def dc(time, addr, data):
 def trash(match, data):
 	pass
 def other(time, addr, data): #should never be called
-	print "Unrecognized CAN packet: "+db.name.get(addr,'?')+" ("+addr+")."
+	print "Unrecognized CAN packet: "+db.name.get(addr,'???')+" ("+addr+"), " + data
 	return ("other", (time, addr, data, None))
 
 #bms_rx_reset_ unhandled
@@ -70,8 +70,9 @@ handlers2= (('_uptime', 		double, 'bms_uptime'),
 			('dc_rx_',	dc, 'dc'),
 			('_heartbeat',		trash,	''),
 			('_id',				trash,	''),
-			('_error',			trash,	'') #WARNING error packets?
+			('_error',			trash,	''), #WARNING error packets?
 			('ws20_rx_reset_cmd',	trash, ''),
+			('',				other,	'')
 			)
 
 commands = (('ws20_rx_drive_cmd', float2, 'dc_cruiseVel', 'dc_cruiseI'),
@@ -83,8 +84,10 @@ commands = (('ws20_rx_drive_cmd', float2, 'dc_cruiseVel', 'dc_cruiseI'),
 			('dc_rx_cruise_velocity_current', float2, 'dc_rx_velocity', 'dc_rx_current'),
 			)
 
+errors =	()
+
 def receive():
-	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='chandel.org'))
+	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	channel = cxn.channel()
 	channel.queue_declare(queue='telemetry')
 	
