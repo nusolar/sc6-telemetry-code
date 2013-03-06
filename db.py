@@ -5,19 +5,16 @@ import os, sqlite3
 def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db')
 def ready():
 	sql = con()
-	sql.execute("CREATE TABLE IF NOT EXISTS descr (time real, cid int, name text, data int)")
-	#NOTE: TRIP CODE IS SIGNED INT
-	sql.execute("CREATE TABLE IF NOT EXISTS tripPt(time real, cid int, low real, high real)")
-	sql.execute("CREATE TABLE IF NOT EXISTS trips (time real, cid int, code int, module int)")
-	#regular data
-	sql.execute("CREATE TABLE IF NOT EXISTS mppt (time real, cid int, bits text, flags text)")
-	sql.execute("CREATE TABLE IF NOT EXISTS other(time real, cid int, data text, unused null)")
+	sql.execute("CREATE TABLE IF NOT EXISTS errors (time real, message text)")
 
-	sql.execute("CREATE TABLE IF NOT EXISTS cmds (time real, mc_drive bit, mc_power bit, \
+	sql.execute("CREATE TABLE IF NOT EXISTS trips (time real, code int, module int, Ihi real, Ilow real, Vhi real, Vlow real, Thi real Tlow real)")
+
+	sql.execute("CREATE TABLE IF NOT EXISTS cmds (time real, mc_driveVel real, mc_driveI real, mc_power real, \
 		dc_horn bit, dc_leftSig bit, dc_rightSig bit, dc_reverse bit, dc_cruiseEn bit, dc_cruiseVel real, dc_cruiseI real)")
 	sqlColumns = sql.execute('PRAGMA table_info(cmds)').fetchall()
 	cmdsColumns = {name:num for name,num in ((x[1],x[0]) for x in sqlColumns)}
-	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bms_uptime real, bms_I real, bms_CC real, bms_Wh real, \
+
+	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bms_uptime real, bms_bypass int, bms_I real, bms_CC real, bms_Wh real, \
 		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
 		V17 real, V18 real, V19 real, V20 real, V21 real, V22 real, V23 real, V24 real, V25 real, V26 real, V27 real, V28 real, V29 real, V30 real, V31 real, V32 real, \
 		T1 real, T2 real, T3 real, T4 real, T5 real, T6 real, T7 real, T8 real, T9 real, T10 real, T11 real, T12 real, T13 real, T14 real, T15 real, T16 real, \
@@ -29,8 +26,9 @@ def ready():
 	sqlColumns = sql.execute('PRAGMA table_info(data)').fetchall()
 	dataColumns = {name:num for name,num in ((x[1],x[0]) for x in sqlColumns)}
 	return True
-cmdsColumns = {}
 dataColumns = {}
+cmdsColumns = {}
+tripColumns = {}
 
 
 #CAN_ADDRESSES.h

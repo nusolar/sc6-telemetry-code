@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import subprocess as sp, consumer, transmitter, server, multiprocessing as mp
-import db, sys, os, signal
+import subprocess as sp, consumer, transmitter, server
+import multiprocessing as mp, db, sys, os, signal
 
 class task:
 	def __init__(self, runnable, kill = lambda: os.kill(self.p.pid, signal.SIGINT)):
@@ -29,7 +29,7 @@ def begin():
 def quit():
 	for worker in roll: worker.stop()
 
-if __name__ == '__main__':
+if __name__ == '__main__' and db.ready():
 	sys.tracebacklimit = 3
 	try: begin() #chill until all worker Processes terminate
 	except (KeyboardInterrupt, SystemExit): quit()

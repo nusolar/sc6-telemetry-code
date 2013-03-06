@@ -1,3 +1,4 @@
+# Copyright Alex Chandel, 2013. All rights reserved.
 import pika
 
 def send():
