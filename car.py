@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
 import pika, serial, io, time, sys, multiprocessing as mp, threading as th
+local_queue = 'car_outbox'
+remote_queue = 'laptop_inbox'
 
 def loop(fun, xcpn = BaseException):
 	while True:
 		try: sys.tracebacklimit = 1; fun()
 		except (xcpn) as e:	print type(e).__name__+" on "+fun.func_name+": "+str(e)
-		time.sleep(4)
+		finally: time.sleep(4)
 
 def process(func):
 	print "\n\nTrying "+func.func_name
@@ -25,25 +27,24 @@ def hammer():
 		if line[0] != 't': continue
 		line = "{0:.6f}".format(time.time()) + line
 		print line #DEBUG
-		channel.basic_publish(exchange='',routing_key='telemetry',body=line)
+		channel.basic_publish(exchange='',routing_key=local_queue,body=line)
 def hephaestus():
 	con = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	channel = con.channel()
-	channel.queue_declare(queue='telemetry')
+	channel.queue_declare(queue=local_queue)
 	loop(hammer, serial.SerialException)
 
 def hermes():
 	con1 = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	chan1 = con1.channel()
-	chan1.queue_declare(queue='telemetry')
+	chan1.queue_declare(queue=local_queue)
 	con2 = pika.BlockingConnection(pika.ConnectionParameters(host='mbr.chandel.net'))
 	chan2 = con2.channel()
-	chan2.queue_declare(queue='telemetry')
+	chan2.queue_declare(queue=remote_queue)
 	def callback(ch, method, properties, pkt):
-		chan2.basic_publish(exchange='',routing_key='telemetry',body=pkt)
-	chan1.basic_consume(callback,queue='telemetry',no_ack=True)
-	try: chan1.start_consuming()
-	except: con1.close(); con2.close()
+		chan2.basic_publish(exchange='',routing_key=remote_queue,body=pkt)
+	chan1.basic_consume(callback,queue=remote_queue,no_ack=True)
+	chan1.start_consuming() #WARNING may drop 1 packet upon crash!
 
 if __name__ == '__main__':
 	for job in (hephaestus, hermes):

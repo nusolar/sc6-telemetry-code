@@ -15,11 +15,15 @@ def send():
 			chan1.stop_consuming()
 			con1.close()
 			con2.close()
-	chan1.basic_consume(callback,queue='transmitter',no_ack=True)
-	try: chan1.start_consuming()
-	except: con1.close(); con2.close()
+		ch.basic_ack(method.delivery_tag)
+	chan1.basic_consume(callback, queue='transmitter')
+	chan1.start_consuming()
 
 def run():
-	try: send()
+	try: 
+		while not halt:
+			try: send()
+			except (pika.exceptions.AMQPError): pass
+			finally: time.sleep(4)
 	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(4)
 	finally: pass

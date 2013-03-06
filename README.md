@@ -11,6 +11,8 @@ Python >= 2.7.2
 
 * pika >= 0.9.8
 
+* pyserial >= 2.6
+
 RabbitMQ >= 3.0.2
 
 * Do not configure RabbitMQ's server to run automatically.
@@ -53,3 +55,11 @@ laptop.py
 
   To add a task, instantiate ```task``` with a function handle, and add it to ```roll```.
 
+
+db.py
+
+* The database controller. Add custom tables to ```db.ready()```.
+
+consumer.py
+
+* The incoming mailroom. Fresh-off-the-wire packets are sorted into ```db.py``` tables. TODO: create ```class table```

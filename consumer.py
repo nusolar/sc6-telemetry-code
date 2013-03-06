@@ -82,7 +82,7 @@ cmds = (('ws20_rx_drive_cmd', float2, 'mc_driveVel', 'mc_driveI'),
 trip = (('_uptime', 	double, 'bms_uptime'), #keep last
 		('tx_trip',		trip) #3 float2, 1 trip code
 		)
-tabulae = {"data":(data, dataRow, 1)}
+tabulae = {'data':(data, dataRow, 1)}
 
 def handle(ch, method, properties, pkt):
 	t = pkt.find('t') #v = [time, addr, len, data]
@@ -95,23 +95,27 @@ def handle(ch, method, properties, pkt):
 				if row[0]!=None and v[0]-period >= row[0]:
 					con.execute( ''.join(["INSERT INTO %s VALUES ("%name, "?,"*(len(db.dataColumns)-1), "?)"]) , row)
 				if v[0]-period >= row[0]:
-					row[0] = v[0] #WARNING SHOULD NULLIFY ROW???
+					row[0] = v[0] #WARNING should nullify row? analysis should overwrite nulls, but overflow
 				match[1](match, v[3])
 				break
 		else: continue
 		break
+	ch.basic_ack(method.delivery_tag)
 	if halt: quit()
 
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	channel = cxn.channel()
 	channel.queue_declare(queue='telemetry')
-	channel.basic_consume(handle, queue='telemetry', no_ack=True)
 	quit = lambda: channel.stop_consuming(); cxn.close(); sys.exit()
-	try: channel.start_consuming()
-	except: quit()
+	channel.basic_consume(handle, queue='telemetry')
+	channel.start_consuming()
 
 def run():
-	try: receive()
+	try:
+		while not halt:
+			try: receive() #WARNING drops all temporary rows on crash
+			except (pika.exceptions.AMQPError): pass
+			finally: time.sleep(4)
 	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(4)
 	finally: pass
