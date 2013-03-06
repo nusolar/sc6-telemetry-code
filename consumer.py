@@ -9,6 +9,7 @@ con = db.con()
 dataRow = tuple([None]*len(db.dataColumns))
 cmdsRow = tuple([None]*len(db.cmdsColumns))
 tripRow = tuple([None]*len(db.tripColumns))
+errorRow = (None,None)
 
 def modules(match, data): # [uint32, float]
 	column = match[2] + str(int(data[0:8],16))
@@ -29,8 +30,8 @@ def int2(match, data):
 
 def bit2():
 	pass
-def bit64():
-	pass
+def bit64(match, data):
+	tripRow[db.dataColumns[match[2]]] = 0 if int(data[0:8],16)==0 else 1
 def cmds(time, addr, data): #[float, float] TODO
 	return ("cmds",  (time, addr, float.fromhex(data[0:8]), float.fromhex(data[8:])))
 
@@ -114,8 +115,8 @@ def receive():
 def run():
 	try:
 		while not halt:
-			try: receive() #WARNING drops all temporary rows on crash
+			try: receive()
 			except (pika.exceptions.AMQPError): pass
 			finally: time.sleep(4)
 	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(4)
-	finally: pass
+	finally: pass #WARNING drops all temporary rows on crash
