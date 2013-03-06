@@ -2,13 +2,18 @@ telem
 =====
 
 NUSolar SC6 telemetry code
-
+ 
 Prerequisites
 -------------
-Fedora >= 17                        (armel confirmed)
-Debian >= Wheezy (testing)          (no armel currently for g++ >= 4.7.1)
-Ubuntu >= 12.10 "Quantal Quetzal"   (armel unknown)
-Arch Linux                          (armel confirmed)
+A POSIX operating system
+
+Python >= 2.7.2 
+
+* pika >= 0.9.8
+
+RabbitMQ >= 3.0.2
+
+* Do not configure RabbitMQ's server to run automatically.
 
 * g++ >= 4.7.1
 
@@ -23,28 +28,28 @@ Arch Linux                          (armel confirmed)
   sudo apt-get install build-essential
   ```
 
-  In Fedora, use
-  ```
-  sudo yum install make automake gcc gcc-c++
-  ```
-
-  Once installed, the g++ version can be checked with
-
-  ```
-  g++ -v
-  ```
-
-* (optional) clang/LLVM
- 
-  In Debian/Ubuntu/Mint, can be installed with
-
-  ```
-  sudo apt-get install clang
-  ```
-
 Installation
 ------------
+Install all dependencies first.
+
+Clone this project to desired installation directory.
 
 Usage
 -----
+
+* ```cd``` to the installation directory 
+* type ```python laptop.py```
+
+Advanced Configuration
+----------------------
+
+We can run arbitrary telemetry tasks.
+
+laptop.py
+
+* The central task manager. Defines ```class task```, which wraps a function. Also defines the ```roll``` dict, which contains all task instances to be run.
+
+  Default tasks are the RabbitMQ server "```rmq``` ", the packet consumer "```rmq_consumer```", the artificial-packet transmitter "```rmq_producer```", and the web API "```json_server```".
+
+  To add a task, instantiate ```task``` with a function handle, and add it to ```roll```.
 
