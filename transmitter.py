@@ -1,6 +1,7 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
 import pika
 
+halt = False
 def send():
 	con1 = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	chan1 = con1.channel()
@@ -10,6 +11,10 @@ def send():
 	chan2.queue_declare(queue='transmitter')
 	def callback(ch, method, properties, pkt):
 		chan2.basic_publish(exchange='',routing_key='transmitter',body=pkt)
+		if halt:
+			chan1.stop_consuming()
+			con1.close()
+			con2.close()
 	chan1.basic_consume(callback,queue='transmitter',no_ack=True)
 	try: chan1.start_consuming()
 	except: con1.close(); con2.close()

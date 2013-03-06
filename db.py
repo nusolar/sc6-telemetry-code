@@ -5,15 +5,6 @@ import os, sqlite3
 def con(): return sqlite3.connect(os.path.expanduser('~') + '/Desktop/packets.db')
 def ready():
 	sql = con()
-	sql.execute("CREATE TABLE IF NOT EXISTS errors (time real, message text)")
-
-	sql.execute("CREATE TABLE IF NOT EXISTS trips (time real, code int, module int, Ihi real, Ilow real, Vhi real, Vlow real, Thi real Tlow real)")
-
-	sql.execute("CREATE TABLE IF NOT EXISTS cmds (time real, mc_driveVel real, mc_driveI real, mc_power real, \
-		dc_horn bit, dc_leftSig bit, dc_rightSig bit, dc_reverse bit, dc_cruiseEn bit, dc_cruiseVel real, dc_cruiseI real)")
-	sqlColumns = sql.execute('PRAGMA table_info(cmds)').fetchall()
-	cmdsColumns = {name:num for name,num in ((x[1],x[0]) for x in sqlColumns)}
-
 	sql.execute("""CREATE TABLE IF NOT EXISTS data(time real, bms_uptime real, bms_bypass int, bms_I real, bms_CC real, bms_Wh real, \
 		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
 		V17 real, V18 real, V19 real, V20 real, V21 real, V22 real, V23 real, V24 real, V25 real, V26 real, V27 real, V28 real, V29 real, V30 real, V31 real, V32 real, \
@@ -23,8 +14,16 @@ def ready():
 		mppt_tx real, \
 		mc_Rpm real, mc_Vel real, mc_Iim real, mc_Ire real, mc_Vim real, mc_Vre real, mc_Tin real, mc_Tsink real, mc_emf real, mc_e real, \
 		sw_b int, sw_l int)""")
-	sqlColumns = sql.execute('PRAGMA table_info(data)').fetchall()
-	dataColumns = {name:num for name,num in ((x[1],x[0]) for x in sqlColumns)}
+	dataColumns = {name:num for name,num in ((x[1],x[0]) for x in sql.execute('PRAGMA table_info(data)').fetchall())}
+	
+	sql.execute("CREATE TABLE IF NOT EXISTS cmds (time real, mc_driveVel real, mc_driveI real, mc_power real, \
+		dc_horn bit, dc_leftSig bit, dc_rightSig bit, dc_reverse bit, dc_cruiseEn bit, dc_cruiseVel real, dc_cruiseI real)")
+	cmdsColumns = {name:num for name,num in ((x[1],x[0]) for x in sql.execute('PRAGMA table_info(cmds)').fetchall())}
+	
+	sql.execute("CREATE TABLE IF NOT EXISTS trip (time real, code int, module int, Ihi real, Ilow real, Vhi real, Vlow real, Thi real Tlow real)")
+	tripColumns = {name:num for name,num in ((x[1],x[0]) for x in sql.execute('PRAGMA table_info(trip)').fetchall())}
+	
+	sql.execute("CREATE TABLE IF NOT EXISTS errors (time real, message text)")
 	return True
 dataColumns = {}
 cmdsColumns = {}
