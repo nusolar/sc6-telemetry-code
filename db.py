@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
 import os, sqlite3, inspect
+from consumer import *
 
 db_path = os.path.expanduser('~') + '/Desktop/telemetry.db'
 def con(): return sqlite3.connect(db_path)
@@ -11,7 +12,7 @@ class table:
 		self.name = name
 		self.handlers = _handlers[name]
 		sql.execute(_create[name])
-		self.cols = {cname:num for cname,num in ((x[1],x[0]) for x in sql.execute('PRAGMA table_info(%s)' % name).fetchall())}
+		self.cols = {colname:num for colname,num in ((x[1],x[0]) for x in sql.execute('PRAGMA table_info(%s)' % name).fetchall())}
 		self.row = tuple([None]*len(self.cols))
 		self._insert = "INSERT INTO %s VALUES (%s)" % (name, ','.join(['?']*len(self.cols))) #cache sql insert string
 		self._select_last = "SELECT FROM %s ORDER BY time DESC LIMIT 1" % self.name #cache sql select string
@@ -34,7 +35,6 @@ class table:
 		return con.execute(self._select_last).fetchall()
 
 _names = ('data', 'cmds', 'trip', 'error')
-
 _create = {
 	'data': "CREATE TABLE IF NOT EXISTS data(time real, bms_bypass int, bms_I real, bms_CC real, bms_Wh real, \
 		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
@@ -49,7 +49,6 @@ _create = {
 		dc_horn bit, dc_leftSig bit, dc_rightSig bit, dc_reverse bit, dc_cruiseEn bit, dc_cruiseVel real, dc_cruiseI real)",
 	'trip': "CREATE TABLE IF NOT EXISTS trip (time real, code int, module int, Ilow real, Ihi real, Vlow real, Vhi real, Tlow real, Thi real)",
 	'error': "CREATE TABLE IF NOT EXISTS error (time real, message text)"}
-
 _handlers = { 
 	'data':(('bms_tx_batt_bypass',	int2, 'bms_bypass', ''), # bms_tx_last_reset[int32,:] & bms_tx_last_trip[int32,uint32] unhandled
 			('bms_tx_current',	float2, 'array_I', 'bms_I'),
@@ -93,9 +92,9 @@ def error_handle(self, match, v):
 tables = (table('data'), table('cmds'), table('trip',5), table('error',error_handle))
 
 #CAN_ADDRESSES.h
-bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)
-roots = ['_'.join([t,m,'']) for t in ('bms','sw','ws20','mppt','dc') for m in ('rx','tx')]
-groups= (['trip','reset_cc_batt','reset_cc_array','reset_cc_mppt1',
+_bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)
+_roots = ['_'.join([t,m,'']) for t in ('bms','sw','ws20','mppt','dc') for m in ('rx','tx')]
+_groups=(['trip','reset_cc_batt','reset_cc_array','reset_cc_mppt1',
 		  'reset_cc_mppt2','reset_cc_mppt3', 'reset_wh','reset_all'],
 		 ['heartbeat','error','uptime','last_reset','batt_bypass',
 		  'current',
@@ -118,7 +117,7 @@ groups= (['trip','reset_cc_batt','reset_cc_array','reset_cc_mppt1',
 		 
 		 ['horn','signals','cruise','cruise_velocity_current'],
 		 ['drv_id'])
-temp = [[(r+end,id) for end,id in zip(gs,range(n,n+len(gs))) ] for r,gs,n in zip(roots,groups,bases)]
-idList = [canid for group in temp for canid in group]
+_temp = [[(r+end,id) for end,id in zip(gs,range(n,n+len(gs))) ] for r,gs,n in zip(roots,groups,bases)]
+_idList = [canid for group in temp for canid in group]
 addr = dict(idList) #can.addr[x] returns numerical address for name
 name = {v:k for k,v in addr.items()} #returns name for int address

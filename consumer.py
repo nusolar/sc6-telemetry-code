@@ -2,9 +2,6 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
 import pika, db, sys, time
 
-halt = False
-quit = None
-
 def modules(table, match, data): # [uint32, float]
 	column = match[2] + str(int(data[0:8],16))
 	table.row[table.cols[column]] = float.fromhex(data[8:])
@@ -30,31 +27,30 @@ def bit64(table, match, data):
 def trip(table, match, data): #[int32, uint32] 
 	table.row[table.cols[match[2]]] = int(data[:8],16)#ERROR Signed Int NOT HANDLED
 	table.row[table.cols[match[3]]] = int(data[8:],16)
-
 def error(table, match, data): #[char*8]
 	table.row[table.cols[match[2]]] += data.decode('hex')
 def trash(table, match, data): #[char*4, uint32]
 	pass
 
-def handle(ch, method, properties, pkt):
-	t = pkt.find('t') #v = [time, addr, len, data]
-	v = (int(float(pkt[0:t])), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
-	for table in db.tables:
-		for match in table.handlers:
-			if match[0] in db.name.get(v[1],''):
-				table.add(match, v)
-				break
-		else: continue
-		break
-	else: print "Unrecognized CAN packet: "+db.name.get(v[1],'???')+" ("+v[1]+"), " + v[3]
-	ch.basic_ack(method.delivery_tag)
-	if halt: quit()
+halt = False
 
 def receive():
 	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	channel = cxn.channel()
 	channel.queue_declare(queue='telemetry')
-	quit = lambda: channel.stop_consuming(); cxn.close(); sys.exit()
+	def handle(ch, method, properties, pkt):
+		t = pkt.find('t') #v = [time, addr, len, data]
+		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
+		for table in db.tables:
+			for match in table.handlers:
+				if match[0] in db.name.get(v[1],''):
+					table.add(match, v)
+					break
+			else: continue
+			break
+		else: print "Unrecognized CAN packet: "+db.name.get(v[1],'???')+" ("+v[1]+"), " + v[3]
+		ch.basic_ack(method.delivery_tag)
+		if halt: channel.stop_consuming(); cxn.close()
 	channel.basic_consume(handle, queue='telemetry')
 	channel.start_consuming()
 

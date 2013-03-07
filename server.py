@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
 import BaseHTTPServer, time, db, json
-c = db.con()
 
 def telemetry():
 	row = db.tables.data.last()
