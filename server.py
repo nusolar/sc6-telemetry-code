@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
 import BaseHTTPServer, time, db, json
-db.ready()
 c = db.con()
 
 def telemetry():
-	bms_I 	= c.execute('SELECT * FROM modules WHERE cid==%s AND module==%s ORDER BY time DESC' % (db.addr['bms_tx_current'], 0)).fetchone()
-	array_I = c.execute('SELECT * FROM modules WHERE cid==%s AND module==%s ORDER BY time DESC' % (db.addr['bms_tx_current'], 100)).fetchone()
-	
+	row = db.tables.data.last()
 	#SQL queries:
 	d = {"bms":{"I":1, "CC":6, "Wh":7, "uptime":1}, "bms_V": [.421], "bms_T": [39], "bms_owV": [.421], 
 		 "array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0}, "ws": {"v":23, "I":2, "V":20, "T":50, "e":31}, 

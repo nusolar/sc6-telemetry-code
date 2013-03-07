@@ -55,11 +55,11 @@ laptop.py
 
   To add a task, instantiate ```task``` with a function handle, and add it to ```roll```.
 
+consumer.py
+
+* The incoming mailroom. Incoming packets are sorted into one of ```db.tables```.
 
 db.py
 
-* The database controller. Add custom tables to ```db.ready()```.
+* The database controller. To add a new packet table, add an instance of ```class table``` to ```db.tables```. For each custom table, add an entry to ```_names```, ```_sql```, and ```_handlers```.
 
-consumer.py
-
-* The incoming mailroom. Fresh-off-the-wire packets are sorted into ```db.py``` tables. TODO: create ```class table```

@@ -29,7 +29,7 @@ def begin():
 def quit():
 	for worker in roll: worker.stop()
 
-if __name__ == '__main__' and db.ready():
+if __name__ == '__main__':
 	sys.tracebacklimit = 3
 	try: begin() #chill until all worker Processes terminate
 	except (KeyboardInterrupt, SystemExit): quit()
