@@ -5,9 +5,9 @@ from consumer import *
 
 db_path = os.path.expanduser('~') + '/Desktop/telemetry.db'
 def con(): return sqlite3.connect(db_path)
+sql = con()
 
 class table:
-	sql = con()
 	def __init__(self, name, addParam = None):
 		self.name = name
 		self.handlers = _handlers[name]
@@ -25,14 +25,14 @@ class table:
 			self.row[0] = v[0] #WARNING should nullify row? Analysis will overwrite nulls, but could overflow
 		match[1](self, match, v[3])
 	def commit(self):
-		con.execute(self._insert, self.row)
-		con.commit()
+		sql.execute(self._insert, self.row)
+		sql.commit()
 	def last(self):
-		return con.execute(self._select_last).fetchone()
+		return sql.execute(self._select_last).fetchone()
 	def slice(self, bounds):
-		return con.execute(self._select_last).fetchall()
+		return sql.execute(self._select_last).fetchall()
 	def vector(self, col):
-		return con.execute(self._select_last).fetchall()
+		return sql.execute(self._select_last).fetchall()
 
 _names = ('data', 'cmds', 'trip', 'error')
 _create = {
@@ -117,7 +117,7 @@ _groups=(['trip','reset_cc_batt','reset_cc_array','reset_cc_mppt1',
 		 
 		 ['horn','signals','cruise','cruise_velocity_current'],
 		 ['drv_id'])
-_temp = [[(r+end,id) for end,id in zip(gs,range(n,n+len(gs))) ] for r,gs,n in zip(roots,groups,bases)]
-_idList = [canid for group in temp for canid in group]
-addr = dict(idList) #can.addr[x] returns numerical address for name
+_temp = [[(r+end,id) for end,id in zip(gs,range(n,n+len(gs))) ] for r,gs,n in zip(_roots,_groups,_bases)]
+_idList = [canid for group in _temp for canid in group]
+addr = dict(_idList) #can.addr[x] returns numerical address for name
 name = {v:k for k,v in addr.items()} #returns name for int address

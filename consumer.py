@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika, db, sys, time
+import pika, sys, time
 
 def modules(table, match, data): # [uint32, float]
 	column = match[2] + str(int(data[0:8],16))
@@ -33,6 +33,7 @@ def error(table, match, data): #[char*8]
 def trash(table, match, data): #[char*4, uint32]
 	pass
 
+import db
 halt = False
 
 def receive():
