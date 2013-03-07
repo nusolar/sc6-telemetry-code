@@ -25,7 +25,8 @@ def bit2(table, match, data):
 def bit64(table, match, data):
 	table.row[table.cols[match[2]]] = 0 if int(data,16)==0 else 1
 def trip(table, match, data): #[int32, uint32] 
-	table.row[table.cols[match[2]]] = int(data[:8],16)#ERROR Signed Int NOT HANDLED
+	s = int(data[:8],16)
+	table.row[table.cols[match[2]]] = s if s < 2**32/2 else s-2**32
 	table.row[table.cols[match[3]]] = int(data[8:],16)
 def error(table, match, data): #[char*8]
 	table.row[table.cols[match[2]]] += data.decode('hex')
