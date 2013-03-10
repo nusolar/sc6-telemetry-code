@@ -65,7 +65,7 @@ _handlers = {
 			('ws20_tx_sink_temp',	float2, 'mc_Tin', 'mc_Tsink'),
 			('sw_',		int64, 'sw_b'),
 			('sw_',		int64, 'sw_l'),
-			('mppt_tx',	int64, 'mppt_tx'), #WARNING mppt_rx unimplemented
+			('mppt_tx',	mppt, 'mppt_tx'), #WARNING mppt_rx unimplemented
 			('_heartbeat',		trash),
 			('_id',				trash)),
 	'cmds':(('ws20_rx_drive_cmd',	float2, 'mc_driveVel', 'mc_driveI'),

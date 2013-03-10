@@ -19,8 +19,9 @@ New carside-datapoints:
 * Elevation sensor?
 * Solar intensity
 	* Luminosity on array
-		* solar angle
-	-> Power per cell
+		* Include solar angle! Is the sensor Lambertian? Can it be laid parallel to the array?
+	-> Power per module
+* Array temperature sensor
 
 Other variables:
 

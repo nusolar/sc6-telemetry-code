@@ -2,6 +2,7 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
 import pika, sys, time
 
+#PACKET DATA TYPES
 def modules(table, match, data): # [uint32, float]
 	column = match[2] + str(int(data[0:8],16))
 	table.row[table.cols[column]] = float.fromhex(data[8:])
@@ -24,6 +25,8 @@ def bit2(table, match, data):
 	table.row[table.cols[match[3]]] = 0 if int(data[8:],16)==0 else 1
 def bit64(table, match, data):
 	table.row[table.cols[match[2]]] = 0 if int(data,16)==0 else 1
+def mppt(table, match, data):
+	pass
 def trip(table, match, data): #[int32, uint32] 
 	s = int(data[:8],16)
 	table.row[table.cols[match[2]]] = s if s < 2**32/2 else s-2**32
