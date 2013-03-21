@@ -5,8 +5,8 @@ from consumer import *
 
 db_path = os.path.expanduser('~') + '/Desktop/telemetry.db'
 def con(): return sqlite3.connect(db_path)
-sql = con()
 
+sql = con()
 class table:
 	def __init__(self, name, addParam = None):
 		self.name = name
@@ -27,7 +27,7 @@ class table:
 	def commit(self):
 		sql.execute(self._insert, self.row)
 		sql.commit()
-	def last(self):
+	def last(self): #TODO combine accessor methods into __getitem__(self,key)
 		return sql.execute(self._select_last).fetchone()
 	def slice(self, bounds):
 		return sql.execute(self._select_last).fetchall()
