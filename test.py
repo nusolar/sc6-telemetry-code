@@ -1,27 +1,28 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
 import unittest, datetime, time, sys, os, pty, threading as th
-import car, laptop, analysis
+import car, laptop, analysis, gui
 
 class TestTelemetry(unittest.TestCase):
 	def test_car_reading(self):
 		master, slave = pty.openpty()
-		s_name = os.ttyname(slave)
-		car.files[sys.platform] = s_name
+		name = os.ttyname(slave)
+		car.files[sys.platform] = name
 		pkt = []
 		def ham_f():
 			try: car.hammer(pkt.append)
 			except (IOError): pass
+
 		ham_t = th.Thread(target = ham_f)
 		ham_t.start()
 		x = os.read(master,1000)
-		print('car wrote to CAN: '+x.replace('\r','\\r'))
-		self.assertEqual(x,"S8\rO\r")
-		os.write(master, 'tTESTPACKET\r')
+		print('car wrote to CAN: '+x.replace(b'\r',b'\\r').decode('utf8'))
+		self.assertEqual(x,b'S8\rO\r')
+		os.write(master, b't7FF8AlexTest\r')
 		time.sleep(1)
-		print('car read from CAN: '+pkt[0])
-		t = pkt[0].find('t')
+		print('car read from CAN: '+pkt[0].decode('utf8'))
+		t = pkt[0].find(b't')
 		self.assertGreater(60, abs(time.time()-float(pkt[0][:t])))
-		self.assertEqual(pkt[0][t:], 'tTESTPACKET')
+		self.assertEqual(pkt[0][t:], b't7FF8AlexTest')
 		os.close(master)
 		
 	def test_angles(self):
@@ -35,7 +36,7 @@ class TestTelemetry(unittest.TestCase):
 		time.sleep(5)
 		laptop.quit()
 		time.sleep(5)
-		for key,worker in laptop.roll.iteritems():
+		for key,worker in laptop.roll.items():
 			print(key + " is " + ("on" if worker.on() else "off"))
 			self.assertFalse(worker.on())
 

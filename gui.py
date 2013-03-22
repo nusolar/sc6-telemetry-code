@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import Tkinter as tk, ttk
+try:
+	import tkinter as tk, tkinter.ttk as ttk
+except ImportError:
+	import Tkinter as tk, ttk
 
 class Gui:
 	root = None

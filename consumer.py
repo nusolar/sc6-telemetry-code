@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika, sys, time
+import pika, sys, time, config
 
 #PACKET DATA TYPES
 def modules(table, match, data): # [uint32, float]
@@ -40,12 +40,13 @@ import db
 halt = False
 
 def receive():
-	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+	cxn = pika.BlockingConnection(pika.ConnectionParameters(host = 'localhost'))
 	channel = cxn.channel()
-	channel.queue_declare(queue='telemetry')
+	channel.queue_declare(queue = config.afferent_server_inbox)
+	print('Consumer has connected.')
 	def handle(ch, method, properties, pkt):
-		t = pkt.find('t') #v = [time, addr, len, data]
-		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4],16), int(pkt[t+4]), pkt[t+5:])
+		t = pkt.find(b't') #v = [time, addr, len, data]
+		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4],16), pkt[t+4], pkt[t+5:]) #WARNING PY2K, v[2]
 		for table in db.tables:
 			for match in table.handlers:
 				if match[0] in db.name.get(v[1],''):
@@ -56,15 +57,16 @@ def receive():
 		else: print("Unrecognized CAN packet: "+db.name.get(v[1],'???')+" ("+v[1]+"), " + v[3])
 		ch.basic_ack(method.delivery_tag)
 		if halt: channel.stop_consuming(); cxn.close()
-	channel.basic_consume(handle, queue='telemetry')
+	channel.basic_consume(handle, queue = config.afferent_server_inbox)
 	channel.start_consuming()
 
 def run():
 	global halt
+	time.sleep(2)
 	try:
 		while not halt:
 			try: receive()
-			except (pika.exceptions.AMQPError): pass
+			except (pika.exceptions.AMQPError, OSError): pass
 			finally: time.sleep(3)
 	except (KeyboardInterrupt, SystemExit): halt=True#; time.sleep(1) #TODO cleaner quit
 	finally: pass #WARNING drops all temporary rows on crash

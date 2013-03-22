@@ -23,11 +23,11 @@ roll = {'rmq':			Task(lambda: sp.Popen(['rabbitmq-server']).wait(), lambda:sp.Po
 		'json_server':	Task(server.run)}
 
 def begin():
-	for key,worker in roll.iteritems():
+	for key,worker in roll.items():
 		worker.start()
 		print(key + " is " + ("on" if worker.on() else "off"))
 def quit():
-	for worker in roll.itervalues(): worker.stop()
+	for worker in roll.values(): worker.stop()
 
 if __name__ == '__main__':
 	sys.tracebacklimit = 3

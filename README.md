@@ -7,7 +7,7 @@ Prerequisites
 -------------
 POSIX operating system
 
-Python >= 2.7.2 
+Python >= <del>2.7.2</del> 3.0
 
 * pika >= 0.9.8
 
@@ -75,3 +75,6 @@ test.py — powerful unit tests
   
   * WebServer reachability
   
+car.py — remote data collection
+
+* The Magic Numbers in ```car.py``` are currently configured for py3k. To run ```car.py```/unit tests in py2x, substitute them for the commented values

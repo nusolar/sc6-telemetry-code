@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # Copyright Alex Chandel, 2013. All rights reserved.
-import BaseHTTPServer, time, db, json
+import time, db, json
+try:
+	from http.server import HTTPServer, BaseHTTPRequestHandler
+except ImportError:
+	from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 
 def telemetry():
 	row = db.tables.data.last()
@@ -10,11 +14,11 @@ def telemetry():
 		 "mppt":{"T":40, "I":1}}
 	return {"telemetry": d}
 def populate():
-	return {"send": [(k, db.addr[k]) for k in sorted(db.addr.iterkeys())]}
+	return {"send": [(k, db.addr[k]) for k in sorted(db.addr.keys())]}
 
 api = {"populate": populate, "telemetry": telemetry}
 
-class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
+class Handler(BaseHTTPRequestHandler):
 	def log_request(self, code='-', size='-'):
 		pass
 	def do_HEAD(s):
@@ -30,7 +34,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		val = json.dumps( api[ s.path.split('?')[0].split('/')[1] ]() )
 		s.wfile.write('callback( %s )' % val)
 def run():
-	httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', 8080), Handler)
+	httpd = HTTPServer(('0.0.0.0', 8080), Handler)
 	print(time.asctime(), "Server Starts")
 	try:
 		httpd.serve_forever()
