@@ -20,12 +20,14 @@ def process(func):
 def hammer(callback):
 	ser = serial.Serial(files[sys.platform])
 	if not ser.isOpen(): print("WTF: %s isn't open" % ser.port) #DEBUG
-	ser.write("S8\rO\r")
-	sio = io.TextIOWrapper(io.BufferedReader(ser, 1), newline='\r')
-	while sio.readable():
-		line = sio.readline()
-		if line[0] != 't': continue
-		line = "{0:.6f}".format(time.time()) + line[:-1]
+	ser.write(b'S8\rO\r')
+	def newlines(buffer = b''):
+		while ser.isOpen():
+			buffer += ser.read(1)
+			if buffer[-1] is 13: yield buffer; buffer = b'' #b'\r'[0]
+	for line in newlines():
+		if line[0] != 116: continue #b't'[0]
+		line = "{0:.6f}".format(time.time()).encode('utf8') + line[:-1]
 		callback(line)
 def hephaestus():
 	con = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
