@@ -6,43 +6,38 @@ NUSolar SC6 telemetry code
 TODO
 ----
 
-Done: <s>We need to coalesce data packets into ∆t intervals.
-
+Done: <s>We need to coalesce data packets into ∆t intervals.</s>
+<s>
 * ∆t = 1s, for now.
 * What about packets sent every 5s?
 - Solution
-	A consumer will reshape each packet into a row element, and its timestamp is compared to the "working row". If ∆t<1s, the row is overlain by the element, and timestamps are met. If ∆t>1s, the row is committed, and the element forms a new row.</s>
+	A consumer will reshape each packet into a row element, and its timestamp is compared to the "working row". If ∆t<1s, the row is overlain by the element, and timestamps are met. If ∆t>1s, the row is committed, and the element forms a new row.
+</s>
 
 New carside-datapoints:
 
 * GPS sensor?
 * Elevation sensor?
 * Solar intensity
-	* Luminosity on array
-		* Include solar angle! Is the sensor Lambertian? Can it be laid parallel to the array?
-	-> Power per module
-* Array temperature sensor
+	-> Power per module (L,T)
+* Array Temperature
 
 Other variables:
 
 * Track length
-	- maybe from gps, or manual
+	- maybe from gps, or manually
 * Air temperature
 * <s>Time of Day</s>
 * Driver
 
 Events:
 
-* tire blowout
-* battery swap
+* tire blowout, battery swap, hotpit, crash
 * driver change
-* hotpit
-* crash
 
 End result:
 
-* Necessary laptime (from Energy and Power usage)
-* Predicted laptime (from velocity, elapsed time & remaining distance)
+* Necessary laptime (from Energy and Power usage), Predicted laptime (from velocity, elapsed time & remaining distance)
 
 Other – Tests:
 

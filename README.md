@@ -45,23 +45,23 @@ Usage
 Advanced Configuration
 ----------------------
 
-We can run arbitrary telemetry tasks.
+We can run arbitrary tasks and self-tests.
 
 laptop.py — the central task manager
 
-* Defines ```class Task```, wrapping a function. Also defines the ```roll``` dict, which contains all task instances to be run.
+* Defines ```class Task```, wrapping a function. Also declares the ```laptop.roll``` dict, which contains all task instances to be run.
 
-  Default tasks are the RabbitMQ server "```rmq``` ", the packet consumer "```rmq_consumer```", the artificial-packet transmitter "```rmq_producer```", and the web API "```json_server```".
+  Tasks currently include the RabbitMQ server "```rmq``` ", the packet consumer "```rmq_consumer```", the custom-packet transmitter "```rmq_producer```", and the web API "```json_server```".
 
-  To add a task, instantiate ```task``` with a function handle, and add it to ```roll```.
+  To add a task, instantiate ```Task``` with a function handle, and add it to ```roll```.
 
-consumer.py — the incoming mailroom
+consumer.py — the inbox
 
-* Incoming packets are passed to one of ```db.tables```.
+* Incoming packets are passed to a ```Table``` in ```db.tables``` for processing. Also defines functions to handle various Packet Data Types (e.g. 2 floats, 2 int32's, 1 int64, etc).
 
 db.py — the database controller
 
-* Defines ```class Table```, wrapping a SQL table. To add a new packet table, add an instance of ```class Table``` to ```db.tables```. For each custom table, add an entry to ```db._names```, ```db._sql```, and ```db._handlers```.
+* Defines ```class Table```, wrapping a SQL table. To add a custom packet table, add an entry to ```db._names```, ```db._sql```, and ```db._handlers```, and add an instance of ```class Table``` to ```db.tables```. Current tables heavily rely on the Packet Data Type functions in ``consumer.py``.
 
 test.py — powerful unit tests
 
