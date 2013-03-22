@@ -3,9 +3,9 @@
 import db, datetime, math
 
 con = db.con()
-def time(t):
+def time():
 	c = con.execute("SELECT time FROM data ORDER BY time DESC LIMIT 1")
-	return c.fetchone()[0]
+	return datetime.datetime.utcnow() - c.fetchone()[0]
 def derived():
 	num = db.tables.data.last()
 	(volts, max(volts), min(volts), sum(volts)/len(volts),

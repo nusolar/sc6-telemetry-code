@@ -8,7 +8,7 @@ def con(): return sqlite3.connect(db_path)
 
 sql = con()
 class Table:
-	def __init__(self, name, addParam = None):
+	def __init__(self, name, period=1, handler = None):
 		self.name = name
 		self.handlers = _handlers[name]
 		sql.execute(_create[name])
@@ -16,8 +16,8 @@ class Table:
 		self.row = tuple([None]*len(self.cols))
 		self._insert = "INSERT INTO %s VALUES (%s)" % (name, ','.join(['?']*len(self.cols))) #cache sql insert string
 		self._select_last = "SELECT FROM %s ORDER BY time DESC LIMIT 1" % self.name #cache sql select string
-		self.period = addParam if type(addParam) is int else 1
-		if inspect.isfunction(addParam): self.add = addParam 
+		self.period = period
+		if inspect.isfunction(handler): self.add = handler 
 	def add(self, match, v):
 		if self.row[0] is None: self.row[0] = v[0]
 		if v[0]-self.period > self.row[0]:
@@ -33,6 +33,8 @@ class Table:
 		return sql.execute(self._select_last).fetchall()
 	def vector(self, col):
 		return sql.execute(self._select_last).fetchall()
+	def __getitem__(self, key):
+		pass
 
 _names = ('data', 'cmds', 'trip', 'error')
 _create = {
@@ -84,12 +86,12 @@ _handlers = {
 			('_tx_trip',			trip,	'code',	'module')), #trip code
 	'error':(('_error', 			error,	'message'))} 
 
-def error_handle(self, match, v):
+def error_handler(self, match, v):
 	if self.row[0] is None: self.row[0] = v[0]
 	match[1](self, match, v[3])
 	if '\0' in self.row: self.commit()
 
-tables = (Table('data'), Table('cmds'), Table('trip',5), Table('error',error_handle))
+tables = (Table('data'), Table('cmds'), Table('trip',period=5), Table('error',handler=error_handler))
 
 #CAN_ADDRESSES.h
 _bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)

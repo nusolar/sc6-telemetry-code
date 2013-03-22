@@ -3,8 +3,9 @@
 import pika, serial, io, time, sys, multiprocessing as mp, threading as th
 local_queue = 'car_outbox'
 remote_queue = 'laptop_inbox'
+files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB0'}
 
-def loop(fun, xcpn = BaseException):
+def loop(fun, xcpn = Exception):
 	while True:
 		try: sys.tracebacklimit = 1; fun()
 		except (xcpn) as e:	print type(e).__name__+" on "+fun.func_name+": "+str(e)
@@ -16,23 +17,22 @@ def process(func):
 	p.start()
 	p.join()
 
-def hammer():
-	files = {'darwin':'/dev/tty.usbserial-LWR8N2L2', 'linux2':'/dev/ttyUSB0'}
-	ser = serial.Serial(files[sys.platform], baudrate=9600)
+def hammer(callback):
+	ser = serial.Serial(files[sys.platform])
 	if not ser.isOpen(): print("WTF: %s isn't open" % ser.port) #DEBUG
 	ser.write("S8\rO\r")
-	sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
+	sio = io.TextIOWrapper(io.BufferedReader(ser, 1), newline='\r')
 	while sio.readable():
 		line = sio.readline()
 		if line[0] != 't': continue
-		line = "{0:.6f}".format(time.time()) + line
-		print line #DEBUG
-		channel.basic_publish(exchange='',routing_key=local_queue,body=line)
+		line = "{0:.6f}".format(time.time()) + line[:-1]
+		callback(line)
 def hephaestus():
 	con = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-	channel = con.channel()
-	channel.queue_declare(queue=local_queue)
-	loop(hammer, serial.SerialException)
+	chan = con.channel()
+	chan.queue_declare(queue=local_queue)
+	loop(lambda:hammer(lambda x:chan.basic_publish(exchange='',routing_key=local_queue,body=x)), 
+		serial.SerialException)
 
 def hermes():
 	con1 = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
