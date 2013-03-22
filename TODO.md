@@ -6,13 +6,13 @@ NUSolar SC6 telemetry code
 TODO
 ----
 
-Done: <s>We need to coalesce data packets into ∆t intervals.</s>
-<s>
+Done: <del>We need to coalesce data packets into ∆t intervals.</del>
+<del>
 * ∆t = 1s, for now.
 * What about packets sent every 5s?
 - Solution
 	A consumer will reshape each packet into a row element, and its timestamp is compared to the "working row". If ∆t<1s, the row is overlain by the element, and timestamps are met. If ∆t>1s, the row is committed, and the element forms a new row.
-</s>
+</del>
 
 New carside-datapoints:
 
