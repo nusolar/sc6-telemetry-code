@@ -31,12 +31,12 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		s.wfile.write('callback( %s )' % val)
 def run():
 	httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', 8080), Handler)
-	print time.asctime(), "Server Starts"
+	print(time.asctime(), "Server Starts")
 	try:
 		httpd.serve_forever()
 	except (KeyboardInterrupt, SystemExit): pass
 	finally: pass
 	httpd.server_close()
-	print time.asctime(), "Server Stops"
+	print(time.asctime(), "Server Stops")
 
 if __name__ == '__main__': run()

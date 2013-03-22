@@ -1,5 +1,5 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika
+import pika, time
 
 local_queue = 'laptop_outbox'
 remote_queue = 'car_inbox'
@@ -23,10 +23,11 @@ def send():
 	chan1.start_consuming()
 
 def run():
+	global halt
 	try: 
 		while not halt:
 			try: send()
 			except (pika.exceptions.AMQPError): pass
-			finally: time.sleep(4)
-	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(4)
+			finally: time.sleep(3)
+	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(1)
 	finally: pass

@@ -5,7 +5,7 @@ NUSolar SC6 telemetry code
  
 Prerequisites
 -------------
-A POSIX operating system
+POSIX operating system
 
 Python >= 2.7.2 
 
@@ -32,7 +32,7 @@ RabbitMQ >= 3.0.2
 
 Installation
 ------------
-Install all dependencies first.
+Install the dependencies.
 
 Clone this project to desired installation directory.
 
@@ -47,19 +47,31 @@ Advanced Configuration
 
 We can run arbitrary telemetry tasks.
 
-laptop.py
+laptop.py — the central task manager
 
-* The central task manager. Defines ```class task```, which wraps a function. Also defines the ```roll``` dict, which contains all task instances to be run.
+* Defines ```class Task```, wrapping a function. Also defines the ```roll``` dict, which contains all task instances to be run.
 
   Default tasks are the RabbitMQ server "```rmq``` ", the packet consumer "```rmq_consumer```", the artificial-packet transmitter "```rmq_producer```", and the web API "```json_server```".
 
   To add a task, instantiate ```task``` with a function handle, and add it to ```roll```.
 
-consumer.py
+consumer.py — the incoming mailroom
 
-* The incoming mailroom. Incoming packets are sorted into one of ```db.tables```.
+* Incoming packets are passed to one of ```db.tables```.
 
-db.py
+db.py — the database controller
 
-* The database controller. To add a new packet table, add an instance of ```class table``` to ```db.tables```. For each custom table, add an entry to ```_names```, ```_sql```, and ```_handlers```.
+* Defines ```class Table```, wrapping a SQL table. To add a new packet table, add an instance of ```class Table``` to ```db.tables```. For each custom table, add an entry to ```db._names```, ```db._sql```, and ```db._handlers```.
 
+test.py — powerful unit tests
+
+* EVERYTHING is tested, obviating the need for factorial hardware testing. Tests include:
+  
+  * all communication: car-side packet sending, server-side packet reception, server-side sending, and car-side reception.
+  
+  * ```laptop.py```'s multiprocess managing
+  
+  * all analytics math, including: GeoLocation-->Luminosity; Time-of-Day/Year-->Luminosity; Luminosity-->Received Power; Car-Temperature-->Received Power; and Applied Power-->Velocity.
+  
+  * WebServer reachability
+  

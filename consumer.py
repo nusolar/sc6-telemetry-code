@@ -53,17 +53,18 @@ def receive():
 					break
 			else: continue
 			break
-		else: print "Unrecognized CAN packet: "+db.name.get(v[1],'???')+" ("+v[1]+"), " + v[3]
+		else: print("Unrecognized CAN packet: "+db.name.get(v[1],'???')+" ("+v[1]+"), " + v[3])
 		ch.basic_ack(method.delivery_tag)
 		if halt: channel.stop_consuming(); cxn.close()
 	channel.basic_consume(handle, queue='telemetry')
 	channel.start_consuming()
 
 def run():
+	global halt
 	try:
 		while not halt:
 			try: receive()
 			except (pika.exceptions.AMQPError): pass
-			finally: time.sleep(4)
-	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(4)
+			finally: time.sleep(3)
+	except (KeyboardInterrupt, SystemExit): halt=True#; time.sleep(1) #TODO cleaner quit
 	finally: pass #WARNING drops all temporary rows on crash

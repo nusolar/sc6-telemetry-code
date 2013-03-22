@@ -48,4 +48,4 @@ Other – Tests:
 
 * water spray. probably negligible. reflects light, evaporation cools cell.
 	measure (x10) array power (watching luminosity) vs water spray
-
+* Test consumer.py with dummy packets

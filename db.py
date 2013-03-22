@@ -7,7 +7,7 @@ db_path = os.path.expanduser('~') + '/Desktop/telemetry.db'
 def con(): return sqlite3.connect(db_path)
 
 sql = con()
-class table:
+class Table:
 	def __init__(self, name, addParam = None):
 		self.name = name
 		self.handlers = _handlers[name]
@@ -89,7 +89,7 @@ def error_handle(self, match, v):
 	match[1](self, match, v[3])
 	if '\0' in self.row: self.commit()
 
-tables = (table('data'), table('cmds'), table('trip',5), table('error',error_handle))
+tables = (Table('data'), Table('cmds'), Table('trip',5), Table('error',error_handle))
 
 #CAN_ADDRESSES.h
 _bases = (0x200, 0x210, 0x300, 0x310, 0x500, 0x400, 0x710, 0x770, 0x110, 0x500)
