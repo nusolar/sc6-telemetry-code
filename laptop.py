@@ -1,14 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright Alex Chandel, 2013. All rights reserved.
-import subprocess as sp, consumer, transmitter, server
-import multiprocessing as mp, db, sys, os, signal
+import subprocess as sp, consumer, transmitter, server, config
+import multiprocessing as mp, sys, os, signal
 
 class Task:
-	def __init__(self, runnable, kill = None):
+	"""Wraps a function, which is run in a subprocess."""
+	def __init__(self, name, runnable, kill = None):
+		self.name = name
 		self.run = runnable
 		self.kill = (lambda: os.kill(self.p.pid, signal.SIGINT)) if kill is None else kill
 		self.p = mp.Process()
-	def on(self): return self.p.is_alive()
+	def on(self):
+		return self.p.is_alive()
+	def __str__(self):
+		return self.name + " is " + ("on" if self.on() else "off")
 	def stop(self):
 		if self.on(): self.kill()
 	def start(self):
@@ -16,21 +21,30 @@ class Task:
 			self.p = mp.Process(target = self.run)
 			self.p.start()
 
-### NEW TASKS HERE ###
-roll = {'rmq':			Task(lambda: sp.Popen(['rabbitmq-server']).wait(), lambda:sp.Popen(['rabbitmqctl','stop'])),
-		'rmq_consumer':	Task(consumer.run),
-		'rmq_producer': Task(transmitter.run),
-		'json_server':	Task(server.run)}
+### NEW TASKS HERE, IN ORDER OF DEPENDENCE ###
+def rmq_main():
+	signal.signal(signal.SIGINT, signal.SIG_IGN)
+	sp.Popen([config.rmq_dir+'rabbitmq-server'], stdout = None if config.rmq_logging else sp.DEVNULL, start_new_session=True).wait()
+
+roll = (Task('rmq', rmq_main, kill = lambda: sp.Popen([config.rmq_dir + 'rabbitmqctl', 'stop']).wait()),
+		Task('rmq_consumer', consumer.run),
+		Task('rmq_producer', transmitter.run),
+		Task('json_server', server.run),)
 
 def begin():
-	for key,worker in roll.items():
+	for worker in roll:
 		worker.start()
-		print(key + " is " + ("on" if worker.on() else "off"))
-def quit():
-	for worker in roll.values(): worker.stop()
+		print(worker)
+
+def quit(num = None, frame = None):
+	print('Task Manager quitting...')
+	for worker in reversed(roll):
+		worker.stop()
 
 if __name__ == '__main__':
 	sys.tracebacklimit = 3
-	try: begin() #chill until all worker Processes terminate
+	try: begin() # chill until all worker Processes terminate
 	except (KeyboardInterrupt, SystemExit): quit()
-	finally: pass
+	finally:
+		signal.signal(signal.SIGINT, quit)
+		signal.signal(signal.SIGTERM, quit)

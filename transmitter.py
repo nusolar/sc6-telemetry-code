@@ -1,5 +1,5 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika, time, config
+import pika, time, config, signal, sys
 
 halt = False
 def send():
@@ -11,7 +11,7 @@ def send():
 	chan2.queue_declare(queue = config.efferent_publish)
 	print('Transmitter has connected.')
 	def callback(ch, method, properties, pkt):
-		chan2.basic_publish(exchange='',routing_key = config.efferent_inbox, body=pkt)
+		chan2.basic_publish(exchange='', routing_key = config.efferent_inbox, body=pkt)
 		if halt:
 			chan1.stop_consuming()
 			con1.close()
@@ -20,13 +20,16 @@ def send():
 	chan1.basic_consume(callback, queue = config.efferent_consumable)
 	chan1.start_consuming()
 
-def run():
+def stop(num, frame):
+	print('Transmitter stopping...')
 	global halt
+	halt = True
 	time.sleep(2)
-	try: 
-		while not halt:
-			try: send()
-			except (pika.exceptions.AMQPError, OSError): pass
-			finally: time.sleep(3)
-	except (KeyboardInterrupt, SystemExit): halt=True; time.sleep(1)
-	finally: pass
+	sys.exit()
+
+def run():
+	signal.signal(signal.SIGINT, stop)
+	while not halt:
+		time.sleep(2)
+		try: send()
+		except (pika.exceptions.AMQPError, OSError): pass
