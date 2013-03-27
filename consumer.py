@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright Alex Chandel, 2013. All rights reserved.
-import pika, time, config, signal, sys
+import pika, time, config, signal, sys, binascii
 
 #PACKET DATA TYPES
 def modules(table, match, data): # [uint32, float]
@@ -32,7 +32,7 @@ def trip(table, match, data): # [int32, uint32]
 	table.row[table.cols[match[2]]] = s if s < 2**32/2 else s-2**32
 	table.row[table.cols[match[3]]] = int(data[8:], 16)
 def error(table, match, data): # [char*8]
-	table.row[table.cols[match[2]]] += data.decode('hex')
+	table.row[table.cols[match[2]]] += binascii.unhexlify(data)
 def trash(table, match, data): # [char*4, uint32]
 	print("Trashing: "+str(data))
 

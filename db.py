@@ -133,9 +133,13 @@ _handlers = {
 	'error': (('_error',			error,	'message'),)}
 
 def error_handler(self, match, v):
-	if self.row[0] is None: self.row[0] = v[0]
+	if self.row[0] is None:
+		self.row[0] = v[0]
+		self.row[1] = b''
 	match[1](self, match, v[3])
-	if '\0' in self.row: self.commit()
+	if b'\0' in self.row[0] or len(self.row[0]) > 1000:
+		self.commit()
+		self.row[0] = None
 
 tables = (Table('data'), Table('cmds'), Table('trip', period=5), Table('error', handler=error_handler))
 
