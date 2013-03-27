@@ -24,7 +24,8 @@ class Task:
 ### NEW TASKS HERE, IN ORDER OF DEPENDENCE ###
 def rmq_main():
 	signal.signal(signal.SIGINT, signal.SIG_IGN)
-	sp.Popen([config.rmq_dir+'rabbitmq-server'], stdout = None if config.rmq_logging else sp.DEVNULL, start_new_session=True).wait()
+	sp.Popen([config.rmq_dir+'rabbitmq-server'], stdout = None if
+		config.rmq_logging else sp.DEVNULL, start_new_session=True).wait()
 
 roll = (Task('rmq', rmq_main, kill = lambda: sp.Popen([config.rmq_dir + 'rabbitmqctl', 'stop']).wait()),
 		Task('rmq_consumer', consumer.run),

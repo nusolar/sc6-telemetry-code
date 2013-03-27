@@ -3,15 +3,15 @@ import pika, time, config, signal, sys
 
 halt = False
 def send():
-	con1 = pika.BlockingConnection(pika.ConnectionParameters(host = 'localhost'))
+	con1 = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	chan1 = con1.channel()
 	chan1.queue_declare(queue = config.efferent_consumable)
-	con2 = pika.BlockingConnection(pika.ConnectionParameters(host = config.client_name))
+	con2 = pika.BlockingConnection(pika.ConnectionParameters(host=config.client_name))
 	chan2 = con2.channel()
 	chan2.queue_declare(queue = config.efferent_publish)
 	print('Transmitter has connected.')
 	def callback(ch, method, properties, pkt):
-		chan2.basic_publish(exchange='', routing_key = config.efferent_inbox, body=pkt)
+		chan2.basic_publish('', config.efferent_inbox, pkt)
 		if halt:
 			chan1.stop_consuming()
 			con1.close()

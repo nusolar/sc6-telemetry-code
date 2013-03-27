@@ -15,8 +15,9 @@ class Table:
 		sql.execute(_create[name])
 		self.cols = {colname: num for colname, num in ((x[1], x[0]) for x in sql.execute('PRAGMA table_info(%s)' % name).fetchall())}
 		self.clear_row()
-		self._insert = "INSERT INTO %s VALUES (%s)" % (name, ','.join(['?'] * len(self.cols))) # generate and save
-		self._select = "SELECT * FROM " + self.name + " ORDER BY time %s LIMIT %s OFFSET %s" # cache sql select string
+		# generate and cache SQL strings:
+		self._insert = "INSERT INTO %s VALUES (%s)" % (name, ','.join(['?'] * len(self.cols)))
+		self._select = "SELECT * FROM " + self.name + " ORDER BY time %s LIMIT %s OFFSET %s"
 		self._select_last = "SELECT * FROM %s ORDER BY time DESC LIMIT 1" % self.name
 
 		self.period = period
@@ -28,7 +29,7 @@ class Table:
 		elif v[0] - self.period > self.row[0]:
 			logging.debug('Commiting, old '+str(self.row[0])+', new '+str(v[0])+', packet: '+str(v[3]))
 			self.commit()
-			self.row[0] = v[0] # WARNING should zero/null row? Analysis could overwrite nulls, but could overflow
+			self.row[0] = v[0] # WARNING should zero/null row? overflows, but could overwrite nulls
 		match[1](self, match, v[3])
 	def clear_row(self):
 		self.row = [None] * len(self.cols)
@@ -63,7 +64,7 @@ class Table:
 		if key[0].start is None:
 			key = (slice(0, key[0].stop), key[1]) # x[:5] -> x[0:5], x[:-1] -> x[0:-1]
 		if key[0].stop is None or key[0].stop == 0:
-			key = (slice(key[0].start, -0.5), key[1])	 # wat. x[0:] -> x[0:len], x[-1:] -> x[-1:len], x[-1:0] -> x[-1:]
+			key = (slice(key[0].start, -0.5), key[1]) # wat. x[0:] -> x[0:len], x[-1:0] -> x[-1:] -> x[-1:len]
 		# TODO Efficient 1 row
 		# TODO Efficient 1 column
 		ascLimOff = None

@@ -14,9 +14,10 @@ def float2(table, match, data): # [float array, float batt]
 def int64(table, match, data): # [11 bits, 21 unused] or [12 bits, 20 unused]
 	table.row[table.cols[match[2]]] = int(data, 16)
 	#bits = bin(int(data,16))[2:] #bin -> "0b0123456789AB..."
-	#opts = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 buttons
-	#	"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown")['lights' in db.name[addr]].split(' ') #12 lights
-	#flags = ' '.join(opt for (bit,opt) in zip(bits[:len(opts)],opts) if bit=='1')
+	#opts = ("Left Right Yes No Maybe Haz Horn CEn CMode CUp CDown", #11 btns
+	#	"Left Right Marconi Yes Haz CEn CUp Maybe No Horn CMode CDown",
+	#	)['lights' in db.name[addr]].split(' ') #12 lights
+	#flags= ' '.join(opt for (bit,opt) in zip(bits[:len(opts)],opts) if bit=='1')
 def int2(table, match, data):
 	table.row[table.cols[match[2]]] = int(data[:8], 16)
 	if match[3]: table.row[table.cols[match[3]]] = int(data[8:], 16)
@@ -40,12 +41,14 @@ import db
 halt = False
 
 def handle(ch, method, hProperties, pkt):
-	"""Called to consume a RabbitMQ message. We extract the CAN data, find the correct table, and add it."""
+	"""Called to consume a RabbitMQ message. We extract the CAN data,
+	find the correct table, and add it."""
 	# print("Handling packet "+str(pkt)+" of type "+str(type(pkt)))
 	t = pkt.find(b't')
 	try:
 		if t is -1: raise ValueError # v = [time, addr, len, data]
-		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4], 16), int(bytes([pkt[t+4]]).decode(), 16), pkt[t+5:]) # WARNING PY2K, v[2]
+		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4], 16),
+			int(bytes([pkt[t+4]]).decode(), 16), pkt[t+5:]) # PY2K v[2]
 		for table in db.tables:
 			for match in table.handlers:
 				if match[0] in db.name.get(v[1], ''):
@@ -53,7 +56,9 @@ def handle(ch, method, hProperties, pkt):
 					break
 			else: continue
 			break
-		else: print("Unrecognized CAN packet: " + db.name.get(v[1], '???') + " (" + hex(v[1]) + "), contents: " + v[3].decode())
+		else:
+			print("Unrecognized CAN packet: " + db.name.get(v[1], '???') +
+				" (" + hex(v[1]) + "), contents: " + v[3].decode())
 	except (IndexError, ValueError):
 		print("Unintelligible packet: " + str(pkt))
 	finally:
@@ -62,7 +67,7 @@ def handle(ch, method, hProperties, pkt):
 			if halt: ch.stop_consuming()
 
 def receive(callback = handle):
-	cxn = pika.BlockingConnection(pika.ConnectionParameters(host = 'localhost'))
+	cxn = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	channel = cxn.channel()
 	channel.queue_declare(queue = config.afferent_server_inbox)
 	print('Consumer has connected.')

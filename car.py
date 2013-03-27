@@ -6,7 +6,7 @@ halt = False
 def loop(fun, xcpn = Exception):
 	while not halt:
 		try: sys.tracebacklimit = 3; fun()
-		except (xcpn) as e: print(type(e).__name__ + " on " + fun.__name__ + ": " + str(e))
+		except (xcpn) as e: print(type(e).__name__+" on "+fun.__name__+": "+str(e))
 		finally: time.sleep(config.loop_delay)
 
 def process(func):
@@ -32,19 +32,19 @@ def hephaestus(callbacker = hammer):
 	con = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	chan = con.channel()
 	chan.queue_declare(queue = config.afferent_client_outbox)
-	loop(lambda: callbacker(lambda x: chan.basic_publish(exchange='',
-		routing_key = config.afferent_client_outbox, body=x)), serial.SerialException)
+	loop(lambda: callbacker(lambda x: chan.basic_publish('',
+		config.afferent_client_outbox, x)), serial.SerialException)
 	con.close()
 
 def hermes():
 	con1 = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 	chan1 = con1.channel()
 	chan1.queue_declare(queue = config.afferent_client_outbox)
-	con2 = pika.BlockingConnection(pika.ConnectionParameters(host = config.server_name))
+	con2 = pika.BlockingConnection(pika.ConnectionParameters(host=config.server_name))
 	chan2 = con2.channel()
 	chan2.queue_declare(queue = config.afferent_server_inbox)
 	def callback(ch, method, properties, pkt):
-		chan2.basic_publish(exchange='', routing_key = config.afferent_server_inbox, body=pkt)
+		chan2.basic_publish('', config.afferent_server_inbox, pkt)
 		ch.basic_ack(method.delivery_tag)
 		if halt: ch.stop_consuming()
 	chan1.basic_consume(callback, queue = config.afferent_client_outbox)

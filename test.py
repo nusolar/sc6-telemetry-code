@@ -12,7 +12,7 @@ class TestCanUsb(unittest.TestCase):
 		car.halt = False
 
 	def test_car_reading(self):
-		print("TEST: Car activates CANUSB, reads & processes sample garbage packet.")
+		print("TEST: Car activates CANUSB, reads & processes sample packet.")
 		master, slave = pty.openpty()
 		name = os.ttyname(slave)
 		config.files[sys.platform] = name
@@ -44,7 +44,7 @@ class TestAnalysis(unittest.TestCase):
 		self.assertAlmostEqual(analysis.cosTheta(-analysis.pi, analysis.pi / 2, datetime.datetime(2013, 3, 20, 12, 0, 0)), -1)
 
 	def test_array_power(self):
-		print("TEST: Calculate array power from luminosity & PV cell temperature")
+		print("TEST: Calculate array power from luminosity & PV cell temp")
 		self.assertAlmostEqual(analysis.arrayPower(950, 59), 995.41, places=2)
 
 	def test_drag(self):
@@ -66,7 +66,7 @@ class TestMessageQueues(unittest.TestCase):
 		time.sleep(3)
 
 	def setUp(self):
-		self.cxn = pika.BlockingConnection(pika.ConnectionParameters(host = 'localhost'))
+		self.cxn = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 		self.channel = self.cxn.channel()
 		# self.channel.queue_delete(queue = config.afferent_client_outbox)
 		# self.channel.queue_delete(queue = config.afferent_server_inbox)
@@ -88,7 +88,7 @@ class TestMessageQueues(unittest.TestCase):
 		hephaestus_th.start()
 		time.sleep(0.1)
 
-		method, header, body = self.channel.basic_get(queue = config.afferent_client_outbox)
+		method, header, body = self.channel.basic_get(queue=config.afferent_client_outbox)
 		self.assertNotEqual(method.NAME, 'Basic.GetEmpty')
 		print("hephaestus... " + str(body))
 
@@ -99,10 +99,10 @@ class TestMessageQueues(unittest.TestCase):
 		hermes_th.start()
 		time.sleep(0.1)
 
-		self.channel.basic_publish(exchange='', routing_key = config.afferent_client_outbox, body = b'succeeded!')
+		self.channel.basic_publish('', config.afferent_client_outbox, b'succeeded!')
 		time.sleep(0.1)
 
-		method, header, body = self.channel.basic_get(queue = config.afferent_server_inbox)
+		method, header, body = self.channel.basic_get(queue=config.afferent_server_inbox)
 		self.assertNotEqual(method.NAME, 'Basic.GetEmpty')
 		print("hermes... " + str(body))
 
@@ -119,7 +119,7 @@ class TestMessageQueues(unittest.TestCase):
 		receive_th.start()
 		time.sleep(0.1)
 
-		self.channel.basic_publish(exchange='', routing_key = config.afferent_server_inbox, body = b'succeeded!')
+		self.channel.basic_publish('', config.afferent_server_inbox, b'succeeded!')
 		time.sleep(0.1)
 
 		self.assertNotEqual(pkt, None)
@@ -145,7 +145,7 @@ class TestProcessIntegration(unittest.TestCase):
 	def setUp(self):
 		laptop.begin()
 		time.sleep(6)
-		self.cxn = pika.BlockingConnection(pika.ConnectionParameters(host = 'localhost'))
+		self.cxn = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 		self.channel = self.cxn.channel()
 		car.halt = False
 		consumer.halt = False
@@ -168,9 +168,9 @@ class TestProcessIntegration(unittest.TestCase):
 	def test_server_integration(self):
 		print("BIGTEST: Packet travels to Queue, to Consumer, to Packet Handler, to SQLite DB")
 		now = time.time()
-		self.channel.basic_publish(exchange='', routing_key = config.afferent_server_inbox, body = str(now).encode()+b't2109SysIntTst')
-		time.sleep(1.5)
-		self.channel.basic_publish(exchange='', routing_key = config.afferent_server_inbox, body = str(time.time()).encode()+b't2109SysIntTs2')
+		self.channel.basic_publish('', config.afferent_server_inbox, str(now).encode()+b't2109SysIntTst')
+		time.sleep(2)
+		self.channel.basic_publish('', config.afferent_server_inbox, str(time.time()).encode()+b't2109SysIntTs2')
 		time.sleep(0.1)
 		self.assertEqual(db.tables[0][-1, 0][0][0], int(now))
 
