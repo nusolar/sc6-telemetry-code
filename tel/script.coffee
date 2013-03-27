@@ -65,7 +65,7 @@ redraw = ->
 	[drawCar, drawPlots, drawStrategy , (->), drawSend][page]()
 centerTabs = ->
 	return true unless $('.ui-corner-top').size()
-	margin = $('.ui-corner-top').map( -> $(this).width() ).get().reduce (l,r) -> l+r 
+	margin = $('.ui-corner-top').map( -> $(this).width() ).get().reduce (l,r) -> l+r
 	$('#t1').css('margin-left', ($('#tabBar').width() - margin)/2)
 drawCar = ->
 	return true unless $('#driverSvg').children().size() && $('#bboxSvg').children().size()

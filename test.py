@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Copyright Alex Chandel, 2013. All rights reserved.
 import unittest, datetime, time, sys, os, pty, threading as th, pika, config
+# Set up testing variables before importing Telemetry
 config.server_name = 'localhost'
 config.client_name = config.server_name
 config.loop_delay = 0.1
@@ -16,13 +17,11 @@ class TestCanUsb(unittest.TestCase):
 		name = os.ttyname(slave)
 		config.files[sys.platform] = name
 		pkt = None
+
 		def hammer_callback(line):
 			nonlocal pkt
 			pkt = line
-		def hammer_f():
-			try: car.hammer(hammer_callback)
-			except (IOError) as e: print(e)
-		hammer_th = th.Thread(target = hammer_f)
+		hammer_th = th.Thread(target = lambda: car.hammer(hammer_callback))
 		hammer_th.start()
 
 		x = os.read(master, 1000)
@@ -81,6 +80,7 @@ class TestMessageQueues(unittest.TestCase):
 	def test_afferent_car1(self):
 		config.loop_delay = 0
 		print("TEST: Car caches CAN packet on local queue. (\"hephaestus\")")
+
 		def heph_callbacker(callback):
 			car.halt = True
 			callback(b'succeeded!')
@@ -98,7 +98,7 @@ class TestMessageQueues(unittest.TestCase):
 		hermes_th = th.Thread(target = car.hermes)
 		hermes_th.start()
 		time.sleep(0.1)
-		
+
 		self.channel.basic_publish(exchange='', routing_key = config.afferent_client_outbox, body = b'succeeded!')
 		time.sleep(0.1)
 
@@ -109,6 +109,7 @@ class TestMessageQueues(unittest.TestCase):
 	def test_afferent_server(self):
 		print("TEST: Server receives & consumes packets.")
 		pkt = None
+
 		def receive_callback(ch, method, header, body):
 			nonlocal pkt
 			pkt = body
@@ -125,6 +126,7 @@ class TestMessageQueues(unittest.TestCase):
 		print("consumer... " + str(pkt))
 
 class TestPacketHandling(unittest.TestCase):
+	"""Tests parsing packets/entering into dictionary"""
 	def test_handling(self):
 		data = db.tables[0]
 		data.clear_row()
@@ -133,25 +135,44 @@ class TestPacketHandling(unittest.TestCase):
 		pkt = str(time.time()).encode() + b't0008AlexTest'
 		consumer.handle(None, None, None, pkt)
 		now = time.time()
-		pkt = str(now).encode() + b't2108AlexTest' # 0x210 heartbeat packet
+		pkt = str(now).encode() + b't2109HeartTest' # 0x210 heartbeat packet
 		consumer.handle(None, None, None, pkt)
 		self.assertIs(type(data.row[0]), int)
 		self.assertEqual(data.row[0], int(now))
 
-class TestProcessManager(unittest.TestCase):
-	"""Tests the raising and killing of worker processes"""
+class TestProcessIntegration(unittest.TestCase):
+	"""Make sure the Task Manager, Consumer, and DB all play nicely"""
 	def setUp(self):
+		laptop.begin()
+		time.sleep(6)
+		self.cxn = pika.BlockingConnection(pika.ConnectionParameters(host = 'localhost'))
+		self.channel = self.cxn.channel()
 		car.halt = False
 		consumer.halt = False
 
-	def test_laptop_halting(self):
-		print("TEST: Gracefully spawn/terminate all processes.")
-		laptop.begin()
-		time.sleep(6)
+	def tearDown(self):
+		if self.cxn.is_open: self.cxn.close()
 		laptop.quit()
-		time.sleep(5)
-		for worker in laptop.roll:
+		time.sleep(3)
+
+	def test_process_halting(self):
+		"""Tests the raising and killing of worker processes"""
+		print("BIGTEST: Gracefully spawn/terminate all processes.")
+		# [self.assertIs(worker.on(), True) for worker in laptop.roll]
+		self.cxn.close()
+		laptop.quit()
+		time.sleep(3.1)
+		for worker in reversed(laptop.roll):
 			self.assertFalse(worker.on())
+
+	def test_server_integration(self):
+		print("BIGTEST: Packet travels to Queue, to Consumer, to Packet Handler, to SQLite DB")
+		now = time.time()
+		self.channel.basic_publish(exchange='', routing_key = config.afferent_server_inbox, body = str(now).encode()+b't2109SysIntTst')
+		time.sleep(1.5)
+		self.channel.basic_publish(exchange='', routing_key = config.afferent_server_inbox, body = str(time.time()).encode()+b't2109SysIntTs2')
+		time.sleep(0.1)
+		self.assertEqual(db.tables[0][-1, 0][0][0], int(now))
 
 if __name__ == '__main__':
 	unittest.main()

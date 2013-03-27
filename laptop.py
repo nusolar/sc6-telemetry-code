@@ -4,7 +4,7 @@ import subprocess as sp, consumer, transmitter, server, config
 import multiprocessing as mp, sys, os, signal
 
 class Task:
-	"""Wraps a function, which is run in a subprocess."""
+	"""Wraps a function, and runs it in a child process."""
 	def __init__(self, name, runnable, kill = None):
 		self.name = name
 		self.run = runnable
@@ -31,15 +31,16 @@ roll = (Task('rmq', rmq_main, kill = lambda: sp.Popen([config.rmq_dir + 'rabbitm
 		Task('rmq_producer', transmitter.run),
 		Task('json_server', server.run),)
 
-def begin():
-	for worker in roll:
-		worker.start()
-		print(worker)
-
 def quit(num = None, frame = None):
 	print('Task Manager quitting...')
 	for worker in reversed(roll):
 		worker.stop()
+
+def begin():
+	"""Main Telemetry function! Spawns all Tasks in roll in separate processes."""
+	for worker in roll:
+		worker.start()
+		print(worker)
 
 if __name__ == '__main__':
 	sys.tracebacklimit = 3

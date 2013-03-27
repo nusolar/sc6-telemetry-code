@@ -28,8 +28,9 @@ def stop(num, frame):
 	sys.exit()
 
 def run():
+	"""Run the Transmitter. Must be run by laptop.py in a separate process."""
 	signal.signal(signal.SIGINT, stop)
 	while not halt:
-		time.sleep(2)
+		time.sleep(3)
 		try: send()
 		except (pika.exceptions.AMQPError, OSError): pass

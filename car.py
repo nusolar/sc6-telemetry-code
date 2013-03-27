@@ -17,8 +17,8 @@ def process(func):
 
 def hammer(callback):
 	with serial.Serial(config.files[sys.platform]) as ser:
-		if not ser.isOpen(): print("WTF: %s isn't open" % ser.port) # DEBUG
 		ser.write(b'S8\rO\r')
+
 		def newlines(buffer = b''):
 			while not halt:
 				while ser.isOpen() and halt is not None:

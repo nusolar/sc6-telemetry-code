@@ -9,8 +9,8 @@ except ImportError:
 def telemetry():
 	row = db.tables[0].last()
 	# SQL queries:
-	d = {"bms":{"I":1, "CC":6, "Wh":7, "uptime":1}, "bms_V": [.421], "bms_T": [39], "bms_owV": [.421], 
-		 "array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0}, "ws": {"v":23, "I":2, "V":20, "T":50, "e":31}, 
+	d = {"bms":{"I":1, "CC":6, "Wh":7, "uptime":1}, "bms_V": [.421], "bms_T": [39], "bms_owV": [.421],
+		 "array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0}, "ws": {"v":23, "I":2, "V":20, "T":50, "e":31},
 		 "mppt":{"T":40, "I":1}, "time":row[0]}
 	return {"telemetry": d}
 def populate():
@@ -35,6 +35,7 @@ class Handler(BaseHTTPRequestHandler):
 		s.wfile.write('callback( %s )' % val)
 
 def run():
+	"""Run the Web API Server. Must be run by laptop.py in a separate process."""
 	httpd = HTTPServer(('0.0.0.0', 8080), Handler)
 	httpd_th = th.Thread(target = httpd.serve_forever)
 	def stop(num, frame):

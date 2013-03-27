@@ -40,11 +40,12 @@ import db
 halt = False
 
 def handle(ch, method, hProperties, pkt):
+	"""Called to consume a RabbitMQ message. We extract the CAN data, find the correct table, and add it."""
 	# print("Handling packet "+str(pkt)+" of type "+str(type(pkt)))
-	t = pkt.find(b't') # v = [time, addr, len, data]
+	t = pkt.find(b't')
 	try:
-		if t is -1: raise ValueError
-		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4], 16), pkt[t+4], pkt[t+5:]) # WARNING PY2K, v[2]
+		if t is -1: raise ValueError # v = [time, addr, len, data]
+		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4], 16), int(bytes([pkt[t+4]]).decode(), 16), pkt[t+5:]) # WARNING PY2K, v[2]
 		for table in db.tables:
 			for match in table.handlers:
 				if match[0] in db.name.get(v[1], ''):
@@ -77,8 +78,9 @@ def stop(num, frame):
 	sys.exit() # TODO cleaner quit
 
 def run():
+	"""Run the Consumer. Must be run by laptop.py in a separate process."""
 	signal.signal(signal.SIGINT, stop)
 	while not halt:
-		time.sleep(2)
+		time.sleep(3)
 		try: receive() # WARNING drops every temporary row on crash
 		except (pika.exceptions.AMQPError, OSError): pass
