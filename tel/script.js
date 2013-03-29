@@ -66,7 +66,7 @@
         return redraw();
       }
     });
-    $('footer').prepend("Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; ");
+    $('footer').prepend("Via CoffeeScript 1.6, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; ");
     return window.setInterval(tic, 5000);
   });
 

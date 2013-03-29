@@ -172,7 +172,7 @@ class TestProcessIntegration(unittest.TestCase):
 		time.sleep(2)
 		self.channel.basic_publish('', config.afferent_server_inbox, str(time.time()).encode()+b't2109SysIntTs2')
 		time.sleep(0.1)
-		self.assertEqual(db.tables[0][-1, 0][0][0], int(now))
+		self.assertEqual(db.tables[0][-1, 0], int(now))
 
 if __name__ == '__main__':
 	unittest.main()

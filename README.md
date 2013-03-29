@@ -2,7 +2,7 @@ telem
 =====
 
 NUSolar SC6 telemetry code
- 
+
 Prerequisites
 -------------
 POSIX operating system
@@ -24,10 +24,10 @@ RabbitMQ ≥ 3.0.2
   NOTE: Most distributions do not provide a new enough g++.
   If this is the case for you, then you will need to install and use clang/LLVM (below) to compile the telemetry code.
   However, you should still follow these directions to install build-essential as it will be needed to compile the dependencies.
-  
-  
+
+
   In Debian/Ubuntu/Mint, can be installed with
-  
+
   ```
   sudo apt-get install build-essential
   ```
@@ -38,10 +38,12 @@ Install the dependencies.
 
 Clone this project to desired installation directory.
 
+In ```config.py```, set the server & laptop hostname, and the CANUSB device location for your ```sys.platform```.
+
 Usage
 -----
 
-* ```cd``` to the installation directory 
+* ```cd``` to the installation directory
 * type ```./laptop.py```
 * to run self-test, type ```./test.py```
 
@@ -64,7 +66,7 @@ consumer.py — the inbox
 
 db.py — the database controller
 
-* Defines ```class Table```, wrapping a SQL table. Also defines the ```db.tables``` tuple, which holds active ```Table``` instances. 
+* Defines ```class Table```, wrapping a SQL table. Also defines the ```db.tables``` tuple, which holds active ```Table``` instances.
 
   To add a custom packet table, add an entry to ```db._names```, ```db._sql```, and ```db._handlers```, and append a ```Table``` instance to ```db.tables```'s definition. Current tables heavily rely on the Packet Data Type functions in ``consumer.py``.
 
@@ -79,11 +81,11 @@ config.py — configuration options
 test.py — powerful unit tests
 
 * EVERYTHING is tested, obviating the need for factorial hardware testing. Tests include:
-  
+
   * all communication: car-side packet sending, server-side packet reception, server-side sending, and car-side reception.
-  
+
   * ```laptop.py```'s multiprocess management
-  
+
   * analytics math, including: GeoLocation-->Luminosity; Time-of-Day/Year-->Luminosity; Luminosity-->Received Power; Car-Temperature-->Received Power; and Applied Power-->Velocity.
-  
+
   * WebServer reachability

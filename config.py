@@ -1,6 +1,6 @@
 # Copyright Alex Chandel, 2013. All rights reserved.
 
-# CANUSB location
+# CANUSB device file dictionary. the key is sys.platform
 files = {'darwin': '/dev/tty.usbserial-LWR8N2L2', 'linux2': '/dev/ttyUSB0'}
 loop_delay = 4
 

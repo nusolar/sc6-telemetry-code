@@ -29,7 +29,7 @@ $ ->
 			window.scrollTo(0, 0)
 			whoami()
 			redraw()
-	$('footer').prepend "Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
+	$('footer').prepend "Via CoffeeScript 1.6, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
 	window.setInterval tic, 5000
 
 grabSet = (key, dest) ->

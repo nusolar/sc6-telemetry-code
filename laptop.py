@@ -27,7 +27,7 @@ def rmq_main():
 	sp.Popen([config.rmq_dir+'rabbitmq-server'], stdout = None if
 		config.rmq_logging else sp.DEVNULL, start_new_session=True).wait()
 
-roll = (Task('rmq', rmq_main, kill = lambda: sp.Popen([config.rmq_dir + 'rabbitmqctl', 'stop']).wait()),
+roll = (Task('rmq', rmq_main, kill = lambda: sp.Popen([config.rmq_dir+'rabbitmqctl', 'stop']).wait()),
 		Task('rmq_consumer', consumer.run),
 		Task('rmq_producer', transmitter.run),
 		Task('json_server', server.run),)

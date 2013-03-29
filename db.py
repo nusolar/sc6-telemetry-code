@@ -10,8 +10,7 @@ sql = con()
 class Table:
 	def __init__(self, name, period = config.default_period, handler = None):
 		self.name = name
-		self.handlers = _handlers[name]
-
+		# create SQL table & temporary row
 		sql.execute(_create[name])
 		self.cols = {colname: num for colname, num in ((x[1], x[0]) for x in sql.execute('PRAGMA table_info(%s)' % name).fetchall())}
 		self.clear_row()
@@ -19,7 +18,8 @@ class Table:
 		self._insert = "INSERT INTO %s VALUES (%s)" % (name, ','.join(['?'] * len(self.cols)))
 		self._select = "SELECT * FROM " + self.name + " ORDER BY time %s LIMIT %s OFFSET %s"
 		self._select_last = "SELECT * FROM %s ORDER BY time DESC LIMIT 1" % self.name
-
+		# attach custom behavior
+		self.handlers = _handlers[name]
 		self.period = period
 		if inspect.isfunction(handler): self.add = handler
 	def add(self, match, v):
@@ -33,8 +33,8 @@ class Table:
 		match[1](self, match, v[3])
 	def clear_row(self):
 		self.row = [None] * len(self.cols)
-	def commit(self):
-		sql.execute(self._insert, self.row)
+	def commit(self, row = None):
+		sql.execute(self._insert, self.row if row is not tuple else row)
 		sql.commit()
 	def count(self):
 		return sql.execute("SELECT COUNT(*) FROM " + self.name).fetchone()[0]
@@ -51,7 +51,12 @@ class Table:
 		x[:,0] -> the 0th column (col vector)
 		x[-5:,:] <==> x[-5:] (matrix)
 
-		Backwards slices x[5:0] are not supported!
+		x[slice m, slice n] -> a matrix!
+		x[int m, slice n] -> a vector!
+		x[slice m, int n] -> a vector!
+		x[int m, int n] -> a scalar!
+
+		Backwards slices like x[5:0] are not supported!
 		"""
 		# non-tuple requests to tuples
 		if type(key) is int:
@@ -59,31 +64,40 @@ class Table:
 		elif type(key) is slice:
 			key = (key, slice(None)) # slice --> matrix of rows, all cols
 		# scalar to vector
-		key = [slice(k, k+1) if type(k) is int else k for k in key]
+		slices = [slice(k, k+1) if type(k) is int else k for k in key]
 		# TODO Test for backwards slices / Flip forwards
-		if key[0].start is None:
-			key = (slice(0, key[0].stop), key[1]) # x[:5] -> x[0:5], x[:-1] -> x[0:-1]
-		if key[0].stop is None or key[0].stop == 0:
-			key = (slice(key[0].start, -0.5), key[1]) # wat. x[0:] -> x[0:len], x[-1:0] -> x[-1:] -> x[-1:len]
+		if slices[0].start is None:
+			slices[0] = slice(0, slices[0].stop) # x[:5] -> x[0:5], x[:-1] -> x[0:-1]
+		if slices[0].stop is None or slices[0].stop == 0:
+			slices[0] = slice(slices[0].start, -0.5) # x[0:] -> x[0:end], x[-1:] -> x[-1:end], -0.5 := end
 		# TODO Efficient 1 row
 		# TODO Efficient 1 column
 		ascLimOff = None
-		if key[0].start>=0 and key[0].stop>=0: # 0 anchored
-			ascLimOff = ["ASC", key[0].stop - key[0].start, key[0].start]
-			if key[0].stop == -0.5: ascLimOff[1] = -1
-		elif key[0].start<0 and key[0].stop<0: # -1 anchored
-			sl = slice(int(-key[0].stop), -key[0].start) # int(--0.5)==0
+		if slices[0].start>=0 and slices[0].stop>=0: # positive slice
+			ascLimOff = ["ASC", slices[0].stop - slices[0].start, slices[0].start]
+			if slices[0].stop == -0.5:
+				ascLimOff[1] = -1 # -> LIMIT ALL
+		elif slices[0].start<0 and slices[0].stop<0: # negative slice
+			sl = slice(int(-slices[0].stop), -slices[0].start) # int(--0.5) == 0 -> OFFSET 0
 			ascLimOff = ("DESC", sl.stop - sl.start, sl.start)
-		elif key[0].start>=0 and key[0].stop<0: # 0->-1 spanning
-			ascLimOff = ["ASC", self.count() + key[0].stop - key[0].start, key[0].start]
-			if key[0].stop == -0.5: ascLimOff[1] = -1
+		elif slices[0].start>=0 and slices[0].stop<0: # positive to negative
+			ascLimOff = ["ASC", self.count() + slices[0].stop - slices[0].start, slices[0].start]
+			if slices[0].stop == -0.5:
+				ascLimOff[1] = -1 # -> LIMIT ALL
 
-		matrix = sql.execute(self._select % tuple(ascLimOff)).fetchall()
-		if key[0].start<0 and key[0].stop<0: # -1 anchored, second correction
+		matrix = sql.execute(self._select % tuple(ascLimOff)).fetchall() # apply row selection
+		if slices[0].start<0 and slices[0].stop<0: # must row-reverse for negative slices
 			matrix = reversed(matrix)
-		return [r[key[1]] for r in matrix] # apply column selection
 
-_names = ('data', 'cmds', 'trip', 'error')
+		# matrix = [r[slices[1]] for r in matrix] # apply column selection, PRESERVE n-by-1-MATRIX
+		matrix = [r[key[1]] for r in matrix] # apply column selection. COLLAPSE IF integer col index
+		if type(key[0]) is int: # integer row index --> COLLAPSE TO VECTOR
+			matrix = matrix[0] # yields a scalar if both indices are integers
+
+		return matrix
+
+
+_names = ('data', 'cmds', 'trip', 'error', 'events')
 _create = {
 	'data': "CREATE TABLE IF NOT EXISTS data(time real, bms_bypass int, bms_I real, bms_CC real, bms_Wh real, \
 		V1 real, V2 real, V3 real, V4 real, V5 real, V6 real, V7 real, V8 real, V9 real, V10 real, V11 real, V12 real, V13 real, V14 real, V15 real, V16 real, \
@@ -93,11 +107,12 @@ _create = {
 		array_I real, array_CC real, \
 		mppt_tx real, \
 		mc_Rpm real, mc_Vel real, mc_Iim real, mc_Ire real, mc_Vim real, mc_Vre real, mc_Tin real, mc_Tsink real, mc_emf real, mc_e real, \
-		sw_b int, sw_l int)",
+		sw_b int, sw_l int, driver text)",
 	'cmds': "CREATE TABLE IF NOT EXISTS cmds (time real, mc_driveVel real, mc_driveI real, mc_power real, \
 		dc_horn bit, dc_leftSig bit, dc_rightSig bit, dc_reverse bit, dc_cruiseEn bit, dc_cruiseVel real, dc_cruiseI real)",
 	'trip': "CREATE TABLE IF NOT EXISTS trip (time real, code int, module int, Ilow real, Ihi real, Vlow real, Vhi real, Tlow real, Thi real)",
-	'error': "CREATE TABLE IF NOT EXISTS error (time real, message text)"}
+	'error': "CREATE TABLE IF NOT EXISTS error (time real, message text)",
+	'events': "CREATE TABLE IF NOT EXISTS events (time real, event text)"}
 _handlers = {
 	'data': (('bms_tx_batt_bypass',	int2, 'bms_bypass', ''), # bms_tx_last_reset[int32,:] & bms_tx_last_trip[int32,uint32] unhandled
 			('bms_tx_current',	float2, 'array_I', 'bms_I'),
@@ -131,7 +146,15 @@ _handlers = {
 			('_tx_trip_pt_voltage',	float2,	'Vlow',	'Vhi'),
 			('_tx_trip_pt_temp',	float2,	'Tlow',	'Thi'),
 			('_tx_trip',			trip,	'code',	'module'),), # trip code
-	'error': (('_error',			error,	'message'),)}
+	'error': (('_error', error, 'message'),),
+	'events': (
+		('event_hotpit_tire_swap',),
+		('event_hotpit_battery_swap',),
+		('event_hotpit_other',),
+		('event_driver_swap',),
+		('event_stop',),
+		('event_crash',),)
+}
 
 def error_handler(self, match, v):
 	if self.row[0] is None:
@@ -141,7 +164,8 @@ def error_handler(self, match, v):
 	if b'\0' in self.row[0] or len(self.row[0]) > 1000:
 		self.commit()
 		self.row[0] = None
-
+def event_handler(self, match, v):
+	se
 tables = (Table('data'), Table('cmds'), Table('trip', period=5), Table('error', handler=error_handler))
 
 #CAN_ADDRESSES.h
