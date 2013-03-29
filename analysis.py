@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Copyright Alex Chandel, 2013. All rights reserved.
-import db, datetime, math
+import db, datetime, math, time
 
 con = db.con()
-def time():
+def last_time():
 	c = con.execute("SELECT time FROM data ORDER BY time DESC LIMIT 1")
 	return datetime.datetime.utcnow() - c.fetchone()[0]
 def derived():
@@ -28,12 +28,12 @@ def powerOut(v, T=25, P=101325, H=0): # [m/s], T[dC], P[Pa], H[]
 	CD = 0.105636
 	Crr = 0.00475 # @100kph, 6kg/cm^2
 	# W' = .5 rho v^3 Af CD  +  W Crr v
-	return .5*rho * v**3 *Af*CD  +  W*Crr* v
+	return .5*rho * v**3 *Af*CD + W*Crr* v
 
 def arrayPower(L=1365, T=59):
-	L_ref = 0.300 #W/cm^2
-	T_ref = 30 #dC
-	Isc_ref = 0.14 #A
+	L_ref = 0.300 # W/cm^2
+	T_ref = 30 # dC
+	Isc_ref = 0.14 # A
 	I_ref = lambda V: Isc_ref*(1-V^5/1)
 	#regression to alpha, beta, K, Rs
 	Delta_Isc = lambda L, T: Isc_ref*(L/L_ref-1) + alpha*(T-T_ref)
@@ -42,9 +42,10 @@ def arrayPower(L=1365, T=59):
 	#Ia = Ib + Ig + Ir
 	return (0.3382+0.3493+0.3603)*L # [W] @ 59dC
 
-def cosTheta(longitudeRad=-110.9625*pi/180, phi=48.7317*pi/180, utcnow = datetime.datetime.utcnow()): # [rad], [rad], [datetime]
-	n_days = (utcnow - datetime.datetime(2000, 1, 1, 12, 0, 0, 0))
-	n_days = n_days.days + float(n_days.seconds)/86400 # num Julian days
+J2000 = datetime.datetime(2000, 1, 1, 12, 0, 0, 0, tzinfo=datetime.timezone.utc).timestamp()
+def cosTheta(longitudeRad=-110.9625*pi/180, phi=48.7317*pi/180, unixTime = time.time()): # [rad], [rad], [unix time]
+	n_days = (unixTime - J2000)/86400 # num solar days since J2000
+	# n_days = n_days.days + n_days.seconds/86400
 	ec_Lm = (280.460 + 0.9856474*n_days)%360 # mean longitude [degrees]
 	ec_g = (357.528 + 0.9856003*n_days)%360 *pi/180 # mean anomaly [rad]
 	ec_L = (ec_Lm + 1.915*math.sin(ec_g) + 0.020*math.sin(2*ec_g)) *pi/180 # ecliptic longitude [rad]
@@ -53,6 +54,7 @@ def cosTheta(longitudeRad=-110.9625*pi/180, phi=48.7317*pi/180, utcnow = datetim
 	# asc = math.atan(math.cos(e)*math.tan(ec_L)) # right ascension [rad, -pi/2 pi/2]
 	phi2= pi/2 - math.asin(math.sin(e)*math.sin(ec_L)) # pi/2 - declination [rad, -pi/2 pi/2]
 
+	utcnow = datetime.datetime.utcfromtimestamp(unixTime)
 	utcAngleFromNoon = (utcnow - datetime.datetime.combine(utcnow, datetime.time(12))).total_seconds() *7.2921150*10**-5 # [rad]
 	car = [utcAngleFromNoon + longitudeRad, phi] # car's location on earth, in spherical coordinates
 	return math.sin(car[1])*math.sin(phi2)*math.cos(car[0]) + math.cos(car[1])*math.cos(phi2) # special case of dot product
