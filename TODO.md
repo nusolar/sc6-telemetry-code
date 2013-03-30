@@ -29,18 +29,22 @@ Other variables:
 * <s>Time of Day</s>
 * Driver
 
-Events:
-
+<del>
+Events:</del>
+<del>
 * tire blowout, battery swap, hotpit, crash
 * driver change
+</del>
 
 End result:
 
-* Necessary laptime (from Energy and Power usage), Predicted laptime (from velocity, elapsed time & remaining distance)
+* Necessary laptime (from Energy and Power usage)
+* Predicted laptime (from velocity, elapsed time & remaining distance)
 
 Other – Tests:
 
-* water spray. probably negligible. reflects light, evaporation cools cell.
+* water spray.
+	- probably negligible. reflects light, evaporation cools cell.
 	measure (x10) array power (watching luminosity) vs water spray
 
 <del>* Test consumer.py with dummy packets</del>

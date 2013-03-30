@@ -7,7 +7,7 @@ Prerequisites
 -------------
 POSIX operating system
 
-Python ≥ <del>2.7.2</del> 3.3
+Python ≥ 3.3
 
 * (car-side only requires ≥ 3.0)
 

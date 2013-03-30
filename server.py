@@ -9,9 +9,11 @@ except ImportError:
 def telemetry():
 	row = db.tables[0].last()
 	# SQL queries:
-	d = {"bms":{"I":1, "CC":6, "Wh":7, "uptime":1}, "bms_V": [.421], "bms_T": [39], "bms_owV": [.421],
-		 "array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0}, "ws": {"v":23, "I":2, "V":20, "T":50, "e":31},
-		 "mppt":{"T":40, "I":1}, "time":row[0]}
+	d ={"bms": {"I": 1, "CC": 6, "Wh": 7, "uptime": 1},
+		"bms_V": [.421], "bms_T": [39], "bms_owV": [.421],
+		"array": {"I": 3, "CC": 8}, "sw": {"buttons": 0, "lights": 0},
+		"ws": {"v": 23, "I": 2, "V": 20, "T": 50, "e": 31},
+		"mppt": {"T": 40, "I": 1}, "time": row[0]}
 	return {"telemetry": d}
 def populate():
 	return {"send": [(k, db.addr[k]) for k in sorted(db.addr.keys())]}
