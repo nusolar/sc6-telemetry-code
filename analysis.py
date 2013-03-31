@@ -50,8 +50,7 @@ def arrayPower(L=1365, T=59):
 J2000 =dt.datetime(2000, 1, 1, 12, 0, 0, 0, tzinfo=dt.timezone.utc).timestamp()
 
 def cosSun(unix_time = time.time(), thetaLong=-110.9625*pi/180, phi=48.7317*pi/180):
-	"""Computes the cosine of the angle between the array and the sun,
-	i.e. the proportion of solar radiation absorbed.
+	"""Computes the cosine of the angle between the array and the sun.
 
 	unix_time *MUST* be a float. You must comprehend over cosSun. Don't pass
 	lists or arrays. Ergo this function is slow.
@@ -116,11 +115,11 @@ def cuml_radiant_energy(trange, theta, phi):
 	np.cumsum(np.r_[0, (powers[:-1]+powers[1:])/2/np.diff(trange)])
 	return np.cumsum(powers*(trange[1]-trange[0])) # left-corner approx
 
-circuit_americas_geoloc = (-97.6343, 30.1355) # Circuit of the Americas
+americas_geolocation = (-97.6343, 30.1355) # racetrack
 
 def demo():
-	"""Compute cumul radiant energy at FSGP, savefig"""
-	location = geo2sph(*circuit_americas_geoloc)
+	"""Cumulative radiant energy at FSGP, savefig."""
+	location = geo2sph(*americas_geolocation)
 	date = dt.datetime(2013, 6, 27, 10) # race from 10 AM
 	delta = dt.timedelta(0, 7*3600) # till 5 PM
 	trange = [timeRange(date+dt.timedelta(1)*x, delta) for x in range(3)]
