@@ -9,15 +9,21 @@ POSIX operating system
 
 Python ≥ 3.3
 
-* (car-side only requires ≥ 3.0)
+* (car-side ≥ 3.0)
 
-* pika ≥ 0.9.8
+* pika ≥ 0.9.8 (use custom Python 3.3 branch)
 
 * pyserial ≥ 2.6
 
+* numpy ≥ 1.7
+
+* scipy ≥ 0.11
+
+* matplotlib ≥ 1.2
+
 RabbitMQ ≥ 3.0.2
 
-* Do not configure RabbitMQ's server to run automatically. Telemetry assumes it's installed to ```/usr/local/sbin/```
+* Do not configure RabbitMQ's server to run automatically. Set executable location in ```config.py```, default is ```/usr/local/sbin/```
 
 * g++ ≥ 4.7.1
 
@@ -80,7 +86,7 @@ config.py — configuration options
 
 test.py — powerful unit tests
 
-* EVERYTHING is tested, obviating the need for factorial hardware testing. Tests include:
+* EVERYTHING is tested, obviating the need for much hardware testing. Tests include:
 
   * all communication: car-side packet sending, server-side packet reception, server-side sending, and car-side reception.
 

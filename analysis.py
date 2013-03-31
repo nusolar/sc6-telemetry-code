@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright Alex Chandel, 2013. All rights reserved.
-import db, datetime as dt, time, numpy as np
+import db, datetime as dt, time, numpy as np, pylab
 
 con = db.con()
 def last_time():
@@ -43,12 +43,19 @@ def arrayPower(L=1365, T=59):
 	alpha, beta, K, Rs = (0, 0, 0, 0)
 	Delta_Isc = lambda L, T: Isc_ref*(L/L_ref-1) + alpha*(T-T_ref)
 	I = lambda V, L, T: I_ref(V) + Delta_Isc(L, T)
-	V = lambda V, L, T: V - beta*(T-T_ref) - Delta_Isc(L,T)*Rs - K*(T-T_ref)*I(V,L,T)
+	V = lambda V, L, T: V - beta*(T-T_ref) - Delta_Isc(L, T)*Rs - K*(T-T_ref)*I(V, L, T)
 	#Ia = Ib + Ig + Ir
 	return (0.3382+0.3493+0.3603)*L # [W] @ 59dC
 
-J2000 = dt.datetime(2000, 1, 1, 12, 0, 0, 0, tzinfo=dt.timezone.utc).timestamp()
-def cosTheta(unix_time = time.time(), longitudeRad=-110.9625*pi/180, phi=48.7317*pi/180):
+J2000 =dt.datetime(2000, 1, 1, 12, 0, 0, 0, tzinfo=dt.timezone.utc).timestamp()
+
+def cosSun(unix_time = time.time(), thetaLong=-110.9625*pi/180, phi=48.7317*pi/180):
+	"""Computes the cosine of the angle between the array and the sun,
+	i.e. the proportion of solar radiation absorbed.
+
+	unix_time *MUST* be a float. You must comprehend over cosSun. Don't pass
+	lists or arrays. Ergo this function is slow.
+	"""
 	# [unix time] [rad] [rad]
 	n_days = (unix_time - J2000)/86400 # num solar days since J2000
 	# n_days = n_days.days + n_days.seconds/86400
@@ -57,16 +64,20 @@ def cosTheta(unix_time = time.time(), longitudeRad=-110.9625*pi/180, phi=48.7317
 	ec_L = (ec_Lm+ 1.915*np.sin(ec_g)+ 0.020*np.sin(2*ec_g)) *pi/180 # ecliptic long [rad]
 	# R = 1.00014 - 0.01671*np.cos(ec_g) + 0.00014*np.cos(2*ec_g) # orbital radius [AU]
 	e = (23.439 - 0.0000004*n_days) *pi/180 # obliquity [rad]
-	# asc = np.atan(np.cos(e)*np.tan(ec_L)) # right ascension [rad, -pi/2 pi/2]
-	phi2= pi/2 - np.asin(np.sin(e)*np.sin(ec_L)) # pi/2 - declination [rad, -pi/2 pi/2]
+	# asc = np.arctan(np.cos(e)*np.tan(ec_L)) # right asc [rad, -pi/2 pi/2]
+	phi2= pi/2 - np.arcsin(np.sin(e)*np.sin(ec_L)) # pi/2 - declination [rad, -pi/2 pi/2]
 
 	utcnow = dt.datetime.utcfromtimestamp(unix_time) # .replace(tzinfo = dt.timezone.utc)
 	utcAngleFromNoon= (utcnow-dt.datetime.combine(utcnow, dt.time(12))).total_seconds()/43200*pi
-	car = [utcAngleFromNoon + longitudeRad, phi] # car's location, earth, spherical coords
+	car = [utcAngleFromNoon + thetaLong, phi] # car's location, earth, spherical coords
 	# special dot product
 	return np.sin(car[1])*np.sin(phi2)*np.cos(car[0])+ np.cos(car[1])*np.cos(phi2)
 
-def timeRange(date, delta, numel = 1000, step_size = None):
+def timeRange(date = dt.datetime(2013, 6, 27), delta = dt.timedelta(3, 0, 0),
+	numel = 100, step_size = None):
+	"""Generate linspace'd list of Unix Time values, starting at date, ranging
+	over delta.
+	"""
 	initial = date.timestamp()
 	final = initial + delta.total_seconds()
 	if step_size is None:
@@ -74,8 +85,59 @@ def timeRange(date, delta, numel = 1000, step_size = None):
 	else:
 		if np.sign(step_size) != np.sign(final - initial):
 			step_size *= -1
-	return np.r_[initial:final:step_size]
+	return np.r_[initial:final+step_size:step_size]
 
+def geo2sph(long = -110.9625, lat = 41.2683):
+	"""Converts longitude, latitude to spherical coordinates.
 
+	float long: W is negative, E is positive
+	float lat: N is positive, S is negative
+
+	-> tuple(theta, phi)
+	float theta: azimuthal
+	float phi: polar
+	"""
+	return (long*pi/180, (90-lat)*pi/180)
+
+def cuml_radiant_energy(trange, theta, phi):
+	"""Trapezoidally integrate Radiant Flux on Earth (theta, phi) over trange.
+
+	theta, phi: either float or numpy.ndarray. If an array, they must be
+		*EXACTLY* as long as trange, or the longer will be truncated.
+	"""
+	def yielder(x):
+		while True: yield x
+	if type(theta) is float:
+		theta = yielder(theta)
+	if type(phi) is float:
+		phi = yielder(phi)
+	angles = np.array([max((cosSun(*x), 0)) for x in zip(trange, theta, phi)])
+	powers = arrayPower(L = 1300*angles)
+	np.cumsum(np.r_[0, (powers[:-1]+powers[1:])/2/np.diff(trange)])
+	return np.cumsum(powers*(trange[1]-trange[0])) # left-corner approx
+
+circuit_americas_geoloc = (-97.6343, 30.1355) # Circuit of the Americas
+
+def demo():
+	"""Compute cumul radiant energy at FSGP, savefig"""
+	location = geo2sph(*circuit_americas_geoloc)
+	date = dt.datetime(2013, 6, 27, 10) # race from 10 AM
+	delta = dt.timedelta(0, 7*3600) # till 5 PM
+	trange = [timeRange(date+dt.timedelta(1)*x, delta) for x in range(3)]
+	trange_total = np.concatenate(trange)
+	energies = cuml_radiant_energy(trange_total, *location)
+
+	race_hour = [trange[0] - trange[0][0]]
+	race_hour += [trange[1] - trange[1][0] + race_hour[0][-1]]
+	race_hour += [trange[2] - trange[2][0] + race_hour[1][-1]]
+	race_hour = np.concatenate(race_hour) / 3600
+
+	pylab.plot(race_hour, energies / 10**6)
+	pylab.xticks(range(int(max(race_hour))+1))
+	pylab.xlim(min(race_hour), max(race_hour))
+	pylab.title("SC6 Radiant Energy at FSGP")
+	pylab.xlabel("Hour of race (7 hr/day)")
+	pylab.ylabel("Megajoules received")
+	pylab.savefig('race_received_energy.png')
 
 
