@@ -40,8 +40,10 @@ class TestCanUsb(unittest.TestCase):
 class TestAnalysis(unittest.TestCase):
 	def test_angles(self):
 		print("TEST: Heliophysics calculations")
-		self.assertAlmostEqual(analysis.cosTheta(0, analysis.pi / 2, datetime.datetime(2013, 3, 20, 12, 0, 0, tzinfo = datetime.timezone.utc).timestamp()), 1)
-		self.assertAlmostEqual(analysis.cosTheta(-analysis.pi, analysis.pi / 2, datetime.datetime(2013, 3, 20, 12, 0, 0, tzinfo = datetime.timezone.utc).timestamp()), -1)
+		self.assertAlmostEqual(analysis.cosSun(datetime.datetime(2013, 3, 20, 12, 0, 0,
+			tzinfo = datetime.timezone.utc).timestamp(), 0, analysis.pi / 2), 1)
+		self.assertAlmostEqual(analysis.cosSun(datetime.datetime(2013, 3, 20, 12, 0, 0,
+			tzinfo = datetime.timezone.utc).timestamp(), -analysis.pi, analysis.pi / 2), -1)
 
 	def test_array_power(self):
 		print("TEST: Calculate array power from luminosity & PV cell temp")

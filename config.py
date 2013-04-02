@@ -10,7 +10,7 @@ rmq_logging = False
 
 # Server hostnames
 server_name = 'mbr.chandel.net'
-client_name = 'rpi.chandel.net'
+client_name = 'bb.chandel.net'
 # Car --> Laptop
 afferent_client_outbox = 'car_outbox'
 afferent_server_inbox = 'laptop_inbox'
