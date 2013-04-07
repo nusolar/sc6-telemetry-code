@@ -25,6 +25,7 @@ def W_car(v, T=25, P=101325, H=0):
 pi = 3.14159265358979323846264338327950
 
 def powerOut(v, T=25, P=101325, H=0): # [m/s], T[dC], P[Pa], H[]
+	"""Estimate parasitic power loss, from velocity"""
 	rho= P/287.058/(273.15+T)+ H*10**(8.07131-1730.63/(233.426+T))*101325/760/461.495/(273.15+T)
 	# W = W0 + .5 rho v^2 (Ap CL)
 	W = 306 + .5*rho* v**2 *0.01010724337
