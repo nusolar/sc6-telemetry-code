@@ -36,6 +36,7 @@ def powerOut(v, T=25, P=101325, H=0): # [m/s], T[dC], P[Pa], H[]
 	return .5*rho * v**3 *Af*CD + W*Crr* v
 
 def arrayPower(L=1365, T=59):
+	"""Characterizes array (via MPP) in terms of Luminosity and PV Temp"""
 	L_ref = 0.300 # W/cm^2
 	T_ref = 30 # dC
 	Isc_ref = 0.14 # A
