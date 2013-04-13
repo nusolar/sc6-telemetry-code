@@ -48,7 +48,9 @@ def handle(ch, method, hProperties, pkt):
 	try:
 		if t is -1: raise ValueError # v = [time, addr, len, data]
 		v = (int(float(pkt[0:t])), int(pkt[t+1:t+4], 16),
-			int(bytes([pkt[t+4]]).decode(), 16), pkt[t+5:]) # PY2K v[2]
+			int(bytes([pkt[t+4]]).decode(), 16), pkt[t+5:].decode()) # PY2K v[2]
+		print("Handling packet "+str(pkt)+" of type "+str(type(pkt)) +
+			"    names: "+ db.name.get(v[1], '???') +" contents: "+ str(v[3]))
 		for table in db.tables:
 			for match in table.handlers:
 				if match[0] in db.name.get(v[1], ''):
@@ -57,8 +59,8 @@ def handle(ch, method, hProperties, pkt):
 			else: continue
 			break
 		else:
-			print("Unrecognized CAN packet: " + db.name.get(v[1], '???') +
-				" (" + hex(v[1]) + "), contents: " + v[3].decode())
+			print("Throwing out CAN packet: " + db.name.get(v[1], '???') +
+				" (" + hex(v[1]) + "), contents: " + v[3])
 	except (IndexError, ValueError):
 		print("Unintelligible packet: " + str(pkt))
 	finally:
