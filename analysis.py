@@ -53,8 +53,8 @@ J2000 =dt.datetime(2000, 1, 1, 12, 0, 0, 0, tzinfo=dt.timezone.utc).timestamp()
 def cosSun(unix_time = time.time(), thetaLong=-110.9625*pi/180, phi=48.7317*pi/180):
 	"""Computes the cosine of the angle between the array and the sun.
 
-	unix_time *MUST* be a float. You must comprehend over cosSun. Don't pass
-	lists or arrays. Ergo this function is slow.
+	unix_time *MUST* be a float. You must list-comprehend over this function.
+	Don't pass lists or arrays. Ergo this function is slow.
 	"""
 	# [unix time] [rad] [rad]
 	n_days = (unix_time - J2000)/86400 # num solar days since J2000
