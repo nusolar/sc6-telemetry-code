@@ -18,17 +18,20 @@ rho_data = [[-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30, 35],
 	1.269, 1.2466, 1.225, 1.2041, 1.1839, 1.1644, 1.1455]]
 rho_corl = lambda T: 352.9732/(273.15+T)
 def rho_air(T=25, P=101325, H=0): # T[dC],P[Pa], H[]
-	return P/287.058/(273.15+T)+H*10**(8.07131-1730.63/(233.426+T))*101325/760/461.495/(273.15+T)
+	P_h2o = H*10**(8.07131-1730.63/(233.426+T))*101325/760 # Antoine Eqn
+	return ((P-P_h2o)*28.964 + P_h2o*18.01528)/R/(273.15+T) # Sum contributions
 def W_car(v, T=25, P=101325, H=0):
 	return 306 + .5*rho_air(T, P, H)* v**2 *0.01010724337
 
 pi = 3.14159265358979323846264338327950
+R = 8314.4621 # PER KILOMOL
 
 def powerOut(v, T=25, P=101325, H=0): # [m/s], T[dC], P[Pa], H[]
 	"""Estimate parasitic power loss, from velocity"""
-	rho= P/287.058/(273.15+T)+ H*10**(8.07131-1730.63/(233.426+T))*101325/760/461.495/(273.15+T)
+	P_h2o = H*10**(8.07131-1730.63/(233.426+T))*101325/760 # Antoine Eqn
+	rho= ((P-P_h2o)*28.964 + P_h2o*18.01528)/R/(273.15+T) # Sum contributions
 	# W = W0 + .5 rho v^2 (Ap CL)
-	W = 306 + .5*rho* v**2 *0.01010724337
+	W = 9.8*306 + .5*rho* v**2 *0.01010724337
 	Af = 1.16864768
 	CD = 0.105636
 	Crr = 0.00475 # @100kph, 6kg/cm^2
@@ -52,6 +55,7 @@ J2000 =dt.datetime(2000, 1, 1, 12, 0, 0, 0, tzinfo=dt.timezone.utc).timestamp()
 
 def cosSun(unix_time = time.time(), thetaLong=-110.9625*pi/180, phi=48.7317*pi/180):
 	"""Computes the cosine of the angle between the array and the sun.
+	Also computes the Earth-Sun distance.
 
 	unix_time *MUST* be a float. You must list-comprehend over this function.
 	Don't pass lists or arrays. Ergo this function is slow.

@@ -55,19 +55,19 @@ To install python ≥ 3.0, in Debian/Ubuntu/Mint,
 
 Installation
 ------------
-Install the dependencies.
+Install the prerequisites.
 
 Clone this project to desired installation directory.
 
-Edit ```config.py``` to record your server & laptop hostname, the CANUSB device location for your `sys.platform`, and the location of the `rabbitmq-server` executable.
+Edit ```config.py```, recording your laptop-server & car-client hostnames, the CANUSB device location for your `sys.platform`, and the location of the `rabbitmq-server` executable.
 
 Usage
 -----
 
 First `cd` to the installation directory
-* to start telemetry: run ```./laptop.py```
-* to do self-testing: run ```./test.py```
-* to talk to the BeagleBoard over SerialUSB: connect cable and run `./beagleboard.sh`
+* to start telemetry: type ```./laptop.py```
+* to do self-testing: type ```./test.py```
+* to talk to the BeagleBoard over SerialUSB: connect cable and type `./beagleboard.sh`
 
 Advanced Configuration
 ----------------------
