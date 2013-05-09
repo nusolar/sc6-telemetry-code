@@ -148,4 +148,3 @@ def demo():
 	pylab.ylabel("Megajoules received")
 	pylab.savefig('race_received_energy.png')
 
-

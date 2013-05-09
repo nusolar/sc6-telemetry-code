@@ -1,4 +1,14 @@
 # Copyright Alex Chandel 2013. All rights reserved.
+# require.config
+# 	paths:
+# 		svg: 'jquery.svg'
+# 		flot: 'jquery.flot'
+# 		jquery: 'jquery-1.9.0'
+# 		jquery_ui: 'jquery-ui-1.10.0.custom'
+# 	shim:
+# 		jquery_ui:
+# 			deps: ['jquery']
+
 this.em = 16
 this.toc = ["telemetry","plots","strategy","alerts","send"]
 whoami = ->
@@ -21,15 +31,15 @@ $ ->
 	window.data.telemetry = { "bms":{"I":1, "CC":6, "Wh":7, "uptime":1}, "bms_V": [.421], "bms_T": [39], "bms_owV":[.421]
 	"array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0}, "ws": {"v":22, "I":2, "V":20, "T":50, "e":31}, "mppt":{"T":40, "I":1} }
 	grabSet('populate', grabStatic)
+	# $('#nav a:first').tab('show')
 	populate()
 	$(window).resize redraw
-	$('.tabs').tabs
-		activate:	(event, ui) ->
-			window.location.hash = ui.newPanel.attr('id')
-			window.scrollTo(0, 0)
-			whoami()
-			redraw()
-	$('footer').prepend "Via CoffeeScript 1.4, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
+	$('a').on 'shown', (event) ->
+		window.location.hash = event.target.hash
+		window.scrollTo(0, 0)
+		whoami()
+		redraw()
+	$('footer').prepend "Via CoffeeScript 1.6, jQuery 1.9, jQuery UI 1.10, Flot " + $.plot.version + " &ndash; "
 	window.setInterval tic, 5000
 
 grabSet = (key, dest) ->
@@ -48,28 +58,28 @@ populate = ->
 	populateSend()
 	redraw()
 populateCar = ->
-	$('#driverSvg').load 'css/driver.svg', drawCar
-	$('#bboxSvg').load 'css/bbox.svg', drawCar
+	$('#driver_svg').load 'css/driver.svg', drawCar
+	$('#bbox_svg').load 'css/bbox.svg', drawCar
 populatePlots = ->
 	$('#dataset')[0].options[i] = new Option(g) for g, i in window.data.plots
 	$('#dataset')[0].onchange = drawPlots
 	$('#datatime')[0].options[0] = new Option(window.data.ranges[0])
 	$('#datatime')[0].onchange = drawPlots
 populateSend = ->
-	$('#pktName')[0].options[i] = new Option(g[0],g[1]) for g,i in window.data.send
-	$('#pktName')[0].onchange = drawSend
+	$('#pkt_name')[0].options[i] = new Option(g[0],g[1]) for g,i in window.data.send
+	$('#pkt_name')[0].onchange = drawSend
 
 #Redraw UI with centered, updated data
 redraw = ->
 	centerTabs()
-	[drawCar, drawPlots, drawStrategy , (->), drawSend][page]()
+	[drawCar, drawPlots, drawStrategy , (->), drawSend][@page]()
 centerTabs = ->
 	return true unless $('.ui-corner-top').size()
-	margin = $('.ui-corner-top').map( -> $(this).width() ).get().reduce (l,r) -> l+r 
-	$('#t1').css('margin-left', ($('#tabBar').width() - margin)/2)
+	margin = $('.ui-corner-top').map( -> $(this).width() ).get().reduce (l,r) -> l+r
+	$('#t1').css('margin-left', ($('#nav').width() - margin)/2)
 drawCar = ->
-	return true unless $('#driverSvg').children().size() && $('#bboxSvg').children().size()
-	maxH = $("#nonfooter").height()-$("header").height()-10 -$("#tabBar").height()-1 -(2 + 0.2)*em
+	return true unless $('#driver_svg').children().size() && $('#bbox_svg').children().size()
+	maxH = $("#nonfooter").height()-$("header").height()-10 -$("#nav").height()-1 -(2 + 0.2)*em
 	ns = "http://www.w3.org/2000/svg"
 	$('#telemetry').find('text').remove()
 	setText = (selector, string, xoff) ->
@@ -88,9 +98,9 @@ drawCar = ->
 	for x in [1..32]
 		setText("#bat"+x, ".421V, "+data.telemetry.bms_T[0]+"ºC", 3)
 drawPlots = ->
-	maxH = $('#nonfooter').height()-$("header").height()-10 -$('#tabBar').height()-1 -(2 + 0.2 + 8)*em
-	height = $('#plotHolder').width() / 1.618
-	$('#plotHolder').height(if height < maxH then height else maxH)
+	maxH = $('#nonfooter').height()-$("header").height()-10 -$('#nav').height()-1 -(2 + 0.2 + 8)*em
+	height = $('#plot_holder').width() / 1.618
+	$('#plot_holder').height(if height < maxH then height else maxH)
 	dataName = $("#dataset")[0].options[$("#dataset")[0].selectedIndex].value.toLowerCase()
 	data = []
 	switch dataName
@@ -100,14 +110,14 @@ drawPlots = ->
 			data.push( [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]] )
 		when "velocity"
 			data.push( ([x, Math.atan(x)] for x in [0..13] by 0.1) )
-	$.plot('#plotHolder', data)
+	$.plot('#plot_holder', data)
 drawStrategy = ->
-	maxH = $('#nonfooter').height()-$("header").height()-10 -$('#tabBar').height()-1 -(2 + 0.2 + 8)*em
-	height = $('#strategyHolder').width() / 1.618
-	$('#strategyHolder').height(if height < maxH then height else maxH)
-	$.plot('#strategyHolder', [[0,1],[1,1.2]])
+	maxH = $('#nonfooter').height()-$("header").height()-10 -$('#nav').height()-1 -(2 + 0.2 + 8)*em
+	height = $('#strategy_holder').width() / 1.618
+	$('#strategy_holder').height(if height < maxH then height else maxH)
+	$.plot('#strategy_holder', [[0,1],[1,1.2]])
 drawSend = ->
-	$('#pktAddr').val($('#pktName').val())
+	$('#pkt_addr').val($('#pkt_name').val())
 
 tic = ->
 	grabSet("telemetry", grabDynamic)

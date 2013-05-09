@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>NU Solar Telemetry</title>
+		<link rel="stylesheet" href="css/style.css" type="text/css"/>
+		<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+		<script src="js/jquery-1.9.0.js"></script>
+		<script src="js/jquery-ui-1.10.0.custom.js"></script>
+		<script src="js/jquery.flot.js"></script>
+		<script src="js/jquery.svg.js"></script>
+		<script src="js/script.js"></script>
+	</head>
+	<body>
+		<div class="container-fluid" id="nonfooter">
+			<header>NU Solar Telemetry</header>
+			<div class="tabs">
+				<ul id="tabBar">
+					<li id="t1"><a href="#telemetry">Telemetry</a></li>
+					<li id="t2"><a href="#plots">Plots</a></li>
+					<li id="t3"><a href="#strategy">Strategy</a></li>
+					<li id="t4"><a href="#alerts">Alerts</a></li>
+					<li id="t5"><a href="#send">Send</a></li>
+				</ul>
+				<article id="telemetry">
+					<div id="driverSvg" class="svgHolder"></div>
+					<div id="bboxSvg" class="svgHolder"></div>
+				</article>
+				<article id="plots">
+					<div class='graph'>
+						<div id='plotHolder'></div>
+					</div>
+					<div class='hanger'>
+						<form>
+							<label class="datasetLabel">Plot: </label>
+							<select id="dataset" name="dataset"></select>
+							<label class="datasetLabel"> from </label>
+							<select id="datatime" name="datatime"></select>
+							<label class="datasetLabel"> ago.</label>
+						</form>
+					</div>
+				</article>
+				<article id="strategy">
+					<h1>Inspirational Messages</h1>
+					<p>P = IV = (.5 rho v^3 A Cd) + (Crr W v) = (.5 rho A Cd) v^3 + (Crr W) v</p>
+					<p>Max eff(v) in Meters per Coulomb := v / I = V/( .5*rho*v^2*A*Cd + Crr*W)</p>
+					<p>Max eff(v) in Meters per Joule := v / IV = 1/( .5*rho*v^2*A*Cd + Crr*W)</p>
+					<p>Note eff's at different v's are NOT comparable</p>
+					<div class='graph'>
+						<div id='strategyHolder'></div>
+					</div>
+					<div class='hanger'>
+					</div>
+				</article>
+				<article id="alerts">
+					<h1>(List of) Oh noez!</h1>
+				</article>
+				<article id="send">
+					<h1>Compose CAN packets hurr</h1>
+					<form>
+						Name <select id="pktName" name="name"></select>
+						or Address <input id="pktAddr" name="addr" type="text" size=8/><br/>
+						Data:
+					</form>
+				</article>
+			</div>
+		</div>
+		<footer>
+			 © Alex Chandel 2013.
+		</footer>
+	</body>
+</html>
