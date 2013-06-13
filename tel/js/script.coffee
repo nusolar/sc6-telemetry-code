@@ -25,11 +25,14 @@ $ ->
 	whoami()
 	# populate() must run before redraw() is ever called
 	window.data = {}
-	window.data.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501], ['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
+	window.data.send = [['bms_rx_trip', 0x200], ['mc_rx_drive_cmd', 0x501],
+		['mc_rx_power_cmd', 0x502], ['mc_rx_reset_cmd',0x503]]
 	window.data.plots = ["Example", "Velocity"]
 	window.data.ranges = ["1 day"]
-	window.data.telemetry = { "bms":{"I":1, "CC":6, "Wh":7, "uptime":1}, "bms_V": [.421], "bms_T": [39], "bms_owV":[.421]
-	"array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0}, "ws": {"v":22, "I":2, "V":20, "T":50, "e":31}, "mppt":{"T":40, "I":1} }
+	window.data.telemetry = { "bms":{"I":1, "CC":6, "Wh":7, "uptime":1},
+		"bms_V": [.421], "bms_T": [39], "bms_owV":[.421],
+		"array":{"I":3, "CC":8}, "sw":{"buttons":0, "lights":0},
+		"ws": {"v":22, "I":2, "V":20, "T":50, "e":31}, "mppt":{"T":40, "I":1} }
 	grabSet('populate', grabStatic)
 	# $('#nav a:first').tab('show')
 	populate()

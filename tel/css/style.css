@@ -33,21 +33,6 @@ header, footer {
 	right: 0px;
 	bottom: 2em;
 }
-.tabs {
-	position: static !important;
-	padding: 0px;
-	border: 0px;
-}
-.tabs .ui-tabs-nav {
-	background: lightslategrey;
-	border-width: 0px 0px 1px 0px;
-	-moz-border-radius: 0px;
-	-webkit-border-radius: 0px;
-	border-radius: 0px;
-}
-.tabs .ui-tabs-panel {
-	margin: 0em 0.2em 0.2em 0.2em;
-}
 
 article {
 	font-size: 16px !important;
@@ -59,6 +44,12 @@ article {
 #bbox_svg {
 	padding-bottom: 2em;
 }
+
+.cell {
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+
 #plot_holder {
 	padding: 0px;
 	position: relative;

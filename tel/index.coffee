@@ -3,8 +3,8 @@ html ->
 	head ->
 		meta charset: 'utf-8'
 		title "NU Solar Telemetry"
-		link rel: 'stylesheet', href: 'css/style.css'
 		link rel: 'stylesheet', href: 'css/bootstrap.min.css', media: 'screen'
+		link rel: 'stylesheet', href: 'css/style.css'
 		script src: 'js/jquery-1.9.0.js'
 		script src: 'js/jquery.flot.js'
 		script src: 'js/bootstrap.min.js'
@@ -28,6 +28,18 @@ html ->
 				article '#telemetry.tab-pane.active', ->
 					div '#driver_svg.svgHolder', (->)
 					div '#bbox_svg.svgHolder', (->)
+					table '.cell', ->
+						tr ->
+							td -> "32"
+						tr ->
+							td -> "31"
+						tr ->
+							td -> "30"
+							td -> "eff"
+							td -> "eff"
+							td -> "eff"
+							td -> "eff"
+							td -> "eff"
 				article '#plots.tab-pane', ->
 					div '.graph', ->
 						div '#plot_holder', (->)
