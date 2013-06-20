@@ -8,6 +8,8 @@ cd "${HOME}"
 sudo apt-get update
 sudo apt-get upgrade
 
+sudo apt-get install locales
+
 sudo apt-get install rabbitmq-server
 sudo apt-get install python3 # currently 3.2.3-6
 sudo apt-get install python3-serial
