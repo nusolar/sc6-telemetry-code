@@ -119,7 +119,7 @@
       };
 
       Controller.prototype['mouseup &'] = function() {
-        this.view.$().css('background-color', 'inherit');
+        this.view.$().css('background-color', '');
         return this.controller.click(false);
       };
 
@@ -134,7 +134,9 @@
     function Button(title, click) {
       var model, view;
       if (click == null) {
-        click = function() {};
+        click = function() {
+          return true;
+        };
       }
       model = {
         text: title
@@ -245,6 +247,34 @@
 
   })($$);
 
+  Drive = (function(_super) {
+    __extends(Drive, _super);
+
+    Drive.Controller = (function() {
+      function Controller() {}
+
+      Controller.prototype['create'] = function() {
+        var start;
+        this.append(start = new Button("START"));
+        return start.view.$().css({
+          'max-width': '20%'
+        });
+      };
+
+      return Controller;
+
+    })();
+
+    function Drive() {
+      var view;
+      view = $('#drive_template').html();
+      return $$({}, view, new Drive.Controller());
+    }
+
+    return Drive;
+
+  })($$);
+
   Camera = (function(_super) {
     __extends(Camera, _super);
 
@@ -264,19 +294,6 @@
     }
 
     return Camera;
-
-  })($$);
-
-  Drive = (function(_super) {
-    __extends(Drive, _super);
-
-    function Drive() {
-      var view;
-      view = $('#drive_template').html();
-      return $$({}, view);
-    }
-
-    return Drive;
 
   })($$);
 
@@ -317,9 +334,9 @@
         if (state) {
           this.controller._current_panel.view.$().css('display', 'none');
           this.controller._current_panel = this.controller.panels[panel];
-          return window.setTimeout(function() {
+          return window.setTimeout((function() {
             return _this.controller._current_panel.view.$().css('display', 'block');
-          }, 0);
+          }), 0);
         }
       };
 

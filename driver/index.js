@@ -97,9 +97,7 @@
         script('#drive_template', {
           type: 'text/html'
         }, function() {
-          return section('.DrivePanel', function() {
-            return "DRIVE";
-          });
+          return section('.DrivePanel', function() {});
         });
         script('#camera_template', {
           type: 'text/html'

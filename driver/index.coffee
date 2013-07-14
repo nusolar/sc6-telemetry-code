@@ -44,7 +44,6 @@ html ->
 					"MAP"
 			script '#drive_template', type: 'text/html', ->
 				section '.DrivePanel', ->
-					"DRIVE"
 			script '#camera_template', type: 'text/html', ->
 				section '.CameraPanel', ->
 					"CAMERA"

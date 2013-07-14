@@ -56,11 +56,11 @@ class Button extends $$
 			@view.$().css('background-color', 'blue')
 			@controller.click(true)
 		'mouseup &': ->
-			@view.$().css('background-color', 'inherit')
+			@view.$().css('background-color', '')
 			@controller.click(false)
 		'mouseout &': ->
 			@controller['mouseup &']()
-	constructor: (title, click = ->) ->
+	constructor: (title, click = -> true) ->
 		model = text: title
 		view = $('#button_template').html()
 		return $$ model, view, new Button.Controller(click)
@@ -101,17 +101,23 @@ class Map extends $$
 		view = $('#map_template').html()
 		return $$ {}, view, new Map.Controller()
 
+
+class Drive extends $$
+	class @Controller
+		'create': ->
+			@append start = new Button("START")
+			start.view.$().css 'max-width': '20%'
+	constructor: ->
+		view = $('#drive_template').html()
+		return $$ {}, view, new Drive.Controller()
+
+
 class Camera extends $$
 	class @Controller
 		'create': ->
 	constructor: ->
 		view = $('#camera_template').html()
 		return $$ {}, view, new Camera.Controller()
-
-class Drive extends $$
-	constructor: ->
-		view = $('#drive_template').html()
-		return $$ {}, view
 
 class CenterPanel extends $$
 	class @Controller
@@ -128,9 +134,9 @@ class CentralRow extends $$
 			if state
 				@controller._current_panel.view.$().css('display', 'none')
 				@controller._current_panel = @controller.panels[panel]
-				# delay necessary due to CSS bugs:
-				window.setTimeout(=> @controller._current_panel.view.$().css('display', 'block'),
-				0)
+				# 0 ms delay necessary due to CSS bugs:
+				window.setTimeout (=> @controller._current_panel.view.$().css('display', 'block')
+				), 0
 		'create': ->
 			center = new CenterPanel()
 			center.append @controller.panels['map'] = new Map()
