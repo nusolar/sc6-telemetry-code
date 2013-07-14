@@ -1,0 +1,50 @@
+* {
+	border-style: solid;
+	border-width: 1px;
+}
+
+/*Central Layout:*/
+.CentralRowWrapper {
+	margin: 1px;
+	display: table;
+	width: 100%;
+}
+
+.CentralRow {
+	overflow: auto;
+	display:table-row;
+}
+
+.LeftPanel, .CenterPanel, .RightPanel {
+	display: table-cell;
+}
+
+.CenterPanel {
+	width: 80%;
+}
+.LeftPanel, .RightPanel {
+	width: 10%;
+}
+
+/*Component Layout:*/
+.CenterPanel > section {
+	margin-left: auto;
+	margin-right: auto;
+	display: none;
+}
+
+.BatteryBoxTable {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.Button {
+	font-family: "Swiss911 UCm BT", sans-serif;
+	line-height: 3em;
+	width: 100%;
+	text-align: center;
+}
+
+h1 {
+	text-align: center;
+}
