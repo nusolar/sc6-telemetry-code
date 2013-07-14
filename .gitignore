@@ -79,7 +79,7 @@ profile
 *~.nib
 
 #Sublime Text 2
-*.sublime-project
+#*.sublime-project
 *.sublime-workspace
 
 # C/C++

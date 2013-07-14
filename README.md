@@ -1,7 +1,7 @@
 telem
 =====
 
-NUSolar SC6 telemetry code
+NUSolar ZELDA - telemetry code
 
 Getting Prerequisites
 -------------

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # Copyright Alex Chandel, 2013. All rights reserved.
-
 import serial
 
 record = b'\x1e'
