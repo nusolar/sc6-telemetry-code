@@ -8,22 +8,10 @@ html ->
 		script src: 'agility.min.js'
 		script src: 'main.js'
 
-	body '#body', ->
-		header '.HeaderBar', ->
-			"Title PLACEHOLDER"
-		article '.CentralRowWrapper', ->
-		footer '.FooterBar', ->
-			"no content"
-
-		div '#templates', ->
+	body ->
+		div '.Templates', ->
 			script '#button_template', type: 'text/html', ->
 				div '.Button', data: {bind: 'text'}, ->
-					# div '.ButtonText', ->
-			script '#left_template', type: 'text/html', ->
-				section '.LeftPanel', ->
-
-			script '#right_template', type: 'text/html', ->
-				section '.RightPanel', ->
 
 			script '#battery_box_template', type: 'text/html', ->
 				section '.BatteryBoxPanel', ->
@@ -47,8 +35,18 @@ html ->
 			script '#camera_template', type: 'text/html', ->
 				section '.CameraPanel', ->
 					"CAMERA"
-			script '#central_template', type: 'text/html', ->
-				div '.CenterPanel', ->
 
-			script '#central_row_template', type:'text/html', ->
-				div '.CentralRow', ->
+			script '#main_table_template', type:'text/html', ->
+				article '.MainTable', ->
+					header '.HeaderRow', ->
+						div '.Cell', ->
+						div '.Title.Cell', colspan: '2', ->
+							"Title PLACEHOLDER"
+					div '.CentralRow', ->
+						section '.LeftPanel', ->
+						div '.CenterPanel', ->
+						section '.RightPanel', ->
+					footer '.FooterRow', colspan: '2', ->
+						div '.Cell', ->
+						div '.Cell.Title', colspan: '2', ->
+							"no content"

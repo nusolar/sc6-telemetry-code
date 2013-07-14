@@ -22,15 +22,8 @@
         src: 'main.js'
       });
     });
-    return body('#body', function() {
-      header('.HeaderBar', function() {
-        return "Title PLACEHOLDER";
-      });
-      article('.CentralRowWrapper', function() {});
-      footer('.FooterBar', function() {
-        return "no content";
-      });
-      return div('#templates', function() {
+    return body(function() {
+      return div('.Templates', function() {
         script('#button_template', {
           type: 'text/html'
         }, function() {
@@ -39,16 +32,6 @@
               bind: 'text'
             }
           }, function() {});
-        });
-        script('#left_template', {
-          type: 'text/html'
-        }, function() {
-          return section('.LeftPanel', function() {});
-        });
-        script('#right_template', {
-          type: 'text/html'
-        }, function() {
-          return section('.RightPanel', function() {});
         });
         script('#battery_box_template', {
           type: 'text/html'
@@ -106,15 +89,34 @@
             return "CAMERA";
           });
         });
-        script('#central_template', {
+        return script('#main_table_template', {
           type: 'text/html'
         }, function() {
-          return div('.CenterPanel', function() {});
-        });
-        return script('#central_row_template', {
-          type: 'text/html'
-        }, function() {
-          return div('.CentralRow', function() {});
+          return article('.MainTable', function() {
+            header('.HeaderRow', function() {
+              div('.Cell', function() {});
+              return div('.Title.Cell', {
+                colspan: '2'
+              }, function() {
+                return "Title PLACEHOLDER";
+              });
+            });
+            div('.CentralRow', function() {
+              section('.LeftPanel', function() {});
+              div('.CenterPanel', function() {});
+              return section('.RightPanel', function() {});
+            });
+            return footer('.FooterRow', {
+              colspan: '2'
+            }, function() {
+              div('.Cell', function() {});
+              return div('.Cell.Title', {
+                colspan: '2'
+              }, function() {
+                return "no content";
+              });
+            });
+          });
         });
       });
     });

@@ -49,6 +49,11 @@ namespace 'Model', (exports) ->
 	for k, v of exports.serial_devices
 		exports.usb[k] = new exports.UsbSerial(v)
 
+###
+NOTE: Sub-class methods of Classes that extend/become MVC objects are always
+	executed in the scope of the MVC class (e.g. Button), NOT the subclasses
+	(e.g. model, view, or controller)
+###
 class Button extends $$
 	class @Controller
 		constructor: (@click) ->
@@ -65,26 +70,28 @@ class Button extends $$
 		view = $('#button_template').html()
 		return $$ model, view, new Button.Controller(click)
 
-class LeftPanel extends $$
-	class @Controller
-		'create': ->
-			@append left = new Button("LEFT")
-			@append haz  = new Button("HAZARDS")
-			@append rev  = new Button("REVERSE")
-	constructor: ->
-		view = $('#left_template').html()
-		return $$ {}, view, new LeftPanel.Controller()
 
-
-class RightPanel extends $$
-	class @Controller
+class Toggle
+	mousedown: false
+	controller:
+		'change': ->
+			@view.$().css 'background-color': if @model.get('state') then '#FFFF33' else ''
+		'mousedown &': ->
+			@mousedown = true
+		'mouseup &': ->
+			if @mousedown
+				@mousedown = false
+				@toggle @model.set 'state': not @model.get('state')
+		'mouseout &': ->
+			@mousedown = false
 		'create': ->
-			@append right = new Button("RIGHT")
-			@append heads = new Button("HEADLIGHTS")
-			@append horn  = new Button("HORN")
-	constructor: ->
-		view = $('#right_template').html()
-		return $$ {}, view, new RightPanel.Controller()
+			# This is done to trigger the Change Event
+			@model.set 'state': @model.get 'state'
+	constructor: (title, initial = false, @toggle = ->) ->
+		@view = format: $('#button_template').html()
+		@model =
+			state: initial
+			text: title
 
 
 class BatteryBox extends $$
@@ -93,6 +100,7 @@ class BatteryBox extends $$
 	constructor: ->
 		view = $('#battery_box_template').html()
 		return $$ {}, view, new BatteryBox.Controller()
+
 
 class Map extends $$
 	class @Controller
@@ -105,8 +113,10 @@ class Map extends $$
 class Drive extends $$
 	class @Controller
 		'create': ->
-			@append start = new Button("START")
-			start.view.$().css 'max-width': '20%'
+			@append @start = $$ new Toggle("START")
+			@start.view.$().css 'max-width': '20%'
+		'child:change:state': (e) ->
+			console.log @start.model.get('state')
 	constructor: ->
 		view = $('#drive_template').html()
 		return $$ {}, view, new Drive.Controller()
@@ -119,14 +129,7 @@ class Camera extends $$
 		view = $('#camera_template').html()
 		return $$ {}, view, new Camera.Controller()
 
-class CenterPanel extends $$
-	class @Controller
-		'create': ->
-	constructor: ->
-		view = $('#central_template').html()
-		return $$ {}, view, new CenterPanel.Controller()
-
-class CentralRow extends $$
+class MainTable extends $$
 	class @Controller
 		panels: {}
 		_current_panel: null
@@ -138,36 +141,35 @@ class CentralRow extends $$
 				window.setTimeout (=> @controller._current_panel.view.$().css('display', 'block')
 				), 0
 		'create': ->
-			center = new CenterPanel()
-			center.append @controller.panels['map'] = new Map()
-			center.append @controller.panels['sensors'] = new BatteryBox()
-			center.append @controller.panels['drive'] = new Drive()
-			center.append @controller.panels['camera'] = new Camera()
+			@append @controller.panels['map'] = new Map(), '.CenterPanel'
+			@append @controller.panels['sensors'] = new BatteryBox(), '.CenterPanel'
+			@append @controller.panels['drive'] = new Drive(), '.CenterPanel'
+			@append @controller.panels['camera'] = new Camera(), '.CenterPanel'
 
 			@controller._current_panel = @controller.panels['sensors']
 
-			left = new LeftPanel()
-			left.append new Button("MAP", (state) => @controller.show(state, 'map'))
-			left.append new Button("SENSORS", (state) => @controller.show(state, 'sensors'))
+			@append @left = new Button("LEFT"), '.LeftPanel'
+			@append @haz  = new Button("HAZARDS"), '.LeftPanel'
+			@append @rev  = new Button("REVERSE"), '.LeftPanel'
+			@append @map  = new Button("MAP", (s) => @controller.show(s, 'map')), '.LeftPanel'
+			@append @sens = new Button("SENSORS", (s) => @controller.show(s, 'sensors')), '.LeftPanel'
 
-			right = new RightPanel()
-			right.append new Button("DRIVE", (state) => @controller.show(state, 'drive'))
-			right.append new Button("CAMERA", (state) => @controller.show(state, 'camera'))
-
-			@append left
-			@append center
-			@append right
+			@append @right = new Button("RIGHT"), '.RightPanel'
+			@append @heads = new Button("HEADLIGHTS"), '.RightPanel'
+			@append @horn  = new Button("HORN"), '.RightPanel'
+			@append @drive = new Button("DRIVE" , (s) => @controller.show(s, 'drive')), '.RightPanel'
+			@append @cam   = new Button("CAMERA", (s) => @controller.show(s, 'camera')), '.RightPanel'
 	constructor: ->
-		view = $('#central_row_template').html()
-		return $$ {}, view, new CentralRow.Controller()
+		view = $('#main_table_template').html()
+		return $$ {}, view, new MainTable.Controller()
 
 $ ->
 	window.mouse_down = false
 	document.body.onmouseup   = (e) -> window.mouse_down = false if e.button == 0
 	document.body.onmousedown = (e) -> window.mouse_down = true  if e.button == 0
 
-	body = new CentralRow()
-	$$.document.append body, '.CentralRowWrapper'
+	$$.document.append new MainTable()
+
 
 
 

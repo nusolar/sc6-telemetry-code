@@ -9,26 +9,10 @@
     <script src="main.js"></script>
   </head>
   <body id="body">
-    <header class="HeaderBar">
-      Title PLACEHOLDER
-    </header>
-    <article class="CentralRowWrapper">
-    </article>
-    <footer class="FooterBar">
-      no content
-    </footer>
     <div id="templates">
       <script id="button_template" type="text/html">
         <div class="Button" data-bind="text">
         </div>
-      </script>
-      <script id="left_template" type="text/html">
-        <section class="LeftPanel">
-        </section>
-      </script>
-      <script id="right_template" type="text/html">
-        <section class="RightPanel">
-        </section>
       </script>
       <script id="battery_box_template" type="text/html">
         <section class="BatteryBoxPanel">
@@ -158,13 +142,31 @@
           CAMERA
         </section>
       </script>
-      <script id="central_template" type="text/html">
-        <div class="CenterPanel">
-        </div>
-      </script>
-      <script id="central_row_template" type="text/html">
-        <div class="CentralRow">
-        </div>
+      <script id="main_table_template" type="text/html">
+        <article class="MainTable">
+          <header class="HeaderRow">
+            <div class="Cell">
+            </div>
+            <div class="Title Cell" colspan="2">
+              Title PLACEHOLDER
+            </div>
+          </header>
+          <div class="CentralRow">
+            <section class="LeftPanel">
+            </section>
+            <div class="CenterPanel">
+            </div>
+            <section class="RightPanel">
+            </section>
+          </div>
+          <footer class="FooterRow" colspan="2">
+            <div class="Cell">
+            </div>
+            <div class="Cell Title" colspan="2">
+              no content
+            </div>
+          </footer>
+        </article>
       </script>
     </div>
   </body>
