@@ -4,7 +4,9 @@ body {
 	background-color: black;
 }
 
-/*Central Layout:*/
+/*
+ * Main App Layout:
+ */
 .MainTable {
 	display: table;
 	width: 100%;
@@ -33,11 +35,38 @@ body {
 	padding-right: 1px;
 }
 
+/*
+ * Components' Style:
+ */
+
 .Title {
 	background-color: #CC6666;
 }
+.InvCell {
+	display: table-cell;
+	border-style: none;
+}
 
-/*Component Layout:*/
+.Button {
+	background-color: #FF9900;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0.5em 0;
+	width: 100%;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.Gap {
+	width: 100%;
+	height: 0.3em;
+}
+
+/*
+ * Center Panel Layout:;
+ */
+
 .CenterPanel > section {
 	margin-left: auto;
 	margin-right: auto;
@@ -58,24 +87,10 @@ body {
 	margin-bottom: 1px;
 }
 
-.Button {
-	background-color: #FF9900;
-	border-style: solid;
-	border-width: 1px;
-	padding: 0.5em 0;
-	width: 100%;
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-h1 {
-	text-align: center;
-}
-
-.Cell {
-	display: table-cell;
-	border-style: none;
+.DriveToggle {
+	width: auto;
+	background-color: red;
+	padding: 0.5em 0.5em;
 }
 
 .Templates {

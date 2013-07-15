@@ -10,6 +10,9 @@ html ->
 
 	body ->
 		div '.Templates', ->
+			script '#gap_template', type: 'text/html', ->
+				div '.Gap', ->
+
 			script '#button_template', type: 'text/html', ->
 				div '.Button', data: {bind: 'text'}, ->
 
@@ -39,14 +42,14 @@ html ->
 			script '#main_table_template', type:'text/html', ->
 				article '.MainTable', ->
 					header '.HeaderRow', ->
-						div '.Cell', ->
-						div '.Title.Cell', colspan: '2', ->
+						div '.InvCell', ->
+						div '.InvCell.Title', colspan: '2', ->
 							"Title PLACEHOLDER"
 					div '.CentralRow', ->
 						section '.LeftPanel', ->
 						div '.CenterPanel', ->
 						section '.RightPanel', ->
 					footer '.FooterRow', colspan: '2', ->
-						div '.Cell', ->
-						div '.Cell.Title', colspan: '2', ->
+						div '.InvCell', ->
+						div '.InvCell.Title', colspan: '2', ->
 							"no content"

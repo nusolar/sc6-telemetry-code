@@ -24,6 +24,11 @@
     });
     return body(function() {
       return div('.Templates', function() {
+        script('#gap_template', {
+          type: 'text/html'
+        }, function() {
+          return div('.Gap', function() {});
+        });
         script('#button_template', {
           type: 'text/html'
         }, function() {
@@ -96,8 +101,8 @@
         }, function() {
           return article('.MainTable', function() {
             header('.HeaderRow', function() {
-              div('.Cell', function() {});
-              return div('.Title.Cell', {
+              div('.InvCell', function() {});
+              return div('.InvCell.Title', {
                 colspan: '2'
               }, function() {
                 return "Title PLACEHOLDER";
@@ -111,8 +116,8 @@
             return footer('.FooterRow', {
               colspan: '2'
             }, function() {
-              div('.Cell', function() {});
-              return div('.Cell.Title', {
+              div('.InvCell', function() {});
+              return div('.InvCell.Title', {
                 colspan: '2'
               }, function() {
                 return "no content";

@@ -70,12 +70,17 @@ class Button extends $$
 		view = $('#button_template').html()
 		return $$ model, view, new Button.Controller(click)
 
+class Gap
+	constructor: ->
+		@model = {}
+		@view = format: $('#gap_template').html()
 
 class Toggle
 	mousedown: false
 	controller:
-		'change': ->
+		'change:state': ->
 			@view.$().css 'background-color': if @model.get('state') then '#FFFF33' else ''
+			@model.set text: if @model.get 'state' then @model.get 'on' else @model.get 'off'
 		'mousedown &': ->
 			@mousedown = true
 		'mouseup &': ->
@@ -86,12 +91,16 @@ class Toggle
 			@mousedown = false
 		'create': ->
 			# This is done to trigger the Change Event
+			@view.$().addClass('DriveToggle')
 			@model.set 'state': @model.get 'state'
-	constructor: (title, initial = false, @toggle = ->) ->
+	constructor: (args = {}) ->
+		@toggle = args.toggle ? ->
 		@view = format: $('#button_template').html()
 		@model =
-			state: initial
-			text: title
+			state: args.initial ? false
+			on: args.on ? "ON"
+			off: args.off ? (args.on ? "OFF")
+			text: ""
 
 
 class BatteryBox extends $$
@@ -113,7 +122,10 @@ class Map extends $$
 class Drive extends $$
 	class @Controller
 		'create': ->
-			@append @start = $$ new Toggle("START")
+			@append @start = $$ new Toggle
+				on: "MOTOR IS ON"
+				off: "MOTOR IS OFF"
+				state: false
 			@start.view.$().css 'max-width': '20%'
 		'child:change:state': (e) ->
 			console.log @start.model.get('state')
@@ -152,12 +164,14 @@ class MainTable extends $$
 			@append @left = new Button("LEFT"), '.LeftPanel'
 			@append @haz  = new Button("HAZARDS"), '.LeftPanel'
 			@append @rev  = new Button("REVERSE"), '.LeftPanel'
+			@append $$(new Gap()), '.LeftPanel'
 			@append @map  = new Button("MAP", (s) => @controller.show(s, 'map')), '.LeftPanel'
 			@append @sens = new Button("SENSORS", (s) => @controller.show(s, 'sensors')), '.LeftPanel'
 
 			@append @right = new Button("RIGHT"), '.RightPanel'
 			@append @heads = new Button("HEADLIGHTS"), '.RightPanel'
 			@append @horn  = new Button("HORN"), '.RightPanel'
+			@append $$(new Gap()), '.RightPanel'
 			@append @drive = new Button("DRIVE" , (s) => @controller.show(s, 'drive')), '.RightPanel'
 			@append @cam   = new Button("CAMERA", (s) => @controller.show(s, 'camera')), '.RightPanel'
 	constructor: ->
