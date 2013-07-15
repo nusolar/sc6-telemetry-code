@@ -42,14 +42,16 @@ html ->
 			script '#main_table_template', type:'text/html', ->
 				article '.MainTable', ->
 					header '.HeaderRow', ->
-						div '.InvCell', ->
-						div '.InvCell.Title', colspan: '2', ->
+						div '.TextCell.Title.TopLeftCorner', ->
+						div '.TextCell.Title', colspan: '2', ->
 							"Title PLACEHOLDER"
+						div '.TextCell.Title.TopRightCorner', ->
 					div '.CentralRow', ->
 						section '.LeftPanel', ->
 						div '.CenterPanel', ->
 						section '.RightPanel', ->
 					footer '.FooterRow', colspan: '2', ->
-						div '.InvCell', ->
-						div '.InvCell.Title', colspan: '2', ->
+						div '.TextCell.Bottom.BottomLeftCorner', ->
+						div '.TextCell.Bottom', colspan: '2', ->
 							"no content"
+						div '.TextCell.Bottom.BottomRightCorner', ->

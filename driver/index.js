@@ -101,12 +101,13 @@
         }, function() {
           return article('.MainTable', function() {
             header('.HeaderRow', function() {
-              div('.InvCell', function() {});
-              return div('.InvCell.Title', {
+              div('.TextCell.Title.TopLeftCorner', function() {});
+              div('.TextCell.Title', {
                 colspan: '2'
               }, function() {
                 return "Title PLACEHOLDER";
               });
+              return div('.TextCell.Title.TopRightCorner', function() {});
             });
             div('.CentralRow', function() {
               section('.LeftPanel', function() {});
@@ -116,12 +117,13 @@
             return footer('.FooterRow', {
               colspan: '2'
             }, function() {
-              div('.InvCell', function() {});
-              return div('.InvCell.Title', {
+              div('.TextCell.Bottom.BottomLeftCorner', function() {});
+              div('.TextCell.Bottom', {
                 colspan: '2'
               }, function() {
                 return "no content";
               });
+              return div('.TextCell.Bottom.BottomRightCorner', function() {});
             });
           });
         });
