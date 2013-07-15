@@ -74,7 +74,9 @@
           type: 'text/html'
         }, function() {
           return section('.MapPanel', function() {
-            return "MAP";
+            return img('.Map', {
+              src: 'map.png'
+            }, function() {});
           });
         });
         script('#drive_template', {

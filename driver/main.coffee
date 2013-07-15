@@ -129,6 +129,7 @@ class Camera extends $$
 		view = $('#camera_template').html()
 		return $$ {}, view, new Camera.Controller()
 
+
 class MainTable extends $$
 	class @Controller
 		panels: {}
@@ -162,6 +163,7 @@ class MainTable extends $$
 	constructor: ->
 		view = $('#main_table_template').html()
 		return $$ {}, view, new MainTable.Controller()
+
 
 $ ->
 	window.mouse_down = false

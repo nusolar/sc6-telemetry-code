@@ -29,7 +29,7 @@ html ->
 											battery_cell(k)
 			script '#map_template', type: 'text/html', ->
 				section '.MapPanel', ->
-					"MAP"
+					img '.Map', src: 'map.png', ->
 			script '#drive_template', type: 'text/html', ->
 				section '.DrivePanel', ->
 			script '#camera_template', type: 'text/html', ->

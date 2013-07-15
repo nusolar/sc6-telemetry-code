@@ -1,5 +1,6 @@
 body {
 	font-size: 32px;
+	font-family: "Swiss911 UCm BT", sans-serif;
 	background-color: black;
 }
 
@@ -28,7 +29,7 @@ body {
 }
 
 .LeftPanel {
-	/*This hack is for LeftPanel/CenterPanel border:*/
+	/*WARNING hack is for LeftPanel-CenterPanel border:*/
 	padding-right: 1px;
 }
 
@@ -48,9 +49,17 @@ body {
 	margin-right: auto;
 }
 
+.Map {
+	vertical-align: text-top;
+	max-width: 100%;
+	max-height: 100%;
+	/*WARNING hack removes the 17px cell padding & fix bottom border*/
+	margin-top: -17px;
+	margin-bottom: 1px;
+}
+
 .Button {
 	background-color: #FF9900;
-	font-family: "Swiss911 UCm BT", sans-serif;
 	border-style: solid;
 	border-width: 1px;
 	padding: 0.5em 0;
