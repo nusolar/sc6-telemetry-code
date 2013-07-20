@@ -40,6 +40,7 @@ body {
 }
 .Title {
 	background-color: #CC6666;
+	text-align: center;
 }
 .TopLeftCorner {
 	border-top-left-radius: 50%;
@@ -49,6 +50,7 @@ body {
 }
 .Bottom {
 	background-color: #99CCFF;
+	text-align: center;
 }
 .BottomLeftCorner {
 	border-bottom-left-radius: 50%;
@@ -97,7 +99,7 @@ body {
 	margin-bottom: 1px;
 }
 
-.DriveToggle {
+.MotorToggle {
 	width: auto;
 	background-color: red;
 	border-width: 1px;

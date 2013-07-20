@@ -75,12 +75,12 @@ class Gap
 		@model = {}
 		@view = format: $('#gap_template').html()
 
-class Toggle
+class MotorToggle
 	mousedown: false
 	controller:
 		'change:state': ->
 			@view.$().css 'background-color': if @model.get('state') then '#FFFF33' else ''
-			@model.set text: if @model.get 'state' then @model.get 'on' else @model.get 'off'
+			@model.set text: if @model.get 'state' then @model.get 'on_text' else @model.get 'off_text'
 		'mousedown &': ->
 			@mousedown = true
 		'mouseup &': ->
@@ -90,17 +90,21 @@ class Toggle
 		'mouseout &': ->
 			@mousedown = false
 		'create': ->
+			@view.$().addClass('MotorToggle')
 			# This is done to trigger the Change Event
-			@view.$().addClass('DriveToggle')
 			@model.set 'state': @model.get 'state'
 	constructor: (args = {}) ->
 		@toggle = args.toggle ? ->
 		@view = format: $('#button_template').html()
 		@model =
 			state: args.initial ? false
-			on: args.on ? "ON"
-			off: args.off ? (args.on ? "OFF")
+			on_text: args.on_text ? "ON"
+			off_text: args.off_text ? (args.on ? "OFF")
 			text: ""
+
+class ToggleController
+	'create': ->
+		@mousedown = false
 
 
 class BatteryBox extends $$
@@ -122,9 +126,9 @@ class Map extends $$
 class Drive extends $$
 	class @Controller
 		'create': ->
-			@append @start = $$ new Toggle
-				on: "MOTOR IS ON"
-				off: "MOTOR IS OFF"
+			@append @start = $$ new MotorToggle
+				on_text: "MOTOR IS ON"
+				off_text: "MOTOR IS OFF"
 				state: false
 			@start.view.$().css 'max-width': '20%'
 		'child:change:state': (e) ->
