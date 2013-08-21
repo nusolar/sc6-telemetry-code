@@ -2,7 +2,11 @@
 (function() {
   doctype(5);
 
-  html(function() {
+  html({
+    lang: "en",
+    'ng-app': '',
+    'ng-csp': ''
+  }, function() {
     head(function() {
       meta({
         charset: 'utf-8'
@@ -16,116 +20,163 @@
         src: 'jquery-2.0.3.js'
       });
       script({
-        src: 'agility.min.js'
+        src: 'angular.min.js'
       });
       return script({
         src: 'main.js'
       });
     });
     return body(function() {
-      return div('.Templates', function() {
-        script('#gap_template', {
-          type: 'text/html'
-        }, function() {
-          return div('.Gap', function() {});
-        });
-        script('#button_template', {
-          type: 'text/html'
-        }, function() {
-          return div('.Button', {
-            data: {
-              bind: 'text'
-            }
-          }, function() {});
-        });
-        script('#battery_box_template', {
-          type: 'text/html'
-        }, function() {
-          return section('.BatteryBoxPanel', function() {
-            return table('.BatteryBoxTable', function() {
-              var battery_cell, i, _i, _results;
-              battery_cell = function(num) {
-                return td('#battery_' + String(num) + '.Battery', function() {
-                  return String(num);
-                });
-              };
-              tr(battery_cell(31));
-              tr(battery_cell(30));
-              _results = [];
-              for (i = _i = 29; _i >= 25; i = _i += -1) {
-                _results.push(tr(function() {
-                  var j, k, _j, _results1;
-                  _results1 = [];
-                  for (j = _j = i; _j >= 0; j = _j += -10) {
-                    _results1.push((function() {
-                      var _k, _len, _ref, _results2;
-                      _ref = [j, j - (2 * (j % 5) + 1)];
-                      _results2 = [];
-                      for (_k = 0, _len = _ref.length; _k < _len; _k++) {
-                        k = _ref[_k];
-                        _results2.push(battery_cell(k));
-                      }
-                      return _results2;
-                    })());
-                  }
-                  return _results1;
-                }));
-              }
-              return _results;
-            });
+      return article('.MainTable', {
+        'ng-controller': 'MainTable'
+      }, function() {
+        header('.HeaderRow', function() {
+          div('.TextCell.Title.TopLeftCorner', function() {});
+          div('.TextCell.Title', {
+            colspan: '2'
+          }, function() {
+            return "Title PLACEHOLDER";
           });
+          return div('.TextCell.Title.TopRightCorner', function() {});
         });
-        script('#map_template', {
-          type: 'text/html'
-        }, function() {
-          return section('.MapPanel', function() {
-            return img('.Map', {
-              src: 'map.png'
-            }, function() {});
-          });
-        });
-        script('#drive_template', {
-          type: 'text/html'
-        }, function() {
-          return section('.DrivePanel', function() {});
-        });
-        script('#camera_template', {
-          type: 'text/html'
-        }, function() {
-          return section('.CameraPanel', function() {
-            return "CAMERA";
-          });
-        });
-        return script('#main_table_template', {
-          type: 'text/html'
-        }, function() {
-          return article('.MainTable', function() {
-            header('.HeaderRow', function() {
-              div('.TextCell.Title.TopLeftCorner', function() {});
-              div('.TextCell.Title', {
-                colspan: '2'
-              }, function() {
-                return "Title PLACEHOLDER";
-              });
-              return div('.TextCell.Title.TopRightCorner', function() {});
-            });
-            div('.CentralRow', function() {
-              section('.LeftPanel', function() {});
-              div('.CenterPanel', function() {});
-              return section('.RightPanel', function() {});
-            });
-            return footer('.FooterRow', {
-              colspan: '2'
+        div('.CentralRow', function() {
+          section('.LeftPanel', function() {
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[left_btn]",
+              'ng-click': 'Left()'
             }, function() {
-              div('.TextCell.Bottom.BottomLeftCorner', function() {});
-              div('.TextCell.Bottom', {
-                colspan: '2'
-              }, function() {
-                return "no content";
-              });
-              return div('.TextCell.Bottom.BottomRightCorner', function() {});
+              return "LEFT";
+            });
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[hazards_btn]",
+              'ng-click': 'Hazards()'
+            }, function() {
+              return "HAZARDS";
+            });
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[horn_btn]",
+              'ng-mousedown': 'SetHorn(true)',
+              'ng-mouseup': 'SetHorn(false)'
+            }, function() {
+              return "HORN";
+            });
+            div('.Gap', function() {});
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[map_btn]",
+              'ng-click': 'Map()'
+            }, function() {
+              return "MAP";
+            });
+            return div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[sensors_btn]",
+              'ng-click': 'Sensors()'
+            }, function() {
+              return "SENSORS";
             });
           });
+          div('.CenterPanel.ng-cloak', function() {
+            section('.MapPanel', {
+              'ng-show': 'map_btn'
+            }, function() {
+              return img('.Map', {
+                src: 'map.png'
+              }, function() {});
+            });
+            section('.BatteryBoxPanel', {
+              'ng-show': 'sensors_btn'
+            }, function() {
+              return table('.BatteryBoxTable', function() {
+                var battery_cell, i, _i, _results;
+                battery_cell = function(num) {
+                  return td('#battery_' + String(num) + '.Battery', function() {
+                    return String(num);
+                  });
+                };
+                tr(battery_cell(31));
+                tr(battery_cell(30));
+                _results = [];
+                for (i = _i = 29; _i >= 25; i = _i += -1) {
+                  _results.push(tr(function() {
+                    var j, k, _j, _results1;
+                    _results1 = [];
+                    for (j = _j = i; _j >= 0; j = _j += -10) {
+                      _results1.push((function() {
+                        var _k, _len, _ref, _results2;
+                        _ref = [j, j - (2 * (j % 5) + 1)];
+                        _results2 = [];
+                        for (_k = 0, _len = _ref.length; _k < _len; _k++) {
+                          k = _ref[_k];
+                          _results2.push(battery_cell(k));
+                        }
+                        return _results2;
+                      })());
+                    }
+                    return _results1;
+                  }));
+                }
+                return _results;
+              });
+            });
+            section('.DrivePanel', {
+              'ng-show': 'drive_btn'
+            }, function() {
+              return div('.Button.MotorToggle', {
+                'ng-class': "{true: 'MotorToggleOn', false: ''}[motor_btn]",
+                'ng-click': 'Motor()'
+              }, function() {
+                return "MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}";
+              });
+            });
+            return section('.CameraPanel', {
+              'ng-show': 'camera_btn'
+            }, function() {
+              return "CAMERA";
+            });
+          });
+          return section('.RightPanel', function() {
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[right_btn]",
+              'ng-click': 'Right()'
+            }, function() {
+              return "RIGHT";
+            });
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[headlights_btn]",
+              'ng-click': 'Headlights()'
+            }, function() {
+              return "HEADLIGHTS";
+            });
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[reverse_btn]",
+              'ng-click': 'Reverse()'
+            }, function() {
+              return "REVERSE";
+            });
+            div('.Gap', function() {});
+            div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[drive_btn]",
+              'ng-click': 'Drive()'
+            }, function() {
+              return "DRIVE";
+            });
+            return div('.Button', {
+              'ng-class': "{true: 'ButtonOn', false: ''}[camera_btn]",
+              'ng-click': 'Camera()'
+            }, function() {
+              return "CAMERA";
+            });
+          });
+        });
+        return footer('.FooterRow', {
+          colspan: '2'
+        }, function() {
+          div('.TextCell.Bottom.BottomLeftCorner', function() {});
+          div('.TextCell.Bottom', {
+            colspan: '2'
+          }, function() {
+            return "no content";
+          });
+          return div('.TextCell.Bottom.BottomRightCorner', function() {});
         });
       });
     });

@@ -5,7 +5,7 @@ body {
 }
 
 /*
- * Main App Layout:
+ * Main App - Layout:
  */
 .MainTable {
 	display: table;
@@ -31,7 +31,7 @@ body {
 }
 
 /*
- * Components' Style:
+ * Main App - Peripheral Styles:
  */
 
 .TextCell {
@@ -69,6 +69,9 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 }
+.ButtonOn {
+	background-color: blue;
+}
 
 .Gap {
 	width: 100%;
@@ -76,13 +79,12 @@ body {
 }
 
 /*
- * Center Panel Layout:;
+ * Center Panel - Layout:
  */
 
 .CenterPanel > section {
 	margin-left: auto;
 	margin-right: auto;
-	display: none;
 }
 
 .BatteryBoxTable {
@@ -99,11 +101,20 @@ body {
 	margin-bottom: 1px;
 }
 
+/*
+ * In-App styles
+ */
+
 .MotorToggle {
 	width: auto;
 	background-color: red;
 	border-width: 1px;
 	padding: 0.5em 0.5em;
+	max-width: 20%;
+}
+
+.MotorToggleOn {
+	background-color: #FFFF33;
 }
 
 .Templates {

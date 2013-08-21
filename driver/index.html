@@ -1,181 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="" ng-csp="">
   <head>
     <meta charset="utf-8" />
     <title>NU Solar's ZELDA OS</title>
     <link rel="stylesheet" href="main.css" />
     <script src="jquery-2.0.3.js"></script>
-    <script src="agility.min.js"></script>
+    <script src="angular.min.js"></script>
     <script src="main.js"></script>
   </head>
   <body>
-    <div class="Templates">
-      <script id="gap_template" type="text/html">
-        <div class="Gap">
+    <article class="MainTable" ng-controller="MainTable">
+      <header class="HeaderRow">
+        <div class="TextCell Title TopLeftCorner">
         </div>
-      </script>
-      <script id="button_template" type="text/html">
-        <div class="Button" data-bind="text">
+        <div class="TextCell Title" colspan="2">
+          Title PLACEHOLDER
         </div>
-      </script>
-      <script id="battery_box_template" type="text/html">
-        <section class="BatteryBoxPanel">
-          <table class="BatteryBoxTable">
-            <td id="battery_31" class="Battery">
-              31
-            </td>
-            <tr></tr>
-            <td id="battery_30" class="Battery">
-              30
-            </td>
-            <tr></tr>
-            <tr>
-              <td id="battery_29" class="Battery">
-                29
-              </td>
-              <td id="battery_20" class="Battery">
-                20
-              </td>
-              <td id="battery_19" class="Battery">
-                19
-              </td>
-              <td id="battery_10" class="Battery">
-                10
-              </td>
-              <td id="battery_9" class="Battery">
-                9
-              </td>
-              <td id="battery_0" class="Battery">
-                0
-              </td>
-            </tr>
-            <tr>
-              <td id="battery_28" class="Battery">
-                28
-              </td>
-              <td id="battery_21" class="Battery">
-                21
-              </td>
-              <td id="battery_18" class="Battery">
-                18
-              </td>
-              <td id="battery_11" class="Battery">
-                11
-              </td>
-              <td id="battery_8" class="Battery">
-                8
-              </td>
-              <td id="battery_1" class="Battery">
-                1
-              </td>
-            </tr>
-            <tr>
-              <td id="battery_27" class="Battery">
-                27
-              </td>
-              <td id="battery_22" class="Battery">
-                22
-              </td>
-              <td id="battery_17" class="Battery">
-                17
-              </td>
-              <td id="battery_12" class="Battery">
-                12
-              </td>
-              <td id="battery_7" class="Battery">
-                7
-              </td>
-              <td id="battery_2" class="Battery">
-                2
-              </td>
-            </tr>
-            <tr>
-              <td id="battery_26" class="Battery">
-                26
-              </td>
-              <td id="battery_23" class="Battery">
-                23
-              </td>
-              <td id="battery_16" class="Battery">
-                16
-              </td>
-              <td id="battery_13" class="Battery">
-                13
-              </td>
-              <td id="battery_6" class="Battery">
-                6
-              </td>
-              <td id="battery_3" class="Battery">
-                3
-              </td>
-            </tr>
-            <tr>
-              <td id="battery_25" class="Battery">
-                25
-              </td>
-              <td id="battery_24" class="Battery">
-                24
-              </td>
-              <td id="battery_15" class="Battery">
-                15
-              </td>
-              <td id="battery_14" class="Battery">
-                14
-              </td>
-              <td id="battery_5" class="Battery">
-                5
-              </td>
-              <td id="battery_4" class="Battery">
-                4
-              </td>
-            </tr>
-          </table>
-        </section>
-      </script>
-      <script id="map_template" type="text/html">
-        <section class="MapPanel">
-          <img class="Map" src="map.png" />
-        </section>
-      </script>
-      <script id="drive_template" type="text/html">
-        <section class="DrivePanel">
-        </section>
-      </script>
-      <script id="camera_template" type="text/html">
-        <section class="CameraPanel">
-          CAMERA
-        </section>
-      </script>
-      <script id="main_table_template" type="text/html">
-        <article class="MainTable">
-          <header class="HeaderRow">
-            <div class="TextCell Title TopLeftCorner">
-            </div>
-            <div class="TextCell Title" colspan="2">
-              Title PLACEHOLDER
-            </div>
-            <div class="TextCell Title TopRightCorner">
-            </div>
-          </header>
-          <div class="CentralRow">
-            <section class="LeftPanel">
-            </section>
-            <div class="CenterPanel">
-            </div>
-            <section class="RightPanel">
-            </section>
+        <div class="TextCell Title TopRightCorner">
+        </div>
+      </header>
+      <div class="CentralRow">
+        <section class="LeftPanel">
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[left_btn]" ng-click="Left()">
+            LEFT
           </div>
-          <footer class="FooterRow" colspan="2">
-            <div class="TextCell Bottom BottomLeftCorner">
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[hazards_btn]" ng-click="Hazards()">
+            HAZARDS
+          </div>
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[horn_btn]" ng-mousedown="SetHorn(true)" ng-mouseup="SetHorn(false)">
+            HORN
+          </div>
+          <div class="Gap">
+          </div>
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[map_btn]" ng-click="Map()">
+            MAP
+          </div>
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[sensors_btn]" ng-click="Sensors()">
+            SENSORS
+          </div>
+        </section>
+        <div class="CenterPanel ng-cloak">
+          <section class="MapPanel" ng-show="map_btn">
+            <img class="Map" src="map.png" />
+          </section>
+          <section class="BatteryBoxPanel" ng-show="sensors_btn">
+            <table class="BatteryBoxTable">
+              <td id="battery_31" class="Battery">
+                31
+              </td>
+              <tr></tr>
+              <td id="battery_30" class="Battery">
+                30
+              </td>
+              <tr></tr>
+              <tr>
+                <td id="battery_29" class="Battery">
+                  29
+                </td>
+                <td id="battery_20" class="Battery">
+                  20
+                </td>
+                <td id="battery_19" class="Battery">
+                  19
+                </td>
+                <td id="battery_10" class="Battery">
+                  10
+                </td>
+                <td id="battery_9" class="Battery">
+                  9
+                </td>
+                <td id="battery_0" class="Battery">
+                  0
+                </td>
+              </tr>
+              <tr>
+                <td id="battery_28" class="Battery">
+                  28
+                </td>
+                <td id="battery_21" class="Battery">
+                  21
+                </td>
+                <td id="battery_18" class="Battery">
+                  18
+                </td>
+                <td id="battery_11" class="Battery">
+                  11
+                </td>
+                <td id="battery_8" class="Battery">
+                  8
+                </td>
+                <td id="battery_1" class="Battery">
+                  1
+                </td>
+              </tr>
+              <tr>
+                <td id="battery_27" class="Battery">
+                  27
+                </td>
+                <td id="battery_22" class="Battery">
+                  22
+                </td>
+                <td id="battery_17" class="Battery">
+                  17
+                </td>
+                <td id="battery_12" class="Battery">
+                  12
+                </td>
+                <td id="battery_7" class="Battery">
+                  7
+                </td>
+                <td id="battery_2" class="Battery">
+                  2
+                </td>
+              </tr>
+              <tr>
+                <td id="battery_26" class="Battery">
+                  26
+                </td>
+                <td id="battery_23" class="Battery">
+                  23
+                </td>
+                <td id="battery_16" class="Battery">
+                  16
+                </td>
+                <td id="battery_13" class="Battery">
+                  13
+                </td>
+                <td id="battery_6" class="Battery">
+                  6
+                </td>
+                <td id="battery_3" class="Battery">
+                  3
+                </td>
+              </tr>
+              <tr>
+                <td id="battery_25" class="Battery">
+                  25
+                </td>
+                <td id="battery_24" class="Battery">
+                  24
+                </td>
+                <td id="battery_15" class="Battery">
+                  15
+                </td>
+                <td id="battery_14" class="Battery">
+                  14
+                </td>
+                <td id="battery_5" class="Battery">
+                  5
+                </td>
+                <td id="battery_4" class="Battery">
+                  4
+                </td>
+              </tr>
+            </table>
+          </section>
+          <section class="DrivePanel" ng-show="drive_btn">
+            <div class="Button MotorToggle" ng-class="{true: 'MotorToggleOn', false: ''}[motor_btn]" ng-click="Motor()">
+              MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}
             </div>
-            <div class="TextCell Bottom" colspan="2">
-              no content
-            </div>
-            <div class="TextCell Bottom BottomRightCorner">
-            </div>
-          </footer>
-        </article>
-      </script>
-    </div>
+          </section>
+          <section class="CameraPanel" ng-show="camera_btn">
+            CAMERA
+          </section>
+        </div>
+        <section class="RightPanel">
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[right_btn]" ng-click="Right()">
+            RIGHT
+          </div>
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[headlights_btn]" ng-click="Headlights()">
+            HEADLIGHTS
+          </div>
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[reverse_btn]" ng-click="Reverse()">
+            REVERSE
+          </div>
+          <div class="Gap">
+          </div>
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[drive_btn]" ng-click="Drive()">
+            DRIVE
+          </div>
+          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[camera_btn]" ng-click="Camera()">
+            CAMERA
+          </div>
+        </section>
+      </div>
+      <footer class="FooterRow" colspan="2">
+        <div class="TextCell Bottom BottomLeftCorner">
+        </div>
+        <div class="TextCell Bottom" colspan="2">
+          no content
+        </div>
+        <div class="TextCell Bottom BottomRightCorner">
+        </div>
+      </footer>
+    </article>
   </body>
 </html>
