@@ -24,7 +24,6 @@
     $scope.headlights_btn = false;
     $scope.horn_btn = false;
     $scope.motor_btn = false;
-    $scope.motor_state = ["OFF", "ON"];
     $scope.set_panel_button = function(panel) {
       var _this = this;
       $scope.map_btn = false;
@@ -35,7 +34,7 @@
         return $timeout((function() {
           $scope.current_panel = panel;
           return $scope[$scope.current_panel] = true;
-        }), 0);
+        }), 1);
       }
     };
     $scope.set_panel_button('sensors_btn');

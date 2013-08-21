@@ -60,7 +60,6 @@ window.MainTable = ($scope, $timeout) ->
 	$scope.horn_btn = false
 
 	$scope.motor_btn = false
-	$scope.motor_state = ["OFF", "ON"]
 
 	# initialize App buttons' states.
 	$scope.set_panel_button = (panel) ->
@@ -70,11 +69,11 @@ window.MainTable = ($scope, $timeout) ->
 		$scope.drive_btn = false
 		$scope.camera_btn = false
 		if panel
-			# 0 ms delay necessary due to CSS bugs:
+			# 1 ms delay necessary due to CSS bugs:
 			$timeout (=>
 				$scope.current_panel = panel
 				$scope[$scope.current_panel] = true
-			), 0
+			), 1
 	$scope.set_panel_button('sensors_btn')
 
 	# Button callbacks - HW
