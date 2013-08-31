@@ -46,7 +46,7 @@ class Com:
 
 tty = "/dev/ttyserial"
 devices = {
-	"head_l": Com(tty),
+	"head_l": Com(tty), # Digital Outs
 	"brake_l": Com(tty),
 	"left_l": Com(tty),
 	"right_l": Com(tty),
