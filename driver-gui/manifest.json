@@ -1,6 +1,6 @@
 {
 	"manifest_version": 2,
-	"name": "NUSolar ZELDA OS",
+	"name": "NUSolar ZELDA System",
 	"version": "0.0.1",
 	"minimum_chrome_version": "27",
 	"icons": {
@@ -8,7 +8,7 @@
 	},
 	"app": {
 		"background": {
-			"scripts": ["jquery-2.0.3.js", "agility.min.js", "background.js"]
+			"scripts": ["jquery-2.0.3.js", "angular.min.js", "background.js"]
 		}
 	},
 	"sandbox": {
