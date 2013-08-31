@@ -1,0 +1,28 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="SolarCar/Reports.cs">
+    <Files>
+      <File FileName="SolarCar/Program.cs" Line="17" Column="44" />
+      <File FileName="SolarCar/Hardware.cs" Line="15" Column="12" />
+      <File FileName="SolarCar/SerialDevices.cs" Line="10" Column="25" />
+      <File FileName="SolarCar/CanBus.cs" Line="53" Column="12" />
+      <File FileName="SolarCar/Reports.cs" Line="18" Column="9" />
+      <File FileName="SolarCar/Config.cs" Line="6" Column="34" />
+      <File FileName="SolarCar/Modes.cs" Line="70" Column="55" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="SolarCar" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="Reports.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

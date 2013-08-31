@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarCar", "SolarCar\SolarCar.csproj", "{D9083BF5-0E20-4421-A288-4ACD975655B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Debug|x86.ActiveCfg = Debug|x86
+		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Debug|x86.Build.0 = Debug|x86
+		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Release|x86.ActiveCfg = Release|x86
+		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SolarCar\SolarCar.csproj
+	EndGlobalSection
+EndGlobal
