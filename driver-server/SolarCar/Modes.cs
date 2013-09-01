@@ -32,17 +32,17 @@ namespace SolarCar {
 				DischargeConj = this.Off,
 				DriveConj = this.Discharging
 			};
-			this.EmptyCharging = new Mode { ID=4, CanDischarge = false, Drive = false, CanCharge = true,
+			this.EmptyCharging = new Mode { ID = 4, CanDischarge = false, Drive = false, CanCharge = true,
 				ChargeConj = this.Off,
 				DischargeConj = this.Charging,
 				DriveConj = null
 			};
-			this.Charging = new Mode { ID=5, CanDischarge = true, Drive = false, CanCharge = true,
+			this.Charging = new Mode { ID = 5, CanDischarge = true, Drive = false, CanCharge = true,
 				ChargeConj = this.Discharging,
 				DischargeConj = this.EmptyCharging,
 				DriveConj = this.DriveCharging
 			};
-			this.DriveCharging = new Mode { ID=6, CanDischarge = true, Drive = true, CanCharge = true,
+			this.DriveCharging = new Mode { ID = 6, CanDischarge = true, Drive = true, CanCharge = true,
 				ChargeConj = this.Drive,
 				DischargeConj = this.EmptyCharging,
 				DriveConj = this.Charging
@@ -52,9 +52,9 @@ namespace SolarCar {
 		}
 
 		/// <summary>
-		/// Check the battery conditions, adjust mode, and sleep 1ms.
+		/// Check the battery health, and adjust Protection Mode.
 		/// </summary>
-		void CheckConditions() {
+		void CheckHealth() {
 			bool health = hardware.Health() == "NONE";
 			bool can_discharge = hardware.CanDischarge();
 			bool can_charge = hardware.CanCharge();
@@ -80,7 +80,16 @@ namespace SolarCar {
 
 			// Send BPS mode change.
 			this.hardware.Mode = this.Current.ID;
-			System.Threading.Thread.Sleep(1);
+		}
+
+		/// <summary>
+		/// BPS run loop. Sleeps 1ms per cycle.
+		/// </summary>
+		public void RunLoop() {
+			while (this.hardware != null) {
+				this.CheckHealth();
+				System.Threading.Thread.Sleep(1);
+			}
 		}
 	}
 }

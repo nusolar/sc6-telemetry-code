@@ -6,7 +6,7 @@ namespace SolarCar {
 	/// </summary>
 	class Hardware {
 		readonly BPS bps = new BPS();
-		readonly CanBus can_bus = new CanBus("/dev/tty.CANBUS");
+		readonly CanUsb can_bus = new CanUsb("/dev/tty.CANUSB");
 		readonly PedalIn pedals = new PedalIn("/dev/tty.PEDALS");
 		readonly DigitalOut brake_lights = new DigitalOut("/dev/tty.BRAKEL");
 		readonly DigitalOut right_signal = new DigitalOut("/dev/tty.RIGHTL");
@@ -116,7 +116,7 @@ namespace SolarCar {
 		/// </summary>
 		/// <value><c>true</c> if headlights; otherwise, <c>false</c>.</value>
 		public bool HeadLights {
-			get { return this.headlights.Status;}
+			get { return this.headlights.Value;}
 			set { this.headlights.Set(value);}
 		}
 
@@ -125,7 +125,7 @@ namespace SolarCar {
 		/// </summary>
 		/// <value><c>true</c> if brake lights; otherwise, <c>false</c>.</value>
 		public bool BrakeLights {
-			get { return this.brake_lights.Status;}
+			get { return this.brake_lights.Value;}
 			set { this.brake_lights.Set(value);}
 		}
 
@@ -134,7 +134,7 @@ namespace SolarCar {
 		/// </summary>
 		/// <value><c>true</c> if right signal; otherwise, <c>false</c>.</value>
 		public bool RightSignal {
-			get { return this.right_signal.Status;}
+			get { return this.right_signal.Value;}
 			set { this.right_signal.Set(value);}
 		}
 
@@ -143,7 +143,7 @@ namespace SolarCar {
 		/// </summary>
 		/// <value><c>true</c> if left signal; otherwise, <c>false</c>.</value>
 		public bool LeftSignal {
-			get { return this.left_signal.Status;}
+			get { return this.left_signal.Value;}
 			set { this.left_signal.Set(value);}
 		}
 
@@ -152,7 +152,7 @@ namespace SolarCar {
 		/// </summary>
 		/// <value><c>true</c> if horn; otherwise, <c>false</c>.</value>
 		public bool Horn {
-			get { return this.horn.Status;}
+			get { return this.horn.Value;}
 			set { this.horn.Set(value);}
 		}
 		#endregion

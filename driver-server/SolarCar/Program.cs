@@ -11,7 +11,7 @@ namespace SolarCar {
 			this.hardware = hw;
 		}
 
-		public void RunLoop() {
+		void ChooseVelocity() {
 			bool is_braking = this.hardware.BrakePedel;
 
 			float accel = this.hardware.AccelAmount;
@@ -37,10 +37,19 @@ namespace SolarCar {
 
 			this.hardware.SetMotor(motor_velocity, motor_current);
 		}
+
+		public void RunLoop() {
+			while (this.hardware != null) {
+				this.ChooseVelocity();
+				System.Threading.Thread.Sleep(1);
+			}
+		}
 	}
 
 	class MainClass {
 		void ReadBps() {
+			// runs I/O on main thread.
+			Hardware hw = new Hardware();
 
 		}
 
