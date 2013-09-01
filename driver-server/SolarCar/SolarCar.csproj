@@ -45,12 +45,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="CarData.cs" />
-    <Compile Include="CanBus.cs" />
     <Compile Include="Reports.cs" />
     <Compile Include="Hardware.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="SerialDevices.cs" />
     <Compile Include="Modes.cs" />
+    <Compile Include="CanUsb.cs" />
+    <Compile Include="SyncSerialPort.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
