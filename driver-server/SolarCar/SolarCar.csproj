@@ -52,6 +52,7 @@
     <Compile Include="Modes.cs" />
     <Compile Include="CanUsb.cs" />
     <Compile Include="SyncSerialPort.cs" />
+    <Compile Include="JsonReporters.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
