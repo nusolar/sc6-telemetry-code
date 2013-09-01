@@ -1,5 +1,4 @@
 using System;
-using System.IO.Ports;
 
 namespace SolarCar {
 	class CanPacket {
@@ -79,7 +78,7 @@ namespace SolarCar {
 		}
 
 		/// <summary>
-		/// Gets 1 packet from the CAN bus, updates corresponding Report.
+		/// Interpret line as CAN packet, update corresponding Report.
 		/// </summary>
 		void HandleLine(string InLine) {
 			byte[] bytes = System.Text.Encoding.ASCII.GetBytes(InLine);

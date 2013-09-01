@@ -1,6 +1,5 @@
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace SolarCar {
 	class Driver {
@@ -50,15 +49,20 @@ namespace SolarCar {
 		void ReadBps() {
 			// runs I/O on main thread.
 			Hardware hw = new Hardware();
-
+			ModeSwitcher bps = new ModeSwitcher(hw);
+			Driver drv = new Driver(hw);
+			Thread bps_loop = new Thread(new ThreadStart(bps.RunLoop));
+			Thread drv_loop = new Thread(new ThreadStart(drv.RunLoop));
+			bps_loop.Start();
+			drv_loop.Start();
 		}
 
 		public static void Main(string[] args) {
 			Console.WriteLine("Hello World!");
 			CarData.Test();
-			ISerial<BatteryReport>.Test();
-			ISerial<BatteryReport>.Test();
-			ISerial<BatteryReport>.Test();
+			IJsonReporter<BatteryReport>.Test();
+			IJsonReporter<BatteryReport>.Test();
+			IJsonReporter<BatteryReport>.Test();
 
 //			Console.WriteLine("Press any key to continue...");
 //			Console.WriteLine();

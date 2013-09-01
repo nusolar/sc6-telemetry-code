@@ -16,10 +16,9 @@ namespace SolarCar {
 
 		public Hardware() {
 		}
-
+		#region BPS
 		/// <summary>
 		/// String representing Health of batteries.
-		/// TODO: choose BPS evaluation location
 		/// </summary>
 		public string Health() {
 			for (int i=0; i<Config.NUM_BATTERIES; i++) {
@@ -69,6 +68,7 @@ namespace SolarCar {
 			get { return this.bps.Report.mode; }
 			set { this.bps.SetMode(value); }
 		}
+		#endregion
 		#region Motor control
 		public void SetMotor(float motor_velocity, float motor_current) {
 			can_bus.SendDriveCmd(motor_velocity, motor_current);

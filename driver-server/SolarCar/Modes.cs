@@ -58,7 +58,7 @@ namespace SolarCar {
 			bool health = hardware.Health() == "NONE";
 			bool can_discharge = hardware.CanDischarge();
 			bool can_charge = hardware.CanCharge();
-			bool is_drive = false; // from user
+			bool is_drive = false; // TODO get driving input from user
 
 			if (!health) {
 				// kill everything, if batteries unhealthy

@@ -125,9 +125,10 @@ namespace SolarCar {
 			this.Report = report;
 		}
 
-		/**
-		 * sends a JSON value to the device, over serial port.
-		 */
+		/// <summary>
+		/// Sends a JSON value to the device.
+		/// </summary>
+		/// <param name="command">Command.</param>
 		protected void SendValue(string command) {
 			JObject obj = new JObject();
 			obj["command"] = command;
