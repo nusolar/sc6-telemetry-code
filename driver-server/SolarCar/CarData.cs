@@ -2,11 +2,9 @@ using System;
 using Mono.Data.Sqlite;
 
 namespace SolarCar {
-	class CarReport {
-		public BatteryReport b = null;
-		public ArrayReport r = null;
-	}
-
+	/// <summary>
+	/// Database for telemetry, trip events, and commands.
+	/// </summary>
 	class CarData {
 		public void commit(BatteryReport report) {
 		}
@@ -15,25 +13,6 @@ namespace SolarCar {
 		}
 
 		public void commit(DigitalOutReport report) {
-		}
-
-		/**
-		 * critical health of the batteries.
-		 */
-		public bool Health() {
-			return false;
-		}
-
-		public bool BatteriesCanCharge() {
-			return false;
-		}
-
-		public bool BatteriesCanDischarge() {
-			return false;
-		}
-
-		public bool ArrayAvailable() {
-			return false;
 		}
 
 		public static void Test() {

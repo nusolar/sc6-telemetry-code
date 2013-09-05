@@ -2,16 +2,8 @@ using System;
 using System.Collections.Generic;
 
 namespace SolarCar {
-	class MotorReport {
-		public float motor_rpm = 0;
-		public float motor_velocity = 0;
-	}
-
-	class ArrayReport {
-	}
-
 	/// <summary>
-	/// Data aggregate, holding a BPS report
+	/// Data aggregate, from BPS hardware.
 	/// </summary>
 	class BatteryReport {
 		public float battery_current = 0;
@@ -25,11 +17,34 @@ namespace SolarCar {
 		// Lists range 0-31
 		public List<float> battery_voltages = null;
 		public List<float> battery_temperatures = null;
+		// current modes
 		public int mode = 0;
+		public int precharge = 0;
 		// misc fields
 		public int disabled_module = 0;
-		public string message = "";
+		public int last_error = 0;
 		public int uptime = 0;
+		public string message = "";
+	}
+
+	class ArrayReport {
+		int red_Uin = 0;
+		int red_Iin = 0;
+		int red_Uout = 0;
+	}
+
+	/// <summary>
+	/// Data aggregate, from Motor hardware.
+	/// </summary>
+	class MotorReport {
+		public float motor_rpm = 0;
+		public float motor_velocity = 0;
+	}
+
+	class PedalReport {
+		public int accel_pedal = 0;
+		public int regen_pedal = 0;
+		public bool brake_pedal = false;
 	}
 
 	class DigitalOutReport {
@@ -37,8 +52,19 @@ namespace SolarCar {
 		public string name = "";
 	}
 
-	class PedalReport {
-		public int accel_pedal = 0;
+	/// <summary>
+	/// Data aggregate, from SolarCar.Hardware for HttpServer
+	/// </summary>
+	class CarReport {
+		public BatteryReport Battery = null;
+		public ArrayReport Array = null;
+		public float motor_rpm = 0f, motor_velocity = 0f;
+		// Pedal status
 		public bool brake_pedal = false;
+		public float accel_pedal = 0;
+		public float regen_pedel = 0;
+		// Signal status
+		public bool Horn, Headlights, Brakelights;
+		public int Signal;
 	}
 }

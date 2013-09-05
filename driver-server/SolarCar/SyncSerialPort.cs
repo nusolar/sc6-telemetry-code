@@ -29,7 +29,7 @@ namespace SolarCar {
 		}
 
 		/// <summary>
-		/// Releases the SerialPort and performs other cleanup operations before the SolarCar.ISerial is
+		/// Releases the SerialPort and performs other cleanup operations before the SolarCar.SyncSerialPort is
 		/// reclaimed by garbage collection.
 		/// </summary>
 		~SyncSerialPort() {
@@ -74,7 +74,7 @@ namespace SolarCar {
 					int newline_index = this.buffer.IndexOf(this.NewLine);
 					// copy the first line in the buffer.
 					new_line = this.buffer.Substring(0, newline_index + 1);
-					// remove copied data from buffer.
+					// then remove copied data from buffer.
 					this.buffer = this.buffer.Substring(newline_index + 1);
 				}
 			}

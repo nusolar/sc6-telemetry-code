@@ -9,12 +9,12 @@ namespace SolarCar {
 		public int ID = -1;
 	}
 
-	class ModeSwitcher {
+	class BatteryController {
 		readonly Hardware hardware = null;
 		readonly Mode Off, Discharging, Drive, EmptyCharging, Charging, DriveCharging;
 		Mode Current = null;
 
-		public ModeSwitcher(Hardware hw) {
+		public BatteryController(Hardware hw) {
 			this.hardware = hw;
 
 			this.Off = new Mode { ID = 0, CanDischarge = false, Drive = false, CanCharge = false,
@@ -58,7 +58,7 @@ namespace SolarCar {
 			bool health = hardware.Health() == "NONE";
 			bool can_discharge = hardware.CanDischarge();
 			bool can_charge = hardware.CanCharge();
-			bool is_drive = false; // TODO get driving input from user
+			bool is_drive = hardware.UserDrive;
 
 			if (!health) {
 				// kill everything, if batteries unhealthy
@@ -78,7 +78,7 @@ namespace SolarCar {
 				}
 			}
 
-			// Send BPS mode change.
+			// Send the Mode to the BPS board.
 			this.hardware.Mode = this.Current.ID;
 		}
 
@@ -88,7 +88,7 @@ namespace SolarCar {
 		public void RunLoop() {
 			while (this.hardware != null) {
 				this.CheckHealth();
-				System.Threading.Thread.Sleep(1);
+				System.Threading.Thread.Sleep(1); // 1ms
 			}
 		}
 	}

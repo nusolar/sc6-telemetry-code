@@ -53,6 +53,9 @@
     <Compile Include="CanUsb.cs" />
     <Compile Include="SyncSerialPort.cs" />
     <Compile Include="JsonReporters.cs" />
+    <Compile Include="SignalController.cs" />
+    <Compile Include="MotorController.cs" />
+    <Compile Include="UserCommands.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

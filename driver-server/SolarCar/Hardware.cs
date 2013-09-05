@@ -16,7 +16,7 @@ namespace SolarCar {
 
 		public Hardware() {
 		}
-		#region BPS
+		#region BPS HW control
 		/// <summary>
 		/// String representing Health of batteries.
 		/// </summary>
@@ -68,13 +68,20 @@ namespace SolarCar {
 			get { return this.bps.Report.mode; }
 			set { this.bps.SetMode(value); }
 		}
+
+		public int Precharge {
+			get { return this.bps.Report.precharge; }
+		}
 		#endregion
-		#region Motor control
+		/**
+		 * Wraps communication with MotorController Hardware, and the Pedals
+		 */
+		#region Motor HW control
 		public void SetMotor(float motor_velocity, float motor_current) {
 			can_bus.SendDriveCmd(motor_velocity, motor_current);
 		}
 
-		public float MotorVelocity { get { return this.can_bus.motor_report.motor_velocity; } }
+		public float GetMotorVelocity { get { return this.can_bus.motor_report.motor_velocity; } }
 
 		/// <summary>
 		/// Gets a value indicating whether the brake pedel is pressed.
@@ -89,7 +96,8 @@ namespace SolarCar {
 		public float AccelAmount {
 			get {
 				float accel = (pedals.Report.accel_pedal + 0) / 1023;
-				return (accel > 1) ? 1 : ((accel < 0) ? 0 : accel);
+				accel = (accel > 1) ? 1 : ((accel < 0) ? 0 : accel);
+				return (accel > Config.ACCEL_THRESH) ? accel : 0;
 			}
 		}
 
@@ -99,18 +107,16 @@ namespace SolarCar {
 		/// <value>Regen amount, ranges 0-1.</value>
 		public float RegenAmount {
 			get {
-				float regen = 0.3f;
-				return (regen > 1) ? 1 : ((regen < 0) ? 0 : regen);
+				float regen = (pedals.Report.regen_pedal + 0) / 1023;
+				regen = (regen > 1) ? 1 : ((regen < 0) ? 0 : regen);
+				return (regen > Config.REGEN_THRESH) ? regen : 0;
 			}
 		}
-
-		/// <summary>
-		/// Gets a value indicating whether Regen is activated.
-		/// </summary>
-		/// <value><c>true</c> if regen is activated; otherwise, <c>false</c>.</value>
-		public bool RegenActive { get { return this.RegenAmount > Config.REGEN_THRESH; } }
 		#endregion
-		#region Driver signal controls
+		/**
+		 * Wraps communication with Signal Hardware.
+		 */
+		#region Driver signal HW controls
 		/// <summary>
 		/// Assignable value representing the headlights.
 		/// </summary>
@@ -156,6 +162,42 @@ namespace SolarCar {
 			set { this.horn.Set(value);}
 		}
 		#endregion
+		#region User commands
+		public enum Signals {
+			Off = 0,
+			Left,
+			Right,
+			Hazards
+		}
+
+		public bool UserDrive = false;
+		public bool UserHorn = false;
+		public Signals UserSignal = Signals.Off;
+		public bool UserHeadlights = false;
+		#endregion
+		public CarReport Report {
+			get {
+				CarReport rep = new CarReport();
+				rep.Battery = this.bps.Report;
+
+				// TODO get array values
+
+				// TODO more motor values
+				rep.motor_velocity = this.can_bus.motor_report.motor_velocity;
+				rep.motor_rpm = this.can_bus.motor_report.motor_rpm;
+
+				rep.accel_pedal = this.AccelAmount;
+				rep.regen_pedel = this.RegenAmount;
+				rep.brake_pedal = this.BrakePedel;
+
+				rep.Brakelights = this.BrakeLights;
+				// using User values as actual.
+				rep.Horn = this.UserHorn;
+				rep.Headlights = this.UserHeadlights;
+				rep.Signal = (int)this.UserSignal;
+				return rep;
+			}
+		}
 	}
 }
 

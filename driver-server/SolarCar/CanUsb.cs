@@ -48,6 +48,7 @@ namespace SolarCar {
 	/// </summary>
 	class CanUsb: SyncSerialPort {
 		readonly public MotorReport motor_report = new MotorReport();
+		readonly public ArrayReport array_report = new ArrayReport();
 		const string NEWLINE = "\r";
 
 		public CanUsb(string path): base(path) {
@@ -99,6 +100,8 @@ namespace SolarCar {
 						this.motor_report.motor_rpm = packet.Float1();
 						this.motor_report.motor_velocity = packet.Float2();
 						break;
+				// TODO more motor values
+				// TODO get array values
 				}
 			}
 		}

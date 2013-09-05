@@ -13,8 +13,8 @@ namespace SolarCar {
 		public const float MAX_TEMP = 45;
 		public const float MIN_TEMP = 0;
 		// BPS charge/discharge limits:
-		public const float MIN_DISCHARGE_VOLTAGE = 2.76f;
-		public const float MAX_CHARGE_VOLTAGE = 4.29f;
+		public const float MIN_DISCHARGE_VOLTAGE = MIN_VOLTAGE + 0.01f;
+		public const float MAX_CHARGE_VOLTAGE = MAX_VOLTAGE - 0.01f;
 		// Motor controls configuration
 		public const float ACCEL_THRESH = 0.05f;
 		public const float REGEN_THRESH = 0.1f;

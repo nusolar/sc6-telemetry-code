@@ -25,6 +25,7 @@
 	],
 	"mode": 0,
 	"disabled_module": 64, /* module 0-31 */
+	"last_error": 0,
 	"message": "",
 	"uptime": 300000 /* ms */
 }

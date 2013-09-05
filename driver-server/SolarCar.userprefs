@@ -1,22 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="SolarCar/JsonReporters.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="SolarCar/Reports.cs">
     <Files>
-      <File FileName="SolarCar/Program.cs" Line="45" Column="4" />
-      <File FileName="SolarCar/Modes.cs" Line="67" Column="32" />
-      <File FileName="SolarCar/Hardware.cs" Line="162" Column="1" />
-      <File FileName="SolarCar/JsonReporters.cs" Line="3" Column="28" />
-      <File FileName="SolarCar/CanUsb.cs" Line="12" Column="3" />
-      <File FileName="SolarCar/SyncSerialPort.cs" Line="2" Column="23" />
-      <File FileName="SolarCar/Reports.cs" Line="29" Column="17" />
-      <File FileName="SolarCar/Config.cs" Line="1" Column="1" />
+      <File FileName="SolarCar/Program.cs" Line="9" Column="4" />
+      <File FileName="SolarCar/Modes.cs" Line="17" Column="27" />
+      <File FileName="SolarCar/Hardware.cs" Line="183" Column="16" />
+      <File FileName="SolarCar/Server.cs" Line="62" Column="20" />
+      <File FileName="SolarCar/Reports.cs" Line="33" Column="20" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="SolarCar" expanded="True">
             <Node name="References" expanded="True" />
-            <Node name="JsonReporters.cs" selected="True" />
+            <Node name="Reports.cs" selected="True" />
           </Node>
         </State>
       </Pad>
