@@ -47,7 +47,7 @@ namespace SolarCar {
 		public void RunLoop() {
 			while (this.hardware != null) {
 				this.SetSignals();
-				System.Threading.Thread.Sleep(1); // 1ms
+				System.Threading.Thread.Sleep(Config.LOOP_INTERVAL); // 1ms
 			}
 		}
 	}

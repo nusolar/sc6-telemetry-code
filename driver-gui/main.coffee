@@ -5,51 +5,6 @@ namespace = (target, name, block) ->
   target = target[item] or= {} for item in name.split '.'
   block target, top
 
-# namespace 'Model', (exports) ->
-# 	exports.serial_devices =
-# 		horn: "/dev/ttyACM.horn"
-# 		left: "/dev/ttyACM.left"
-# 		right: "/dev/ttyACM.right"
-# 		headlights: "/dev/ttyACM.headlights"
-# 		brakelights: "/dev/ttyACM.brakelights"
-
-# 	class exports.UsbSerial
-# 		_value: 0
-# 		value: () ->
-# 			_value
-# 		ab2str: (buff) ->
-# 			return String.fromCharCode.apply null, new UInt8Array(buff)
-# 		str2ab: (str) ->
-# 			buf = new ArrayBuffer(str.length)
-# 			bufView = new UInt8Array(buf)
-# 			for i in [0..str.length-1]
-# 				bufView[i] = str.charCodeAt(i)
-# 		write: (str, call = ->) ->
-# 			chrome.serial.write @connection_id, str2ab(str), call
-# 		off: () ->
-# 			@write "off", ->
-# 				_value = 0
-# 		on: () ->
-# 			@write "on", ->
-# 				_value = 1
-# 		toggle: () ->
-# 			_value = !_value
-# 		constructor: (@name) ->
-# 			chrome.serial.open @name,
-# 				bitrate: 115200,
-# 				(connection_info) ->
-# 					@connection_id = connection_info.connectionId
-# 					console.log "Serial port opened: "+@name
-# 		# MUST BE CALLED
-# 		destroy: () ->
-# 			chrome.serial.close @connection_id, ->
-# 				console.log "Serial port closed: "+@name
-
-# 	exports.usb = new Object()
-# 	for k, v of exports.serial_devices
-# 		exports.usb[k] = new exports.UsbSerial(v)
-
-
 window.MainTable = ($scope, $timeout) ->
 
 	# initialize HW members. TODO: load from car
@@ -60,6 +15,12 @@ window.MainTable = ($scope, $timeout) ->
 	$scope.horn_btn = false
 
 	$scope.motor_btn = false
+
+	$scope.commands =
+		drive: 0
+		horn: 0
+		signals: 0
+		headlights: 0
 
 	# initialize App buttons' states.
 	$scope.set_panel_button = (panel) ->
@@ -73,37 +34,43 @@ window.MainTable = ($scope, $timeout) ->
 			$timeout (=>
 				$scope.current_panel = panel
 				$scope[$scope.current_panel] = true
-			), 1
+			), 1 #ms
 	$scope.set_panel_button('sensors_btn')
 
-	# Button callbacks - HW
+	# Button callbacks - Hardware control
 	$scope.Left = ->
+		# Turn off other buttons, toggle Left Button
 		$scope.hazards_btn = false
 		$scope.right_btn = false
 		$scope.left_btn = not $scope.left_btn
-		# TODO set HW
+		# if Left Button is depressed, specify left signal (==1, from C# code)
+		$scope.commands.signals = if $scope.left_btn then 1 else 0
 
 	$scope.Right = ->
 		$scope.hazards_btn = false
 		$scope.left_btn = false
 		$scope.right_btn = not $scope.right_btn
-		# TODO set HW
+		# if Right Button is depressed, specify right signal (==2, from C# code)
+		$scope.commands.signals = if $scope.right_btn then 2 else 0
 
 	$scope.Hazards = ->
 		$scope.left_btn = false
 		$scope.right_btn = false
 		$scope.hazards_btn = not $scope.hazards_btn
-		# TODO set HW
+		# if Hazards Button is depressed, specify hazards (==3, from C# code)
+		$scope.commands.signals = if $scope.hazards_btn then 3 else 0
 
 	$scope.Headlights = ->
 		$scope.headlights_btn = not $scope.headlights_btn
-		# TODO set HW
+		# if Headlights Button is depressed, activate headlights
+		$scope.commands.headlights = if $scope.headlights_btn then 1 else 0
 
 	$scope.SetHorn = (horn_bool) ->
 		$scope.horn_btn = horn_bool
-		# TODO set HW
+		# if Horn Button is depressed, activate horn
+		$scope.commands.horn = if horn_bool then 1 else 0
 
-	# Button callbacks - Apps. TODO: Merge into HTML
+	# Button callbacks - Apps. TODO: Inline these OnClick() delegates into the Angular HTML
 	$scope.Map = ->
 		$scope.set_panel_button('map_btn')
 	$scope.Sensors = ->
@@ -115,5 +82,23 @@ window.MainTable = ($scope, $timeout) ->
 
 	$scope.Motor = ->
 		$scope.motor_btn = not $scope.motor_btn
+		# if Motor Button is depressed, activate Drive
+		$scope.commands.drive = if $scope.motor_btn then 1 else 0
 
+
+	# Create timer to submit commands, and receive updated Telemetry values.
+	# Because AngularJS doesn't have $interval yet, we use the $apply hack
+	timer_id = setInterval((=>
+		$scope.$apply(=>
+			$scope.query_string = $.param($scope.commands)
+			$.ajax
+				# url: window.location.origin + ':8080/data.json'
+				url: 'http://localhost:8080/data.json'
+				dataType:'jsonp'
+				data: $scope.commands
+				success: (json) =>
+					# TODO update values
+					$scope.commands
+		)
+	), 50) #ms
 

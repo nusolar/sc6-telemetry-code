@@ -1,9 +1,10 @@
 using System;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace SolarCar {
 	class MainClass {
-		void RunCar() {
+		static void RunCar() {
 			// runs hardware I/O on main thread.
 			Hardware hw = new Hardware();
 
@@ -17,6 +18,7 @@ namespace SolarCar {
 			HttpServer web = new HttpServer(commands);
 
 			// do RunLoops in separate threads:
+			Thread.Sleep(1); // 1ms
 			Thread bps_loop = new Thread(new ThreadStart(bps.RunLoop));
 			Thread drv_loop = new Thread(new ThreadStart(drv.RunLoop));
 			Thread sig_loop = new Thread(new ThreadStart(sig.RunLoop));
@@ -38,9 +40,11 @@ namespace SolarCar {
 			IJsonReporter<BatteryReport>.Test();
 			IJsonReporter<BatteryReport>.Test();
 
-//			Console.WriteLine("Press any key to continue...");
-//			Console.WriteLine();
-//			Console.ReadKey();
+			RunCar();
+
+			// Console.WriteLine("Press any key to continue...");
+			// Console.WriteLine();
+			// Console.ReadKey();
 		}
 	}
 }

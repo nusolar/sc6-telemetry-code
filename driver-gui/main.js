@@ -18,12 +18,20 @@
   };
 
   window.MainTable = function($scope, $timeout) {
+    var timer_id,
+      _this = this;
     $scope.left_btn = false;
     $scope.right_btn = false;
     $scope.hazards_btn = false;
     $scope.headlights_btn = false;
     $scope.horn_btn = false;
     $scope.motor_btn = false;
+    $scope.commands = {
+      drive: 0,
+      horn: 0,
+      signals: 0,
+      headlights: 0
+    };
     $scope.set_panel_button = function(panel) {
       var _this = this;
       $scope.map_btn = false;
@@ -41,23 +49,28 @@
     $scope.Left = function() {
       $scope.hazards_btn = false;
       $scope.right_btn = false;
-      return $scope.left_btn = !$scope.left_btn;
+      $scope.left_btn = !$scope.left_btn;
+      return $scope.commands.signals = $scope.left_btn ? 1 : 0;
     };
     $scope.Right = function() {
       $scope.hazards_btn = false;
       $scope.left_btn = false;
-      return $scope.right_btn = !$scope.right_btn;
+      $scope.right_btn = !$scope.right_btn;
+      return $scope.commands.signals = $scope.right_btn ? 2 : 0;
     };
     $scope.Hazards = function() {
       $scope.left_btn = false;
       $scope.right_btn = false;
-      return $scope.hazards_btn = !$scope.hazards_btn;
+      $scope.hazards_btn = !$scope.hazards_btn;
+      return $scope.commands.signals = $scope.hazards_btn ? 3 : 0;
     };
     $scope.Headlights = function() {
-      return $scope.headlights_btn = !$scope.headlights_btn;
+      $scope.headlights_btn = !$scope.headlights_btn;
+      return $scope.commands.headlights = $scope.headlights_btn ? 1 : 0;
     };
     $scope.SetHorn = function(horn_bool) {
-      return $scope.horn_btn = horn_bool;
+      $scope.horn_btn = horn_bool;
+      return $scope.commands.horn = horn_bool ? 1 : 0;
     };
     $scope.Map = function() {
       return $scope.set_panel_button('map_btn');
@@ -71,9 +84,23 @@
     $scope.Camera = function() {
       return $scope.set_panel_button('camera_btn');
     };
-    return $scope.Motor = function() {
-      return $scope.motor_btn = !$scope.motor_btn;
+    $scope.Motor = function() {
+      $scope.motor_btn = !$scope.motor_btn;
+      return $scope.commands.drive = $scope.motor_btn ? 1 : 0;
     };
+    return timer_id = setInterval((function() {
+      return $scope.$apply(function() {
+        $scope.query_string = $.param($scope.commands);
+        return $.ajax({
+          url: 'http://localhost:8080/data.json',
+          dataType: 'jsonp',
+          data: $scope.commands,
+          success: function(json) {
+            return $scope.commands;
+          }
+        });
+      });
+    }), 50);
   };
 
 }).call(this);

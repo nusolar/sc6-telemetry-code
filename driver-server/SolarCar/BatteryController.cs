@@ -12,7 +12,7 @@ namespace SolarCar {
 	class BatteryController {
 		readonly Hardware hardware = null;
 		readonly Mode Off, Discharging, Drive, EmptyCharging, Charging, DriveCharging;
-		Mode Current = null;
+		volatile Mode Current;
 
 		public BatteryController(Hardware hw) {
 			this.hardware = hw;
@@ -80,6 +80,9 @@ namespace SolarCar {
 
 			// Send the Mode to the BPS board.
 			this.hardware.Mode = this.Current.ID;
+#if DEBUG
+			Console.WriteLine("Mode: " + this.Current.ID.ToString());
+#endif
 		}
 
 		/// <summary>
@@ -88,7 +91,7 @@ namespace SolarCar {
 		public void RunLoop() {
 			while (this.hardware != null) {
 				this.CheckHealth();
-				System.Threading.Thread.Sleep(1); // 1ms
+				System.Threading.Thread.Sleep(Config.LOOP_INTERVAL); // 1ms
 			}
 		}
 	}

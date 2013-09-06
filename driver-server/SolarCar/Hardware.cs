@@ -74,7 +74,7 @@ namespace SolarCar {
 		}
 		#endregion
 		/**
-		 * Wraps communication with MotorController Hardware, and the Pedals
+		 * This region wraps communication with MotorController Hardware, and the Pedals
 		 */
 		#region Motor HW control
 		public void SetMotor(float motor_velocity, float motor_current) {
@@ -114,7 +114,7 @@ namespace SolarCar {
 		}
 		#endregion
 		/**
-		 * Wraps communication with Signal Hardware.
+		 * This region wraps communication with Signal Hardware.
 		 */
 		#region Driver signal HW controls
 		/// <summary>

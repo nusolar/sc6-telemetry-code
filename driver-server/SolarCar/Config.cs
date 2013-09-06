@@ -19,5 +19,11 @@ namespace SolarCar {
 		public const float ACCEL_THRESH = 0.05f;
 		public const float REGEN_THRESH = 0.1f;
 		public const float MAX_VELOCITY = 101;
+		// Bootup files
+		public const string SAMPLE_BATTERY_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_bms.json";
+		public const string SAMPLE_MOTOR_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_motor.json";
+		public const string SAMPLE_INPUT_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_input.json";
+		public const string SAMPLE_OUTPUT_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_output.json";
+		public const int LOOP_INTERVAL = 100;
 	}
 }

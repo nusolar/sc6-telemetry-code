@@ -1,10 +1,11 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace SolarCar {
-	class IJsonReporter<TReport>: SyncSerialPort {
-		public TReport Report;
+	class IJsonReporter<TReport>: SyncSerialPort where TReport: new() {
+		public TReport Report = new TReport();
 
 		public IJsonReporter(string name): base(name) {
 			this.LineReceived += new LineReceivedDelegate(this.HandleLine);
@@ -64,6 +65,7 @@ namespace SolarCar {
 
 	class BPS: IJsonReporter<BatteryReport> {
 		public BPS(): base("/dev/tty.BMS-1234") {
+			this.Report = Json.CreateFromJsonFile<BatteryReport>(Config.SAMPLE_BATTERY_REPORT);
 		}
 
 		public void SetMode(int mode) {
@@ -77,6 +79,7 @@ namespace SolarCar {
 		/// </summary>
 		/// <param name="name">Port name</param>
 		public DigitalOut(string name): base(name) {
+			this.Report = Json.CreateFromJsonFile<DigitalOutReport>(Config.SAMPLE_OUTPUT_REPORT);
 			this.TurnOff();
 		}
 
@@ -101,6 +104,7 @@ namespace SolarCar {
 
 	class PedalIn: IJsonReporter<PedalReport> {
 		public PedalIn(string name): base(name) {
+			this.Report = Json.CreateFromJsonFile<PedalReport>(Config.SAMPLE_INPUT_REPORT);
 		}
 
 		public int AccelPedal { get { return this.Report.accel_pedal; } }

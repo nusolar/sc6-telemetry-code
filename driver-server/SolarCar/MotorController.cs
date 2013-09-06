@@ -27,6 +27,7 @@ namespace SolarCar {
 						// regen MUST be between 0 and 1
 						motor_current = regen;
 					} else if (accel > 0) {
+						// TODO reverse
 						motor_velocity = Config.MAX_VELOCITY;
 						// accel MUST be between 0 and 1
 						motor_current = accel;
@@ -35,12 +36,15 @@ namespace SolarCar {
 			}
 
 			this.hardware.SetMotor(motor_velocity, motor_current);
+#if DEBUG
+			Console.WriteLine("Velocity: " + motor_velocity.ToString());
+#endif
 		}
 
 		public void RunLoop() {
 			while (this.hardware != null) {
 				this.ChooseVelocity();
-				System.Threading.Thread.Sleep(1); // 1ms
+				System.Threading.Thread.Sleep(Config.LOOP_INTERVAL); // 1ms
 			}
 		}
 	}

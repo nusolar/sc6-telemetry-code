@@ -26,52 +26,99 @@ namespace SolarCar {
 			}
 		}
 
+		/// <summary>
+		/// Executes commands from Query parameters. This query API must match the CoffeeScript code.
+		/// </summary>
+		/// <param name="query">Query.</param>
 		void DoCommand(System.Collections.Specialized.NameValueCollection query) {
-			foreach (string key in query) {
-				switch (key) {
-					case "power":
-						switch (query[key]) {
-							case "on":
-								// turn on
-								break;
-							default:
-								// turn off
-								break;
-						}
-						break;
+			switch (query["power"]) {
+				case "1":
+					// TODO implement User power command
+					break;
+				default:
+					// turn off
+					break;
+			}
 
-					case "drive":
-						switch (query[key]) {
-							case "on": 
-								this.commander.Drive = true;
-								break;
-							default: 
-								this.commander.Drive = false;
-								break;
-						}
-						break;
-				}
+			switch (query["drive"]) {
+				case "1": 
+					this.commander.Drive = true;
+					break;
+				default: 
+					this.commander.Drive = false;
+					break;
+			}
+
+			switch (query["signals"]) {
+				case "1": 
+					this.commander.LeftSignal = true;
+					break;
+				case "2":
+					this.commander.RightSignal = true;
+					break;
+				case "3":
+					this.commander.Hazards = true;
+					break;
+				default: 
+					this.commander.LeftSignal = false;
+					break;
+			}
+
+			switch (query["horn"]) {
+				case "1": 
+					this.commander.Horn = true;
+					break;
+				default: 
+					this.commander.Horn = false;
+					break;
+			}
+
+			switch (query["headlights"]) {
+				case "1": 
+					this.commander.HeadLights = true;
+					break;
+				default: 
+					this.commander.HeadLights = false;
+					break;
 			}
 		}
 
 		/**
-		 * Indefinitely serve HTTP, unless this.data == null.
+		 * Indefinitely serve HTTP, unless this.commander == null.
 		 */
 		public void RunLoop() {
 			listener.Start();
-			while (commander != null) {
+			while (true) {
 				HttpListenerContext context = listener.GetContext(); // Blocking
 				HttpListenerRequest request = context.Request;
-				Console.WriteLine(request.RawUrl);
 
-				if (request.RawUrl == "/data.json") {
-					this.SendResponse(context.Response, this.data);
-				} else if (request.RawUrl == "/command.json") {
+#if DEBUG
+				Console.WriteLine("URL: " + request.RawUrl);
+#endif
+
+				string url = request.RawUrl;
+				int query_index = url.IndexOf('?');
+				if (query_index > -1) {
+					url = url.Substring(0, query_index);
+				}
+
+				if (url == "/data.json") {
 					this.DoCommand(request.QueryString);
-					this.SendResponse(context.Response, "{}");
+					string callback = request.QueryString["callback"];
+					if (callback == String.Empty) {
+						callback = "callback";
+					}
+					string jsonp = String.Format("{0}({1})", callback, this.data);
+					context.Response.ContentType = "application/json";
+					this.SendResponse(context.Response, jsonp);
+				} else if (url == "/favicon.ico") {
+					// TODO favicon
+					context.Response.Abort();
+				} else {
+					context.Response.Abort();
 				}
 			}
-			listener.Stop();
+//			listener.Stop();
 		}
 	}
 }

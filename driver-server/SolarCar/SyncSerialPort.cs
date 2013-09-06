@@ -25,7 +25,9 @@ namespace SolarCar {
 			port.ReadTimeout = 50; // 50 ms
 			port.WriteTimeout = 50; // 50 ms
 			port.DataReceived += new SerialDataReceivedEventHandler(this.ReadData);
+#if !DEBUG
 			port.Open();
+#endif
 		}
 
 		/// <summary>
@@ -33,7 +35,9 @@ namespace SolarCar {
 		/// reclaimed by garbage collection.
 		/// </summary>
 		~SyncSerialPort() {
+#if !DEBUG
 			port.Close();
+#endif
 		}
 
 		protected string NewLine {
@@ -92,7 +96,9 @@ namespace SolarCar {
 		public void SyncWriteLine(string line) {
 			try {
 				lock (port_lock) {
+#if !DEBUG
 					port.WriteLine(line);
+#endif
 				}
 			} catch (TimeoutException) {
 				Console.WriteLine("CANBUS: write timed out. SerialPort may be busy.");

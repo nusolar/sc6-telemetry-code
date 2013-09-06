@@ -72,6 +72,5 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 
 			footer '.FooterRow', colspan: '2', ->
 				div '.TextCell.Bottom.BottomLeftCorner', ->
-				div '.TextCell.Bottom', colspan: '2', ->
-					"no content"
+				div '.TextCell.Bottom', colspan: '2', 'ng-bind': 'query_string', ->
 				div '.TextCell.Bottom.BottomRightCorner', ->

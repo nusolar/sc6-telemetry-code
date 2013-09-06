@@ -1,4 +1,5 @@
 {
 	"accel_pedal": 0,
+	"regen_pedal": 0,
 	"brake_pedal": false
 }

@@ -172,10 +172,9 @@
         }, function() {
           div('.TextCell.Bottom.BottomLeftCorner', function() {});
           div('.TextCell.Bottom', {
-            colspan: '2'
-          }, function() {
-            return "no content";
-          });
+            colspan: '2',
+            'ng-bind': 'query_string'
+          }, function() {});
           return div('.TextCell.Bottom.BottomRightCorner', function() {});
         });
       });

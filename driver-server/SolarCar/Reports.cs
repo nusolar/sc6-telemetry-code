@@ -28,9 +28,9 @@ namespace SolarCar {
 	}
 
 	class ArrayReport {
-		int red_Uin = 0;
-		int red_Iin = 0;
-		int red_Uout = 0;
+		public int red_Uin = 0;
+		public int red_Iin = 0;
+		public int red_Uout = 0;
 	}
 
 	/// <summary>
