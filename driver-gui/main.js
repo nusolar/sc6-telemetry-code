@@ -20,11 +20,18 @@
   window.MainTable = function($scope, $timeout) {
     var timer_id,
       _this = this;
+    $scope.Signals = {
+      Off: 0,
+      Left: 1,
+      Right: 2,
+      Hazards: 3
+    };
     $scope.left_btn = false;
     $scope.right_btn = false;
     $scope.hazards_btn = false;
     $scope.headlights_btn = false;
     $scope.horn_btn = false;
+    $scope.signals_btn = $scope.Signals.Off;
     $scope.motor_btn = false;
     $scope.commands = {
       drive: 0,
@@ -47,22 +54,31 @@
     };
     $scope.set_panel_button('sensors_btn');
     $scope.Left = function() {
-      $scope.hazards_btn = false;
-      $scope.right_btn = false;
-      $scope.left_btn = !$scope.left_btn;
-      return $scope.commands.signals = $scope.left_btn ? 1 : 0;
+      if ($scope.signals_btn === $scope.Signals.Left) {
+        $scope.signals_btn = $scope.Signals.Off;
+      } else {
+        $scope.signals_btn = $scope.Signals.Left;
+      }
+      return $scope.commands.signals = $scope.signals_btn;
     };
     $scope.Right = function() {
       $scope.hazards_btn = false;
       $scope.left_btn = false;
       $scope.right_btn = !$scope.right_btn;
-      return $scope.commands.signals = $scope.right_btn ? 2 : 0;
+      if ($scope.signals_btn === $scope.Signals.Right) {
+        $scope.signals_btn = $scope.Signals.Off;
+      } else {
+        $scope.signals_btn = $scope.Signals.Right;
+      }
+      return $scope.commands.signals = $scope.signals_btn;
     };
     $scope.Hazards = function() {
-      $scope.left_btn = false;
-      $scope.right_btn = false;
-      $scope.hazards_btn = !$scope.hazards_btn;
-      return $scope.commands.signals = $scope.hazards_btn ? 3 : 0;
+      if ($scope.signals_btn === $scope.Signals.Hazards) {
+        $scope.signals_btn = $scope.Signals.Off;
+      } else {
+        $scope.signals_btn = $scope.Signals.Hazards;
+      }
+      return $scope.commands.signals = $scope.signals_btn;
     };
     $scope.Headlights = function() {
       $scope.headlights_btn = !$scope.headlights_btn;
@@ -100,7 +116,7 @@
           }
         });
       });
-    }), 50);
+    }), 100);
   };
 
 }).call(this);

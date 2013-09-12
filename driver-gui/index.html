@@ -21,21 +21,21 @@
       </header>
       <div class="CentralRow">
         <section class="LeftPanel">
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[left_btn]" ng-click="Left()">
+          <div class="Button" ng-class="{ButtonOn: signals_btn==Signals.Left}" ng-click="Left()">
             LEFT
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[hazards_btn]" ng-click="Hazards()">
+          <div class="Button" ng-class="{ButtonOn: signals_btn==Signals.Hazards}" ng-click="Hazards()">
             HAZARDS
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[horn_btn]" ng-mousedown="SetHorn(true)" ng-mouseup="SetHorn(false)">
+          <div class="Button" ng-class="{ButtonOn: horn_btn}" ng-mousedown="SetHorn(true)" ng-mouseup="SetHorn(false)">
             HORN
           </div>
           <div class="Gap">
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[map_btn]" ng-click="Map()">
+          <div class="Button" ng-class="{ButtonOn: map_btn}" ng-click="Map()">
             MAP
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[sensors_btn]" ng-click="Sensors()">
+          <div class="Button" ng-class="{ButtonOn: sensors_btn}" ng-click="Sensors()">
             SENSORS
           </div>
         </section>
@@ -156,7 +156,7 @@
             </table>
           </section>
           <section class="DrivePanel" ng-show="drive_btn">
-            <div class="Button MotorToggle" ng-class="{true: 'MotorToggleOn', false: ''}[motor_btn]" ng-click="Motor()">
+            <div class="Button MotorToggle" ng-class="{MotorToggleOn: motor_btn}" ng-click="Motor()">
               MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}
             </div>
           </section>
@@ -165,21 +165,21 @@
           </section>
         </div>
         <section class="RightPanel">
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[right_btn]" ng-click="Right()">
+          <div class="Button" ng-class="{ButtonOn: signals_btn==Signals.Right}" ng-click="Right()">
             RIGHT
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[headlights_btn]" ng-click="Headlights()">
+          <div class="Button" ng-class="{ButtonOn: headlights_btn}" ng-click="Headlights()">
             HEADLIGHTS
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[reverse_btn]" ng-click="Reverse()">
+          <div class="Button" ng-class="{ButtonOn: reverse_btn}" ng-click="Reverse()">
             REVERSE
           </div>
           <div class="Gap">
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[drive_btn]" ng-click="Drive()">
+          <div class="Button" ng-class="{ButtonOn: drive_btn}" ng-click="Drive()">
             DRIVE
           </div>
-          <div class="Button" ng-class="{true: 'ButtonOn', false: ''}[camera_btn]" ng-click="Camera()">
+          <div class="Button" ng-class="{ButtonOn: camera_btn}" ng-click="Camera()">
             CAMERA
           </div>
         </section>

@@ -19,17 +19,17 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 
 			div '.CentralRow', ->
 				section '.LeftPanel', ->
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[left_btn]", 'ng-click': 'Left()', ->
+					div '.Button', 'ng-class': "{ButtonOn: signals_btn==Signals.Left}", 'ng-click': 'Left()', ->
 						"LEFT"
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[hazards_btn]", 'ng-click': 'Hazards()', ->
+					div '.Button', 'ng-class': "{ButtonOn: signals_btn==Signals.Hazards}", 'ng-click': 'Hazards()', ->
 						"HAZARDS"
-					div '.Button', {'ng-class': "{true: 'ButtonOn', false: ''}[horn_btn]",
+					div '.Button', {'ng-class': "{ButtonOn: horn_btn}",
 					'ng-mousedown': 'SetHorn(true)', 'ng-mouseup': 'SetHorn(false)'}, ->
 						"HORN"
 					div '.Gap', ->
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[map_btn]", 'ng-click': 'Map()', ->
+					div '.Button', 'ng-class': "{ButtonOn: map_btn}", 'ng-click': 'Map()', ->
 						"MAP"
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[sensors_btn]", 'ng-click': 'Sensors()', ->
+					div '.Button', 'ng-class': "{ButtonOn: sensors_btn}", 'ng-click': 'Sensors()', ->
 						"SENSORS"
 
 
@@ -50,23 +50,23 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 										for k in [j, j - (2*(j%5) + 1)]
 											battery_cell(k)
 					section '.DrivePanel', 'ng-show': 'drive_btn', ->
-						div '.Button.MotorToggle', 'ng-class': "{true: 'MotorToggleOn', false: ''}[motor_btn]", 'ng-click': 'Motor()', ->
+						div '.Button.MotorToggle', 'ng-class': "{MotorToggleOn: motor_btn}", 'ng-click': 'Motor()', ->
 							"MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}"
 
 					section '.CameraPanel', 'ng-show': 'camera_btn', ->
 						"CAMERA"
 
 				section '.RightPanel', ->
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[right_btn]", 'ng-click': 'Right()', ->
+					div '.Button', 'ng-class': "{ButtonOn: signals_btn==Signals.Right}", 'ng-click': 'Right()', ->
 						"RIGHT"
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[headlights_btn]", 'ng-click': 'Headlights()', ->
+					div '.Button', 'ng-class': "{ButtonOn: headlights_btn}", 'ng-click': 'Headlights()', ->
 						"HEADLIGHTS"
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[reverse_btn]", 'ng-click': 'Reverse()', ->
+					div '.Button', 'ng-class': "{ButtonOn: reverse_btn}", 'ng-click': 'Reverse()', ->
 						"REVERSE"
 					div '.Gap', ->
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[drive_btn]", 'ng-click': 'Drive()', ->
+					div '.Button', 'ng-class': "{ButtonOn: drive_btn}", 'ng-click': 'Drive()', ->
 						"DRIVE"
-					div '.Button', 'ng-class': "{true: 'ButtonOn', false: ''}[camera_btn]", 'ng-click': 'Camera()', ->
+					div '.Button', 'ng-class': "{ButtonOn: camera_btn}", 'ng-click': 'Camera()', ->
 						"CAMERA"
 
 

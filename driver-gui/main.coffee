@@ -6,6 +6,11 @@ namespace = (target, name, block) ->
   block target, top
 
 window.MainTable = ($scope, $timeout) ->
+	$scope.Signals =
+		Off: 0,
+		Left: 1,
+		Right: 2,
+		Hazards: 3
 
 	# initialize HW members. TODO: load from car
 	$scope.left_btn = false
@@ -13,6 +18,7 @@ window.MainTable = ($scope, $timeout) ->
 	$scope.hazards_btn = false
 	$scope.headlights_btn = false
 	$scope.horn_btn = false
+	$scope.signals_btn = $scope.Signals.Off
 
 	$scope.motor_btn = false
 
@@ -40,29 +46,35 @@ window.MainTable = ($scope, $timeout) ->
 	# Button callbacks - Hardware control
 	$scope.Left = ->
 		# Turn off other buttons, toggle Left Button
-		$scope.hazards_btn = false
-		$scope.right_btn = false
-		$scope.left_btn = not $scope.left_btn
-		# if Left Button is depressed, specify left signal (==1, from C# code)
-		$scope.commands.signals = if $scope.left_btn then 1 else 0
+		if $scope.signals_btn==$scope.Signals.Left
+			$scope.signals_btn = $scope.Signals.Off
+		else
+			$scope.signals_btn = $scope.Signals.Left
+		# if Left Button is depressed, specify Left signal (==1, from C# code)
+		$scope.commands.signals = $scope.signals_btn
 
 	$scope.Right = ->
 		$scope.hazards_btn = false
 		$scope.left_btn = false
 		$scope.right_btn = not $scope.right_btn
-		# if Right Button is depressed, specify right signal (==2, from C# code)
-		$scope.commands.signals = if $scope.right_btn then 2 else 0
+		if $scope.signals_btn==$scope.Signals.Right
+			$scope.signals_btn = $scope.Signals.Off
+		else
+			$scope.signals_btn = $scope.Signals.Right
+		# if Right Button is depressed, specify Right signal (==2, from C# code)
+		$scope.commands.signals = $scope.signals_btn
 
 	$scope.Hazards = ->
-		$scope.left_btn = false
-		$scope.right_btn = false
-		$scope.hazards_btn = not $scope.hazards_btn
-		# if Hazards Button is depressed, specify hazards (==3, from C# code)
-		$scope.commands.signals = if $scope.hazards_btn then 3 else 0
+		if $scope.signals_btn==$scope.Signals.Hazards
+			$scope.signals_btn = $scope.Signals.Off
+		else
+			$scope.signals_btn = $scope.Signals.Hazards
+		# if Hazards Button is depressed, specify Hazards (==3, from C# code)
+		$scope.commands.signals = $scope.signals_btn
 
 	$scope.Headlights = ->
 		$scope.headlights_btn = not $scope.headlights_btn
-		# if Headlights Button is depressed, activate headlights
+		# if Headlights Button is depressed, activate Headlights
 		$scope.commands.headlights = if $scope.headlights_btn then 1 else 0
 
 	$scope.SetHorn = (horn_bool) ->
@@ -100,5 +112,5 @@ window.MainTable = ($scope, $timeout) ->
 					# TODO update values
 					$scope.commands
 		)
-	), 50) #ms
+	), 100) #ms
 

@@ -42,19 +42,19 @@
         div('.CentralRow', function() {
           section('.LeftPanel', function() {
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[left_btn]",
+              'ng-class': "{ButtonOn: signals_btn==Signals.Left}",
               'ng-click': 'Left()'
             }, function() {
               return "LEFT";
             });
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[hazards_btn]",
+              'ng-class': "{ButtonOn: signals_btn==Signals.Hazards}",
               'ng-click': 'Hazards()'
             }, function() {
               return "HAZARDS";
             });
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[horn_btn]",
+              'ng-class': "{ButtonOn: horn_btn}",
               'ng-mousedown': 'SetHorn(true)',
               'ng-mouseup': 'SetHorn(false)'
             }, function() {
@@ -62,13 +62,13 @@
             });
             div('.Gap', function() {});
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[map_btn]",
+              'ng-class': "{ButtonOn: map_btn}",
               'ng-click': 'Map()'
             }, function() {
               return "MAP";
             });
             return div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[sensors_btn]",
+              'ng-class': "{ButtonOn: sensors_btn}",
               'ng-click': 'Sensors()'
             }, function() {
               return "SENSORS";
@@ -121,7 +121,7 @@
               'ng-show': 'drive_btn'
             }, function() {
               return div('.Button.MotorToggle', {
-                'ng-class': "{true: 'MotorToggleOn', false: ''}[motor_btn]",
+                'ng-class': "{MotorToggleOn: motor_btn}",
                 'ng-click': 'Motor()'
               }, function() {
                 return "MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}";
@@ -135,32 +135,32 @@
           });
           return section('.RightPanel', function() {
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[right_btn]",
+              'ng-class': "{ButtonOn: signals_btn==Signals.Right}",
               'ng-click': 'Right()'
             }, function() {
               return "RIGHT";
             });
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[headlights_btn]",
+              'ng-class': "{ButtonOn: headlights_btn}",
               'ng-click': 'Headlights()'
             }, function() {
               return "HEADLIGHTS";
             });
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[reverse_btn]",
+              'ng-class': "{ButtonOn: reverse_btn}",
               'ng-click': 'Reverse()'
             }, function() {
               return "REVERSE";
             });
             div('.Gap', function() {});
             div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[drive_btn]",
+              'ng-class': "{ButtonOn: drive_btn}",
               'ng-click': 'Drive()'
             }, function() {
               return "DRIVE";
             });
             return div('.Button', {
-              'ng-class': "{true: 'ButtonOn', false: ''}[camera_btn]",
+              'ng-class': "{ButtonOn: camera_btn}",
               'ng-click': 'Camera()'
             }, function() {
               return "CAMERA";
