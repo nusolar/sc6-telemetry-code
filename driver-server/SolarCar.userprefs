@@ -1,18 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="SolarCar/BatteryController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="SolarCar/Config.cs">
     <Files>
-      <File FileName="SolarCar/Program.cs" Line="14" Column="24" />
-      <File FileName="SolarCar/BatteryController.cs" Line="53" Column="3" />
-      <File FileName="SolarCar/Hardware.cs" Line="22" Column="17" />
-      <File FileName="SolarCar/JsonReporters.cs" Line="107" Column="81" />
+      <File FileName="SolarCar/Program.cs" Line="67" Column="7" />
+      <File FileName="SolarCar/BatteryController.cs" Line="1" Column="1" />
+      <File FileName="SolarCar/Hardware.cs" Line="1" Column="1" />
+      <File FileName="SolarCar/HidApi.cs" Line="1" Column="1" />
+      <File FileName="SolarCar/Boards.cs" Line="1" Column="1" />
+      <File FileName="SolarCar/Reports.cs" Line="1" Column="1" />
+      <File FileName="SolarCar/Config.cs" Line="7" Column="28" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="SolarCar" expanded="True">
             <Node name="References" expanded="True" />
-            <Node name="BatteryController.cs" selected="True" />
+            <Node name="Config.cs" selected="True" />
           </Node>
         </State>
       </Pad>

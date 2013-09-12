@@ -57,6 +57,17 @@
     <Compile Include="BatteryController.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Json.cs" />
+    <Compile Include="Boards.cs" />
+    <Compile Include="HidApi.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\hidapi\bin\hidapi.so">
+      <Link>hidapi.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

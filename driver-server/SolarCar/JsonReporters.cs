@@ -62,54 +62,5 @@ namespace SolarCar {
 
 		}
 	}
-
-	class BPS: IJsonReporter<BatteryReport> {
-		public BPS(): base("/dev/tty.BMS-1234") {
-			this.Report = Json.CreateFromJsonFile<BatteryReport>(Config.SAMPLE_BATTERY_REPORT);
-		}
-
-		public void SetMode(int mode) {
-			this.SendValue(mode);
-		}
-	}
-
-	class DigitalOut: IJsonReporter<DigitalOutReport> {
-		/// <summary>
-		/// Initializes a <see cref="SolarCar.DigitalOut"/>, in the OFF state.
-		/// </summary>
-		/// <param name="name">Port name</param>
-		public DigitalOut(string name): base(name) {
-			this.Report = Json.CreateFromJsonFile<DigitalOutReport>(Config.SAMPLE_OUTPUT_REPORT);
-			this.TurnOff();
-		}
-
-		public void TurnOn() {
-			this.SendValue("on");
-		}
-
-		public void TurnOff() {
-			this.SendValue("off");
-		}
-
-		public void Set(bool State) {
-			if (State) {
-				this.TurnOn();
-			} else {
-				this.TurnOff();
-			}
-		}
-
-		public bool Value { get { return this.Report.output; } }
-	}
-
-	class PedalIn: IJsonReporter<PedalReport> {
-		public PedalIn(string name): base(name) {
-			this.Report = Json.CreateFromJsonFile<PedalReport>(Config.SAMPLE_INPUT_REPORT);
-		}
-
-		public int AccelPedal { get { return this.Report.accel_pedal; } }
-
-		public bool BrakePedal { get { return this.Report.brake_pedal; } }
-	}
 }
 
