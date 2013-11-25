@@ -1,25 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="SolarCar/Config.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="SolarCar/DataAggregator.cs">
     <Files>
-      <File FileName="SolarCar/Program.cs" Line="67" Column="7" />
-      <File FileName="SolarCar/BatteryController.cs" Line="1" Column="1" />
-      <File FileName="SolarCar/Hardware.cs" Line="1" Column="1" />
-      <File FileName="SolarCar/HidApi.cs" Line="1" Column="1" />
-      <File FileName="SolarCar/Boards.cs" Line="1" Column="1" />
-      <File FileName="SolarCar/Reports.cs" Line="1" Column="1" />
-      <File FileName="SolarCar/Config.cs" Line="7" Column="28" />
+      <File FileName="SolarCar/Program.cs" Line="48" Column="4" />
+      <File FileName="SolarCar/DataAggregator.cs" Line="57" Column="17" />
+      <File FileName="SolarCar/CanUsb.cs" Line="105" Column="22" />
+      <File FileName="SolarCar/HttpServer.cs" Line="12" Column="24" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="SolarCar" expanded="True">
-            <Node name="References" expanded="True" />
-            <Node name="Config.cs" selected="True" />
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

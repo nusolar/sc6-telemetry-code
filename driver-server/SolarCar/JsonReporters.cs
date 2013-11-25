@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 
 namespace SolarCar {
-	class IJsonReporter<TReport>: SyncSerialPort where TReport: new() {
+	class IJsonReporter<TReport>: AsyncSerialPort where TReport: new() {
 		public TReport Report = new TReport();
 
 		public IJsonReporter(string name): base(name) {

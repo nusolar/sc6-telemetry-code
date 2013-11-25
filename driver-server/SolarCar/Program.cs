@@ -34,11 +34,6 @@ namespace SolarCar {
 			web_loop.Join();
 		}
 
-		[DllImport("test.dylib")]
-		public static extern void printer_s(
-			//[MarshalAs(UnmanagedType.LPStr)]
-			string s);
-
 		[StructLayout(LayoutKind.Sequential)]
 		public class message {
 			public int i;
@@ -47,48 +42,12 @@ namespace SolarCar {
 			public int j;
 		}
 
-		[DllImport("test.dylib")]
-		public static extern void printer_m(
-			[Out]
-			message m);
-
-		[DllImport("test.dylib", CharSet = CharSet.Unicode)]
-		public static extern int ac_compare(
-			[MarshalAs(UnmanagedType.LPArray)]
-			Int32[] p);
-
 		public static void Main(string[] args) {
 			Console.WriteLine("Hello World!");
 			CarData.Test();
-			IJsonReporter<BatteryReport>.Test();
-			IJsonReporter<BatteryReport>.Test();
-			IJsonReporter<BatteryReport>.Test();
 
 			// RunCar();
 
-			// Testing/Debugging code follows:
-			printer_s("42 foo");
-			message m = new message { str = "barz", j = 666, i = 14 };
-			printer_m(m);
-			Console.WriteLine("i: " + m.i.ToString());
-
-			HidDevice hid = new HidDevice(1452, 601, "DJHC9MZ0VADNYGE0");
-			if (HidDevice.Initialized)
-				Console.WriteLine("Inited!");
-
-			if (hid.Open) {
-				Console.WriteLine("device found");
-				byte[] buffer = new byte[256];
-				int n_copied = hid.Read(buffer);
-				Console.WriteLine("copied: " + n_copied.ToString());
-				if (n_copied > 0) {
-					for (int i=0; i<n_copied; i++) {
-						Console.WriteLine("b" + i.ToString() + ": " + buffer[i].ToString());
-					}
-				}
-			} else {
-				Console.WriteLine("device not found! nullptr returned");
-			}
 
 			// Console.WriteLine("Press any key to continue...");
 			// Console.WriteLine();

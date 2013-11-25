@@ -1,10 +1,26 @@
 using System;
 
 namespace SolarCar {
+	namespace CanAddr {
+		static class Pedals {
+			public const int Base = 0x110;
+			public const int Status = Base + 1;
+		}
+
+		static class BPS {
+			public const int RxBase = 0x200;
+		}
+
+		static class WS20 {
+			public const int Base = 0x400;
+			public const int motor_bus = Base + 2;
+			public const int motor_velocity = Base + 3;
+		}
+	}
 	class CanPacket {
-		public int id = -1;
-		public int length = -1;
-		public byte[] data = null;
+		int id = -1;
+		int length = -1;
+		byte[] data = null;
 
 		public int ID { get { return this.id; } }
 
@@ -19,7 +35,7 @@ namespace SolarCar {
 		public CanPacket(byte[] InPacket) {
 
 			byte[] temp_id = new byte[3];
-			Array.Copy(InPacket, 1, temp_id, 0, 3); // max ID == 0x7FF, 7FF is three characters
+			Array.Copy(InPacket, 1, temp_id, 0, 3); // max ID == 0x7FF, and "7FF" is three characters
 			this.id = Convert.ToInt32(System.Text.Encoding.ASCII.GetString(temp_id), 16);
 
 			this.length = InPacket[4];
@@ -29,29 +45,42 @@ namespace SolarCar {
 		}
 
 		/// <summary>
-		/// Indiscriminately reinterprets first 4 bytes as float
+		/// Reinterprets first 4 bytes as float
 		/// </summary>
 		public float Float1() {
 			return BitConverter.ToSingle(this.Data, 0);
 		}
 
 		/// <summary>
-		/// Indiscriminately reinterprets last 4 bytes as float
+		/// Reinterprets last 4 bytes as float
 		/// </summary>
 		public float Float2() {
 			return BitConverter.ToSingle(this.Data, 4);
 		}
 	}
 
+	class CanHandler {
+		public delegate void CallbackDelegate(CanPacket p);
+
+		public UInt16 Address;
+		public UInt16 Bitmask;
+		public CallbackDelegate Callback;
+
+		public CanHandler(UInt16 InAddress, UInt16 InBitmask, UInt16 InCallback) {
+			this.Address = InAddress;
+			this.Bitmask = InBitmask;
+			this.Callback = InCallback;
+		}
+	}
+
 	/// <summary>
 	/// A CAN-USB wrapper. When running, constantly updates its MotorReport.
 	/// </summary>
-	class CanUsb: SyncSerialPort {
-		readonly public MotorReport motor_report = new MotorReport();
-		readonly public ArrayReport array_report = new ArrayReport();
+	class CanUsb: AsyncSerialPort {
 		const string NEWLINE = "\r";
+		CanHandler[] handlers;
 
-		public CanUsb(string path): base(path) {
+		public CanUsb(string path) : base(path) {
 			this.NewLine = NEWLINE; // CANUSB uses carriage returns
 			this.LineReceived += new LineReceivedDelegate(this.HandleLine);
 			this.SyncWriteLine("S8"); // set bitrate = 1 Mbit/s
@@ -60,6 +89,9 @@ namespace SolarCar {
 
 		~CanUsb() {
 			this.SyncWriteLine("C");
+		}
+
+		string SerializePacket(CanPacket packet) {
 		}
 
 		/// <summary>

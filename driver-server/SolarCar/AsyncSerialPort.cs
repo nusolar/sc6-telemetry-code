@@ -5,9 +5,11 @@ namespace SolarCar {
 	/// <summary>
 	/// Wrapper to send to and receive packets from NUSolar Serial devices.
 	/// </summary>
-	class SyncSerialPort {
+	class AsyncSerialPort {
+		// The underlying SerialPort & its mutex:
 		readonly object port_lock = new Object();
 		readonly SerialPort port = new SerialPort();
+		// The string buffer & its mutex:
 		readonly object buffer_lock = new Object();
 		string buffer = "";
 
@@ -16,10 +18,10 @@ namespace SolarCar {
 		public event LineReceivedDelegate LineReceived;
 
 		/// <summary>
-		/// Initializes a new instance of the SolarCar.ISerial class.
+		/// Initializes a new instance of the SolarCar.SyncSerialPort class.
 		/// </summary>
 		/// <param name="name">Serial Port's name</param>
-		protected SyncSerialPort(string name) {
+		protected AsyncSerialPort(string name) {
 			port.PortName = name;
 			port.BaudRate = 115200;
 			port.ReadTimeout = 50; // 50 ms
@@ -34,7 +36,7 @@ namespace SolarCar {
 		/// Releases the SerialPort and performs other cleanup operations before the SolarCar.SyncSerialPort is
 		/// reclaimed by garbage collection.
 		/// </summary>
-		~SyncSerialPort() {
+		~AsyncSerialPort() {
 #if !DEBUG
 			port.Close();
 #endif
@@ -46,8 +48,8 @@ namespace SolarCar {
 		}
 
 		/// <summary>
-		/// Acquire the SerialPort, read data into buffer. DELEGATE to SerialPort.DataReceived event,
-		/// invoked on a separate thread by SerialPort.
+		/// Private Event Handler for this.port's SerialPort.DataReceived event.
+		/// Acquires the SerialPort, reads data into buffer. It is invoked on a separate thread by SerialPort.
 		/// </summary>
 		/// <param name="sender">Sender, a SerialPort.</param>
 		/// <param name="e">Event Args</param>
@@ -56,7 +58,7 @@ namespace SolarCar {
 				return;
 			}
 			if ((SerialPort)sender != this.port) {
-				Console.WriteLine("ReadData only supports reading its own port!");
+				Console.WriteLine("Warning: ReadData was called with sender != this.port");
 			}
 
 			// acquire lock on CAN bus, read upto 21 bytes.

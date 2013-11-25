@@ -27,6 +27,7 @@
 	"precharge": 0,
 	"disabled_module": 64, /* module 0-31 */
 	"last_error": 0,
+	"current_error": 0,
+	"current_error_value": 0,
 	"uptime": 300000, /* ms */
-	"message": ""
 }
