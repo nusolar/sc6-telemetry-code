@@ -26,18 +26,17 @@
       Right: 2,
       Hazards: 3
     };
-    $scope.left_btn = false;
-    $scope.right_btn = false;
-    $scope.hazards_btn = false;
+    $scope.signals_btn = $scope.Signals.Off;
     $scope.headlights_btn = false;
     $scope.horn_btn = false;
-    $scope.signals_btn = $scope.Signals.Off;
     $scope.motor_btn = false;
+    $scope.reverse_btn = false;
     $scope.commands = {
-      drive: 0,
-      horn: 0,
       signals: 0,
-      headlights: 0
+      headlights: 0,
+      horn: 0,
+      drive: 0,
+      reverse: 0
     };
     $scope.set_panel_button = function(panel) {
       var _this = this;
@@ -62,9 +61,6 @@
       return $scope.commands.signals = $scope.signals_btn;
     };
     $scope.Right = function() {
-      $scope.hazards_btn = false;
-      $scope.left_btn = false;
-      $scope.right_btn = !$scope.right_btn;
       if ($scope.signals_btn === $scope.Signals.Right) {
         $scope.signals_btn = $scope.Signals.Off;
       } else {
@@ -102,7 +98,19 @@
     };
     $scope.Motor = function() {
       $scope.motor_btn = !$scope.motor_btn;
-      return $scope.commands.drive = $scope.motor_btn ? 1 : 0;
+      $scope.commands.drive = $scope.motor_btn ? 1 : 0;
+      if ($scope.reverse_btn) {
+        return $scope.Reverse();
+      }
+    };
+    $scope.Reverse = function() {
+      if ($scope.commands.drive) {
+        $scope.reverse_btn = !$scope.reverse_btn;
+        return $scope.commands.reverse = $scope.reverse_btn ? 1 : 0;
+      } else {
+        $scope.reverse_btn = false;
+        return $scope.commands.reverse = 0;
+      }
     };
     return timer_id = setInterval((function() {
       return $scope.$apply(function() {

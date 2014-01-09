@@ -120,11 +120,18 @@
             section('.DrivePanel', {
               'ng-show': 'drive_btn'
             }, function() {
-              return div('.Button.MotorToggle', {
+              div('.Button.SmallButton.MotorToggle', {
                 'ng-class': "{MotorToggleOn: motor_btn}",
                 'ng-click': 'Motor()'
               }, function() {
                 return "MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}";
+              });
+              div('.Gap', function() {});
+              return div('.Button.SmallButton', {
+                'ng-class': "{ButtonOn: reverse_btn}",
+                'ng-click': 'Reverse()'
+              }, function() {
+                return "REVERSE";
               });
             });
             return section('.CameraPanel', {
@@ -146,11 +153,8 @@
             }, function() {
               return "HEADLIGHTS";
             });
-            div('.Button', {
-              'ng-class': "{ButtonOn: reverse_btn}",
-              'ng-click': 'Reverse()'
-            }, function() {
-              return "REVERSE";
+            div('.Button', function() {
+              return " | ";
             });
             div('.Gap', function() {});
             div('.Button', {

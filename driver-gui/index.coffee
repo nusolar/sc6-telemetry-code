@@ -50,8 +50,11 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 										for k in [j, j - (2*(j%5) + 1)]
 											battery_cell(k)
 					section '.DrivePanel', 'ng-show': 'drive_btn', ->
-						div '.Button.MotorToggle', 'ng-class': "{MotorToggleOn: motor_btn}", 'ng-click': 'Motor()', ->
+						div '.Button.SmallButton.MotorToggle', 'ng-class': "{MotorToggleOn: motor_btn}", 'ng-click': 'Motor()', ->
 							"MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}"
+						div '.Gap', ->
+						div '.Button.SmallButton', 'ng-class': "{ButtonOn: reverse_btn}", 'ng-click': 'Reverse()', ->
+							"REVERSE"
 
 					section '.CameraPanel', 'ng-show': 'camera_btn', ->
 						"CAMERA"
@@ -61,8 +64,8 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 						"RIGHT"
 					div '.Button', 'ng-class': "{ButtonOn: headlights_btn}", 'ng-click': 'Headlights()', ->
 						"HEADLIGHTS"
-					div '.Button', 'ng-class': "{ButtonOn: reverse_btn}", 'ng-click': 'Reverse()', ->
-						"REVERSE"
+					div '.Button', ->
+						" | "
 					div '.Gap', ->
 					div '.Button', 'ng-class': "{ButtonOn: drive_btn}", 'ng-click': 'Drive()', ->
 						"DRIVE"

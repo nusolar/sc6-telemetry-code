@@ -6,27 +6,26 @@ namespace = (target, name, block) ->
   block target, top
 
 window.MainTable = ($scope, $timeout) ->
+	# enum for Signals state
 	$scope.Signals =
 		Off: 0,
 		Left: 1,
 		Right: 2,
 		Hazards: 3
 
-	# initialize HW members. TODO: load from car
-	$scope.left_btn = false
-	$scope.right_btn = false
-	$scope.hazards_btn = false
+	# initialize button states. TODO: load from car
+	$scope.signals_btn = $scope.Signals.Off
 	$scope.headlights_btn = false
 	$scope.horn_btn = false
-	$scope.signals_btn = $scope.Signals.Off
-
 	$scope.motor_btn = false
+	$scope.reverse_btn = false
 
 	$scope.commands =
-		drive: 0
-		horn: 0
 		signals: 0
 		headlights: 0
+		horn: 0
+		drive: 0
+		reverse: 0
 
 	# initialize App buttons' states.
 	$scope.set_panel_button = (panel) ->
@@ -43,7 +42,7 @@ window.MainTable = ($scope, $timeout) ->
 			), 1 #ms
 	$scope.set_panel_button('sensors_btn')
 
-	# Button callbacks - Hardware control
+	# Peripheral Button callbacks - Hardware
 	$scope.Left = ->
 		# Turn off other buttons, toggle Left Button
 		if $scope.signals_btn==$scope.Signals.Left
@@ -54,9 +53,6 @@ window.MainTable = ($scope, $timeout) ->
 		$scope.commands.signals = $scope.signals_btn
 
 	$scope.Right = ->
-		$scope.hazards_btn = false
-		$scope.left_btn = false
-		$scope.right_btn = not $scope.right_btn
 		if $scope.signals_btn==$scope.Signals.Right
 			$scope.signals_btn = $scope.Signals.Off
 		else
@@ -82,7 +78,7 @@ window.MainTable = ($scope, $timeout) ->
 		# if Horn Button is depressed, activate horn
 		$scope.commands.horn = if horn_bool then 1 else 0
 
-	# Button callbacks - Apps. TODO: Inline these OnClick() delegates into the Angular HTML
+	# Peripheral Button callbacks - Apps
 	$scope.Map = ->
 		$scope.set_panel_button('map_btn')
 	$scope.Sensors = ->
@@ -92,11 +88,22 @@ window.MainTable = ($scope, $timeout) ->
 	$scope.Camera = ->
 		$scope.set_panel_button('camera_btn')
 
+	# Motor Tab - Button callbacks
 	$scope.Motor = ->
 		$scope.motor_btn = not $scope.motor_btn
 		# if Motor Button is depressed, activate Drive
 		$scope.commands.drive = if $scope.motor_btn then 1 else 0
+		# always deactivate Reverse, if on
+		if $scope.reverse_btn
+			$scope.Reverse()
 
+	$scope.Reverse = ->
+		if $scope.commands.drive
+			$scope.reverse_btn = not $scope.reverse_btn
+			$scope.commands.reverse = if $scope.reverse_btn then 1 else 0
+		else
+			$scope.reverse_btn = false
+			$scope.commands.reverse = 0
 
 	# Create timer to submit commands, and receive updated Telemetry values.
 	# Because AngularJS doesn't have $interval yet, we use the $apply hack

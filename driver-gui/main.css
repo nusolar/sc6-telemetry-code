@@ -31,7 +31,7 @@ body {
 }
 
 /*
- * Main App - Peripheral Styles:
+ * Main App - Peripheral Shapes:
  */
 
 .TextCell {
@@ -58,6 +58,10 @@ body {
 .BottomRightCorner {
 	border-bottom-right-radius: 50%;
 }
+
+/*
+ * Main App - Peripheral Buttons
+ */
 
 .Button {
 	background-color: #FF9900;
@@ -101,23 +105,22 @@ body {
 	margin-bottom: 1px;
 }
 
-/*
- * In-App styles
- */
-
-.MotorToggle {
+.SmallButton {
 	width: auto;
-	background-color: red;
 	border-width: 1px;
 	padding: 0.5em 0.5em;
 	max-width: 20%;
+}
+
+.MotorToggle {
+	background-color: red;
 }
 
 .MotorToggleOn {
 	background-color: #FFFF33;
 }
 
-.Templates {
+.Invisible {
 	border-style: none;
 	display: none;
 }
