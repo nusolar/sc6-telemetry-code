@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SolarCar {
 	namespace CanAddr {
@@ -37,22 +38,24 @@ namespace SolarCar {
 		public CanPacket(UInt16 id, Byte length, byte[] data) {
 			this.id = id;
 			this.length = length;
-			this.data = new byte[this.Length];
+			this.data = new byte[8];
 			Array.Copy(data, this.data, length);
 		}
 
-		/// <summary>
-		/// Reinterprets first 4 bytes as float
-		/// </summary>
-		public float Float1() {
+		public float GetFloat0() {
 			return BitConverter.ToSingle(this.Data, 0);
 		}
 
-		/// <summary>
-		/// Reinterprets last 4 bytes as float
-		/// </summary>
-		public float Float2() {
+		public float GetFloat1() {
 			return BitConverter.ToSingle(this.Data, 4);
+		}
+
+		public double GetDouble0() {
+			return BitConverter.ToDouble(this.Data, 0);
+		}
+
+		public UInt64 GetUInt64() {
+			return BitConverter.ToUInt64(this.Data, 0);
 		}
 	}
 
@@ -75,7 +78,7 @@ namespace SolarCar {
 	/// </summary>
 	class CanUsb: AsyncSerialPort {
 		const string NEWLINE = "\r";
-		CanHandler[] handlers;
+		public List<CanHandler> handlers = new List<CanHandler>();
 
 		public CanUsb(string path) : base(path) {
 			this.NewLine = NEWLINE; // CANUSB uses carriage returns

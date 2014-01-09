@@ -6,13 +6,7 @@ namespace SolarCar {
 	/// Database for telemetry, trip events, and commands.
 	/// </summary>
 	class CarData {
-		public void commit(BatteryReport report) {
-		}
-
-		public void commit(ArrayReport report) {
-		}
-
-		public void commit(DigitalOutReport report) {
+		public void commit(Car.Status report) {
 		}
 
 		public static void Test() {

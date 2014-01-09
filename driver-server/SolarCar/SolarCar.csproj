@@ -45,7 +45,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CarData.cs" />
-    <Compile Include="Reports.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CanUsb.cs" />
     <Compile Include="HttpServer.cs" />

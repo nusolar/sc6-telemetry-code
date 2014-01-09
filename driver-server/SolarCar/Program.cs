@@ -8,6 +8,11 @@ namespace SolarCar {
 		static void RunCar() {
 			// UIs run on separate threads.
 			DataAggregator data = new DataAggregator();
+
+			CanHandler ch = new CanHandler(0, 0x7ff, data.HandleCanPacket);
+			CanUsb canusb = new CanUsb("/dev/tty.CANUSB");
+			canusb.handlers.Add(ch);
+
 			HttpServer web = new HttpServer(data);
 
 			// do RunLoops in separate threads:
@@ -17,20 +22,11 @@ namespace SolarCar {
 			web_loop.Join();
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
-		public class message {
-			public int i;
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string str;
-			public int j;
-		}
-
 		public static void Main(string[] args) {
 			Console.WriteLine("Hello World!");
 			CarData.Test();
 
 			// RunCar();
-
 
 			// Console.WriteLine("Press any key to continue...");
 			// Console.WriteLine();

@@ -7,7 +7,7 @@ namespace SolarCar {
 		HttpListener listener = new HttpListener();
 		readonly DataAggregator db = null;
 
-		public string data { get { return JsonConvert.SerializeObject(commander.Report); } }
+		public string data { get { return JsonConvert.SerializeObject(db.status); } }
 
 		public HttpServer(DataAggregator InDb) {
 			db = InDb;
@@ -38,8 +38,10 @@ namespace SolarCar {
 			input.reverse = query["reverse"] == "1" ? true : false;
 			int sigs = 0;
 			Int32.TryParse(query["signals"], out sigs);
-			input.sigs = (CarStatus.Signals)sigs;
-			input.heads = query["headlights"] == "1" ? true : false;
+			input.sigs = (Car.Signals)sigs;
+			if (query["headlights"] == "1") {
+				input.sigs |= Car.Signals.Headlights;
+			}
 			input.horn = query["horn"] == "1" ? true : false;
 
 			db.input = input;

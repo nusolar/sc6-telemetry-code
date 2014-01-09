@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 
 namespace SolarCar {
-	sealed class CarStatus {
-		public enum Mode {
+	namespace Car {
+		enum Mode {
 			Off = 0,
 			Discharging = 1,
 			Drive = 3,
@@ -12,58 +12,70 @@ namespace SolarCar {
 			DriveCharging = 7
 		}
 
-		public enum Signals {
-			Off = 0,
-			Left,
-			Right,
-			Hazards
+		[Flags]
+		enum Gears {
+			None = 0,
+			Drive = 1,
+			Reverse = 2
 		}
-		// Pedals
-		public UInt16 AccelPedal;
-		public UInt16 RegenPedal;
-		public bool Braking;
-		public bool Reverse;
-		// motor
-		public float MotorRpm, MotorVelocity;
-		public float MotorVoltage, MotorCurrent;
-		// lights
-		public Signals RequestedSignals;
-		public bool Headlights;
-		public bool Horn;
-		// BPS modes
-		public Mode RequestedMode;
-		public Mode BPSMode;
-		public UInt64 BatteryHealth;
-		// Lists range 0-31
-		public List<float> BatteryVoltages = null;
-		public List<float> BatteryTemps = null;
+
+		[Flags]
+		enum Signals {
+			None = 0,
+			Left = 1,
+			Right = 2,
+			Headlights = 4
+		}
+
+		class Status {
+			// Driver inputs
+			public Mode RequestedMode;
+			public Gears Gear;
+			public Signals RequestedLights;
+			public bool Horn;
+			// Pedals
+			public UInt16 AccelPedal;
+			public UInt16 RegenPedal;
+			public bool Braking;
+			// motor
+			public float MotorRpm, MotorVelocity;
+			public float MotorVoltage, MotorCurrent;
+			// BPS
+			public Mode BPSMode;
+			public UInt64 BatteryHealth;
+			public float BatteryCurrent;
+			public float ArrayCurrent;
+			// Lists range 0-31
+			public List<float> BatteryVoltages = null;
+			public List<float> BatteryTemps = null;
+		}
+	}
+	class UserInput {
+		public bool power = false, array = false;
+		public bool drive = false, reverse = false;
+		public Car.Signals sigs = Car.Signals.None;
+		public bool horn = false;
 	}
 
-	sealed class UserInput {
-		public bool power = false, drive = false, reverse = false;
-		public CarStatus.Signals sigs = CarStatus.Signals.Off;
-		public bool heads = false, horn = false;
-	}
-
-	sealed class DataAggregator {
-		CarStatus status = new CarStatus();
+	class DataAggregator {
+		public Car.Status status = new Car.Status();
+		public UserInput input = null;
 
 		public DataAggregator() {
 		}
 
-		public UserInput input;
-
-		void TxCanPacket() {
+		public void TxCanPacket() {
 			// power :1
+			// array :1
+
 			// gear/drive :1
 			// reverse :1
 
-			// signals :2
-			// head :1
+			// signals :3
 			// horn :1
 		}
 
-		void HandleCanPacket(CanPacket p) {
+		public void HandleCanPacket(CanPacket p) {
 			switch (p.ID) {
 				case CanAddr.Pedals.Status:
 					// accel, regen, brake pedal
