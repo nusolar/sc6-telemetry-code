@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 
 namespace SolarCar {
-	class CarStatus {
+	sealed class CarStatus {
 		public enum Mode {
 			Off = 0,
-			Discharging,
-			Drive,
-			EmptyCharging,
-			Charging,
-			DriveCharging
+			Discharging = 1,
+			Drive = 3,
+			EmptyCharging = 4,
+			Charging = 5,
+			DriveCharging = 7
 		}
 
 		public enum Signals {
@@ -39,32 +39,41 @@ namespace SolarCar {
 		public List<float> BatteryTemps = null;
 	}
 
-	public class DataAggregator {
+	sealed class UserInput {
+		public bool power = false, drive = false, reverse = false;
+		public CarStatus.Signals sigs = CarStatus.Signals.Off;
+		public bool heads = false, horn = false;
+	}
+
+	sealed class DataAggregator {
 		CarStatus status = new CarStatus();
 
 		public DataAggregator() {
 		}
 
-		void SetUserInput(CarStatus.Mode mode, CarStatus.Signals signals, bool headlights, bool horn) {
-			status.RequestedMode = mode;
-			status.RequestedSignals = signals;
-			status.Headlights = headlights;
-			status.Horn = horn;
+		public UserInput input;
+
+		void TxCanPacket() {
+			// power :1
+			// gear/drive :1
+			// reverse :1
+
+			// signals :2
+			// head :1
+			// horn :1
 		}
 
-		void HandlePedals(CanPacket p) {
+		void HandleCanPacket(CanPacket p) {
 			switch (p.ID) {
 				case CanAddr.Pedals.Status:
 					// accel, regen, brake pedal
 					break;
-			}
-		}
-
-		void HandleMotorController(CanPacket p) {
-			if (p.ID == CanAddr.WS20.motor_bus) {
-				// voltage; current;
-			} else if (p.ID == CanAddr.WS20.motor_velocity) {
-				// RPM; velocity;
+				case CanAddr.WS20.motor_bus:
+					// voltage; current;
+					break;
+				case CanAddr.WS20.motor_velocity:
+					// RPM; velocity;
+					break;
 			}
 		}
 	}

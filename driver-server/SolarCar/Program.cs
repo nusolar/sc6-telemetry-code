@@ -6,31 +6,14 @@ using System.Runtime.InteropServices;
 namespace SolarCar {
 	class MainClass {
 		static void RunCar() {
-			// runs hardware I/O on main thread.
-			Hardware hw = new Hardware();
-
-			// HW controllers run on separate threads.
-			BatteryController bps = new BatteryController(hw);
-			MotorController drv = new MotorController(hw);
-			SignalController sig = new SignalController(hw);
-
 			// UIs run on separate threads.
-			UserCommands commands = new UserCommands(hw);
-			HttpServer web = new HttpServer(commands);
+			DataAggregator data = new DataAggregator();
+			HttpServer web = new HttpServer(data);
 
 			// do RunLoops in separate threads:
 			Thread.Sleep(1); // 1ms
-			Thread bps_loop = new Thread(new ThreadStart(bps.RunLoop));
-			Thread drv_loop = new Thread(new ThreadStart(drv.RunLoop));
-			Thread sig_loop = new Thread(new ThreadStart(sig.RunLoop));
 			Thread web_loop = new Thread(new ThreadStart(web.RunLoop));
-			bps_loop.Start();
-			drv_loop.Start();
-			sig_loop.Start();
 			web_loop.Start();
-			bps_loop.Join();
-			drv_loop.Join();
-			sig_loop.Join();
 			web_loop.Join();
 		}
 
