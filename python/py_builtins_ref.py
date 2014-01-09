@@ -27,6 +27,12 @@ abs, divmod, pow
 round # __round__
 max, min, sum
 
+"""collection utilities:"""
+len # __len__
++ iter # __iter__
+any, all, next # __next__
++ enumerate, filter, map, range, reversed, sorted, zip # __reversed__
+
 """introspection:"""
 dir # __dir__
 globals, locals, vars # __dict__
@@ -38,12 +44,6 @@ compile, exec, eval
 
 """attrs:"""
 delattr, getattr, hasattr, setattr # __getattr__, __setattr__
-
-"""collection utilities:"""
-len # __len__
-+ iter # __iter__
-any, all, next # __next__
-+ enumerate, filter, map, range, reversed, sorted, zip # __reversed__
 
 """io:"""
 print
