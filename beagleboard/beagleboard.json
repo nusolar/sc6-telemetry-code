@@ -1,5 +1,20 @@
 {
 	"username": "root",
 	"password": "root",
-	"voltage": "5V"
+	"voltage": "5V",
+
+	"useful commands": {
+		"list installed packages": "dpkg-query -l",
+		"show package info": "apt-cache showpkg NAME"
+	},
+
+	"domain name": "nusolar.no-ip.biz",
+
+	"tethering": {
+		"tethering program": "wvdial",
+		"tethering provider": "T-Mobile",
+		"T-Mobile password": "Nusolar3",
+		"black_stick": "(773) 751-9160",
+		"white_stick": "(773) 796-1547",
+	}
 }
