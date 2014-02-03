@@ -17,16 +17,16 @@
     return block(target, top);
   };
 
-  window.MainTable = function($scope, $timeout) {
+  window.MainTable = function($scope, $timeout, $interval) {
     var timer_id,
       _this = this;
-    $scope.Signals = {
+    $scope.TurnSignals = {
       Off: 0,
       Left: 1,
       Right: 2,
       Hazards: 3
     };
-    $scope.signals_btn = $scope.Signals.Off;
+    $scope.signals_btn = $scope.TurnSignals.Off;
     $scope.headlights_btn = false;
     $scope.horn_btn = false;
     $scope.motor_btn = false;
@@ -53,26 +53,26 @@
     };
     $scope.set_panel_button('sensors_btn');
     $scope.Left = function() {
-      if ($scope.signals_btn === $scope.Signals.Left) {
-        $scope.signals_btn = $scope.Signals.Off;
+      if ($scope.signals_btn === $scope.TurnSignals.Left) {
+        $scope.signals_btn = $scope.TurnSignals.Off;
       } else {
-        $scope.signals_btn = $scope.Signals.Left;
+        $scope.signals_btn = $scope.TurnSignals.Left;
       }
       return $scope.commands.signals = $scope.signals_btn;
     };
     $scope.Right = function() {
-      if ($scope.signals_btn === $scope.Signals.Right) {
-        $scope.signals_btn = $scope.Signals.Off;
+      if ($scope.signals_btn === $scope.TurnSignals.Right) {
+        $scope.signals_btn = $scope.TurnSignals.Off;
       } else {
-        $scope.signals_btn = $scope.Signals.Right;
+        $scope.signals_btn = $scope.TurnSignals.Right;
       }
       return $scope.commands.signals = $scope.signals_btn;
     };
     $scope.Hazards = function() {
-      if ($scope.signals_btn === $scope.Signals.Hazards) {
-        $scope.signals_btn = $scope.Signals.Off;
+      if ($scope.signals_btn === $scope.TurnSignals.Hazards) {
+        $scope.signals_btn = $scope.TurnSignals.Off;
       } else {
-        $scope.signals_btn = $scope.Signals.Hazards;
+        $scope.signals_btn = $scope.TurnSignals.Hazards;
       }
       return $scope.commands.signals = $scope.signals_btn;
     };
@@ -112,19 +112,20 @@
         return $scope.commands.reverse = 0;
       }
     };
-    return timer_id = setInterval((function() {
-      return $scope.$apply(function() {
-        $scope.query_string = $.param($scope.commands);
-        return $.ajax({
-          url: 'http://localhost:8080/data.json',
-          dataType: 'jsonp',
-          data: $scope.commands,
-          success: function(json) {
-            return $scope.commands;
-          }
-        });
+    timer_id = $interval((function() {
+      $scope.query_string = $.param($scope.commands);
+      return $.ajax({
+        url: 'http://localhost:8080/data.json',
+        dataType: 'jsonp',
+        data: $scope.commands,
+        success: function(json) {
+          return $scope.commands;
+        }
       });
-    }), 100);
+    }), 1000);
+    return $scope.$on('$destroy', function() {
+      return $interval.cancel(timer_id);
+    });
   };
 
 }).call(this);

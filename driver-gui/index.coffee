@@ -5,8 +5,9 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 		meta charset: 'utf-8'
 		title "NU Solar's ZELDA OS"
 		link rel: 'stylesheet', href: 'main.css'
+		link rel: 'stylesheet', href: 'angular-1.2.10/angular-csp.css'
 		script src: 'jquery-2.0.3.js'
-		script src: 'angular.min.js'
+		script src: 'angular-1.2.10/angular.js'
 		script src: 'main.js'
 
 	body ->
@@ -19,9 +20,9 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 
 			div '.CentralRow', ->
 				section '.LeftPanel', ->
-					div '.Button', 'ng-class': "{ButtonOn: signals_btn==Signals.Left}", 'ng-click': 'Left()', ->
+					div '.Button', 'ng-class': "{ButtonOn: signals_btn==TurnSignals.Left}", 'ng-click': 'Left()', ->
 						"LEFT"
-					div '.Button', 'ng-class': "{ButtonOn: signals_btn==Signals.Hazards}", 'ng-click': 'Hazards()', ->
+					div '.Button', 'ng-class': "{ButtonOn: signals_btn==TurnSignals.Hazards}", 'ng-click': 'Hazards()', ->
 						"HAZARDS"
 					div '.Button', {'ng-class': "{ButtonOn: horn_btn}",
 					'ng-mousedown': 'SetHorn(true)', 'ng-mouseup': 'SetHorn(false)'}, ->
@@ -60,7 +61,7 @@ html lang: "en", 'ng-app': '', 'ng-csp': '', ->
 						"CAMERA"
 
 				section '.RightPanel', ->
-					div '.Button', 'ng-class': "{ButtonOn: signals_btn==Signals.Right}", 'ng-click': 'Right()', ->
+					div '.Button', 'ng-class': "{ButtonOn: signals_btn==TurnSignals.Right}", 'ng-click': 'Right()', ->
 						"RIGHT"
 					div '.Button', 'ng-class': "{ButtonOn: headlights_btn}", 'ng-click': 'Headlights()', ->
 						"HEADLIGHTS"

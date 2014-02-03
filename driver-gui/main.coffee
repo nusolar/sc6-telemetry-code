@@ -5,21 +5,25 @@ namespace = (target, name, block) ->
   target = target[item] or= {} for item in name.split '.'
   block target, top
 
-window.MainTable = ($scope, $timeout) ->
-	# enum for Signals state
-	$scope.Signals =
+window.MainTable = ($scope, $timeout, $interval) ->
+	# enum for TurnSignals state
+	$scope.TurnSignals =
 		Off: 0,
 		Left: 1,
 		Right: 2,
 		Hazards: 3
 
 	# initialize button states. TODO: load from car
-	$scope.signals_btn = $scope.Signals.Off
+	$scope.signals_btn = $scope.TurnSignals.Off
 	$scope.headlights_btn = false
 	$scope.horn_btn = false
 	$scope.motor_btn = false
 	$scope.reverse_btn = false
 
+	# This object is the state of the User Input. It is serialized and sent to
+	# the driver-server by $interval, below.
+	# KEEP THIS OBJECT IN SYNC with its complementary interface in
+	# /driver-server/SolarCar/HttpServer.cs
 	$scope.commands =
 		signals: 0
 		headlights: 0
@@ -45,26 +49,26 @@ window.MainTable = ($scope, $timeout) ->
 	# Peripheral Button callbacks - Hardware
 	$scope.Left = ->
 		# Turn off other buttons, toggle Left Button
-		if $scope.signals_btn==$scope.Signals.Left
-			$scope.signals_btn = $scope.Signals.Off
+		if $scope.signals_btn==$scope.TurnSignals.Left
+			$scope.signals_btn = $scope.TurnSignals.Off
 		else
-			$scope.signals_btn = $scope.Signals.Left
+			$scope.signals_btn = $scope.TurnSignals.Left
 		# if Left Button is depressed, specify Left signal (==1, from C# code)
 		$scope.commands.signals = $scope.signals_btn
 
 	$scope.Right = ->
-		if $scope.signals_btn==$scope.Signals.Right
-			$scope.signals_btn = $scope.Signals.Off
+		if $scope.signals_btn==$scope.TurnSignals.Right
+			$scope.signals_btn = $scope.TurnSignals.Off
 		else
-			$scope.signals_btn = $scope.Signals.Right
+			$scope.signals_btn = $scope.TurnSignals.Right
 		# if Right Button is depressed, specify Right signal (==2, from C# code)
 		$scope.commands.signals = $scope.signals_btn
 
 	$scope.Hazards = ->
-		if $scope.signals_btn==$scope.Signals.Hazards
-			$scope.signals_btn = $scope.Signals.Off
+		if $scope.signals_btn==$scope.TurnSignals.Hazards
+			$scope.signals_btn = $scope.TurnSignals.Off
 		else
-			$scope.signals_btn = $scope.Signals.Hazards
+			$scope.signals_btn = $scope.TurnSignals.Hazards
 		# if Hazards Button is depressed, specify Hazards (==3, from C# code)
 		$scope.commands.signals = $scope.signals_btn
 
@@ -106,18 +110,18 @@ window.MainTable = ($scope, $timeout) ->
 			$scope.commands.reverse = 0
 
 	# Create timer to submit commands, and receive updated Telemetry values.
-	# Because AngularJS doesn't have $interval yet, we use the $apply hack
-	timer_id = setInterval((=>
-		$scope.$apply(=>
-			$scope.query_string = $.param($scope.commands)
-			$.ajax
-				# url: window.location.origin + ':8080/data.json'
-				url: 'http://localhost:8080/data.json'
-				dataType:'jsonp'
-				data: $scope.commands
-				success: (json) =>
-					# TODO update values
-					$scope.commands
-		)
-	), 100) #ms
+	timer_id = $interval((=>
+		$scope.query_string = $.param($scope.commands)
+		$.ajax
+			# url: window.location.origin + ':8080/data.json'
+			url: 'http://localhost:8080/data.json'
+			dataType:'jsonp'
+			data: $scope.commands
+			success: (json) =>
+				# TODO update values
+				$scope.commands
+	), 1000) #ms
+	# Stop timer if the scope is destroyed (this should never happen).
+	$scope.$on '$destroy', ->
+		$interval.cancel timer_id
 

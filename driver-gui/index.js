@@ -16,11 +16,15 @@
         rel: 'stylesheet',
         href: 'main.css'
       });
+      link({
+        rel: 'stylesheet',
+        href: 'angular-1.2.10/angular-csp.css'
+      });
       script({
         src: 'jquery-2.0.3.js'
       });
       script({
-        src: 'angular.min.js'
+        src: 'angular-1.2.10/angular.js'
       });
       return script({
         src: 'main.js'
@@ -42,13 +46,13 @@
         div('.CentralRow', function() {
           section('.LeftPanel', function() {
             div('.Button', {
-              'ng-class': "{ButtonOn: signals_btn==Signals.Left}",
+              'ng-class': "{ButtonOn: signals_btn==TurnSignals.Left}",
               'ng-click': 'Left()'
             }, function() {
               return "LEFT";
             });
             div('.Button', {
-              'ng-class': "{ButtonOn: signals_btn==Signals.Hazards}",
+              'ng-class': "{ButtonOn: signals_btn==TurnSignals.Hazards}",
               'ng-click': 'Hazards()'
             }, function() {
               return "HAZARDS";
@@ -142,7 +146,7 @@
           });
           return section('.RightPanel', function() {
             div('.Button', {
-              'ng-class': "{ButtonOn: signals_btn==Signals.Right}",
+              'ng-class': "{ButtonOn: signals_btn==TurnSignals.Right}",
               'ng-click': 'Right()'
             }, function() {
               return "RIGHT";
