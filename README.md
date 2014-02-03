@@ -3,63 +3,22 @@ telem
 
 NUSolar ZELDA - telemetry code
 
+Warning
+----
+This README is mostly out of date. The telemetry is no longer in Python.
+
 Getting Prerequisites
 -------------
-### POSIX operating system
-* OS X or Linux. Completely untested on Windows, multiprocessing will probably crash.
-
-### Python ≥ 3.3
-
-In OS X, can be installed with
-  ```bash
-  brew install python3
-  ```
-
-Currently most Linux distributions don't package Python 3.3. Check your unstable/experimental repository.
-
-##### Note: car-side only requires Python ≥ 3.0
-
-To install python ≥ 3.0, in Debian/Ubuntu/Mint,
-  ```
-  sudo apt-get install python3
-  ```
-
-* #### pika ≥ 0.9.8
-  Use our custom Python 3.3 branch, at <a href="https://github.com/alexchandel/pika">alexchandel/pika</a>. To install, download or clone this repository, `cd` into it, and run
-
-  ```bash
-  python3 setup.py install
-  ```
-
-* #### pyserial ≥ 2.6
-
-  Only used by the car code, to talk to the CANUSB. (However it's also used by self-testing, see Usage below)
-
-  In OS X, install with `pip3 install pyserial`
-
-  In Debian, install with `sudo apt-get install python3-serial`
-
-* #### numpy ≥ 1.7, scipy ≥ 0.11, matplotlib ≥ 1.2
-
-  Used only on the laptop, for analytics.
-
-  In OS X, install with `pip3 install numpy scipy matplotlib`
-
-### RabbitMQ ≥ 3.0.2
-
-* Do not configure RabbitMQ's server to run automatically. Record server executable's location in ```config.py```, default is ```/usr/local/sbin/```
-
-  In OS X, can be installed with `brew install rabbitmq`
-
-  In Debian/Ubuntu/Mint, can be installed with `sudo apt-get install rabbitmq-server`
+* Mono or equivalent .NET framework
+* Web browser
 
 Installation
 ------------
-Install the prerequisites.
+Clone this repository into the desired installation directory on the BeagleBoard.
 
-Clone this project to desired installation directory.
+The ```/driver-server``` and ```/driver-gui``` subprojects will be run on the car's onboard Linux board, the BeagleBoard-xM. Tools for bootstrapping the BeagleBoard can be found in the ```/beagleboard``` folder.
 
-Edit ```config.py```, recording your laptop-server & car-client hostnames, the CANUSB device location for your `sys.platform`, and the location of the `rabbitmq-server` executable.
+Edit ```Config.cs``` and record the laptop-server & car-client hostnames and the CANUSB device location for your `sys.platform`.
 
 Usage
 -----

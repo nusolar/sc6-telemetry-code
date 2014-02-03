@@ -33,18 +33,37 @@ namespace SolarCar {
 		void DoCommand(System.Collections.Specialized.NameValueCollection query) {
 			UserInput input = new UserInput();
 
-			input.power = query["power"] == "1" ? true : false;
-			input.drive = query["drive"] == "1" ? true : false;
-			input.reverse = query["reverse"] == "1" ? true : false;
+			// Do the power & array Mode flags first
+			if (query["power"] == "1") {
+				input.mode |= Car.Mode.Discharging;
+			}
+
+			// Gear flags
+			if (query["drive"] == "1") {
+				input.gears |= Car.Gears.Drive;
+				// NOTICE drive influences BOTH Mode AND Gear flags.
+				// However, it is only active if Mode is already Discharging,
+				// because it's dangerous to Drive without Discharging!
+				if (input.mode.HasFlag(Car.Mode.Discharging)) {
+					input.mode |= Car.Mode.Drive;
+				}
+			}
+			if (query["reverse"] == "1") {
+				input.gears |= Car.Gears.Reverse;
+			}
+
+			// Signal flags
 			int sigs = 0;
 			Int32.TryParse(query["signals"], out sigs);
 			input.sigs = (Car.Signals)sigs;
 			if (query["headlights"] == "1") {
 				input.sigs |= Car.Signals.Headlights;
 			}
-			input.horn = query["horn"] == "1" ? true : false;
+			if (query["horn"] == "1") {
+				input.sigs |= Car.Signals.Horn;
+			}
 
-			db.input = input;
+			db.HandleUserInput(input);
 		}
 
 		/**

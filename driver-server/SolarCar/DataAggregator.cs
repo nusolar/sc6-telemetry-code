@@ -3,13 +3,14 @@ using System.Collections.Generic;
 
 namespace SolarCar {
 	namespace Car {
+		[Flags]
 		enum Mode {
 			Off = 0,
 			Discharging = 1,
-			Drive = 3,
+			Drive = 2 | 1,
 			EmptyCharging = 4,
-			Charging = 5,
-			DriveCharging = 7
+			Charging = 4 | 1,
+			DriveCharging = 4 | 2 | 1
 		}
 
 		[Flags]
@@ -24,15 +25,15 @@ namespace SolarCar {
 			None = 0,
 			Left = 1,
 			Right = 2,
-			Headlights = 4
+			Headlights = 4,
+			Horn = 8
 		}
 
 		class Status {
 			// Driver inputs
 			public Mode RequestedMode;
 			public Gears Gear;
-			public Signals RequestedLights;
-			public bool Horn;
+			public Signals RequestedSignals;
 			// Pedals
 			public UInt16 AccelPedal;
 			public UInt16 RegenPedal;
@@ -51,17 +52,21 @@ namespace SolarCar {
 		}
 	}
 	class UserInput {
-		public bool power = false, array = false;
-		public bool drive = false, reverse = false;
+		public Car.Mode mode = Car.Mode.Off;
+		public Car.Gears gears = Car.Gears.None;
 		public Car.Signals sigs = Car.Signals.None;
-		public bool horn = false;
 	}
 
 	class DataAggregator {
 		public Car.Status status = new Car.Status();
-		public UserInput input = null;
 
 		public DataAggregator() {
+		}
+
+		public void HandleUserInput(UserInput input) {
+			this.status.RequestedMode = input.mode;
+			this.status.Gear = input.gears;
+			this.status.RequestedSignals = input.sigs;
 		}
 
 		public void TxCanPacket() {
