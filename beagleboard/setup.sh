@@ -11,6 +11,10 @@ sudo apt-get install locales
 sudo apt-get install at
 
 
+## configure Dynamic DNS - must be done manually
+# apt-get install ddclient
+# domain name: nusolar.no-ip.biz
+
 ## configure USB Tethering
 sudo tee "/usr/local/bin/dialer.sh" <<-EOF
 	echo "sudo wvdial" | at now
