@@ -71,7 +71,7 @@ namespace SolarCar
 
 		public DataAggregator()
 		{
-			CanHandler ch = new CanHandler(0, Can.Addr.ws20.motor_bus, this.HandleCanPacket);
+			CanHandler ch = new CanHandler(0, Can.Addr.ws20.tx.motor_velocity._id, this.HandleCanPacket);
 			canusb.handlers.Add(ch);
 
 		}
@@ -93,13 +93,13 @@ namespace SolarCar
 		{
 			switch (p.ID)
 			{
-				case Can.Addr.pedals.Status:
+				case Can.Addr.pedals.tx.pedals._id:
 					// accel, regen, brake pedal
 					break;
-				case Can.Addr.ws20.motor_bus:
+				case Can.Addr.ws20.tx.motor_bus._id:
 					// voltage; current;
 					break;
-				case Can.Addr.ws20.motor_velocity:
+				case Can.Addr.ws20.tx.motor_velocity._id:
 					// RPM; velocity;
 					break;
 			}
@@ -107,17 +107,17 @@ namespace SolarCar
 
 		void TxCanPacket()
 		{
-			Can.Packet p = new Can.Packet(0, 8, 0);
-			p.frame.uint16x4.uint16_0 = (UInt16)this.status.RequestedMode;
+			Can.Addr.os.tx.user_cmds p = new Can.Addr.os.tx.user_cmds(0);
+			p.power = (UInt16)this.status.RequestedMode;
 			// power :1
 			// drive :1
 			// array :1
 
-			p.frame.uint16x4.uint16_1 = (UInt16)this.status.Gear;
+			p.gearFlags = (UInt16)this.status.Gear;
 			// gear/drive :1
 			// reverse :1
 
-			p.frame.uint16x4.uint16_2 = (UInt16)this.status.RequestedSignals;
+			p.signalFlags = (UInt16)this.status.RequestedSignals;
 			// signals :3
 			// horn :1
 
