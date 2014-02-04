@@ -116,9 +116,11 @@
       $scope.query_string = $.param($scope.commands);
       return $.ajax({
         url: 'http://localhost:8080/data.json',
-        dataType: 'jsonp',
+        dataType: 'text',
         data: $scope.commands,
-        success: function(json) {
+        success: function(json_text) {
+          var json;
+          json = JSON.parse(json_text);
           return $scope.commands;
         }
       });

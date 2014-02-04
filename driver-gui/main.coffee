@@ -115,10 +115,11 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		$.ajax
 			# url: window.location.origin + ':8080/data.json'
 			url: 'http://localhost:8080/data.json'
-			dataType:'jsonp'
+			dataType:'text'
 			data: $scope.commands
-			success: (json) =>
+			success: (json_text) =>
 				# TODO update values
+				json = JSON.parse(json_text)
 				$scope.commands
 	), 1000) #ms
 	# Stop timer if the scope is destroyed (this should never happen).
