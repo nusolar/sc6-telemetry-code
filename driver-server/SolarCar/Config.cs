@@ -1,6 +1,8 @@
 
-namespace SolarCar {
-	static class Config {
+namespace SolarCar
+{
+	static class Config
+	{
 		public const int NUM_BATTERIES = 32;
 		// BPS configuration
 		public const float MAX_VOLTAGE = 4.3f;
@@ -24,6 +26,10 @@ namespace SolarCar {
 		public const string SAMPLE_MOTOR_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_motor.json";
 		public const string SAMPLE_INPUT_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_input.json";
 		public const string SAMPLE_OUTPUT_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_output.json";
-		public const int LOOP_INTERVAL = 100;
+		// Tx CAN LOOP
+		public const int LOOP_INTERVAL_MS = 1000;
+		// Platform-specific things
+		public const string CANUSB_DEV_FILE = "/dev/tty.CANUSB";
+		public const string HTTPSERVER_PREFIX = "http://+:8080/";
 	}
 }

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace SolarCar {
-	namespace Car {
+namespace SolarCar
+{
+	namespace Car
+	{
 		[Flags]
-		enum Mode {
+		enum Mode
+		{
 			Off = 0,
 			Discharging = 1,
 			Drive = 2 | 1,
@@ -14,14 +17,16 @@ namespace SolarCar {
 		}
 
 		[Flags]
-		enum Gears {
+		enum Gear
+		{
 			None = 0,
 			Drive = 1,
 			Reverse = 2
 		}
 
 		[Flags]
-		enum Signals {
+		enum Signals
+		{
 			None = 0,
 			Left = 1,
 			Right = 2,
@@ -29,10 +34,11 @@ namespace SolarCar {
 			Horn = 8
 		}
 
-		class Status {
+		class Status
+		{
 			// Driver inputs
 			public Mode RequestedMode;
-			public Gears Gear;
+			public Gear Gear;
 			public Signals RequestedSignals;
 			// Pedals
 			public UInt16 AccelPedal;
@@ -51,46 +57,79 @@ namespace SolarCar {
 			public List<float> BatteryTemps = null;
 		}
 	}
-	class UserInput {
+	class UserInput
+	{
 		public Car.Mode mode = Car.Mode.Off;
-		public Car.Gears gears = Car.Gears.None;
+		public Car.Gear gear = Car.Gear.None;
 		public Car.Signals sigs = Car.Signals.None;
 	}
 
-	class DataAggregator {
-		public Car.Status status = new Car.Status();
+	class DataAggregator
+	{
+		Car.Status status = new Car.Status();
+		CanUsb canusb = new CanUsb(Config.CANUSB_DEV_FILE);
 
-		public DataAggregator() {
+		public DataAggregator()
+		{
+			CanHandler ch = new CanHandler(0, Can.Addr.ws20.motor_bus, this.HandleCanPacket);
+			canusb.handlers.Add(ch);
+
 		}
 
-		public void HandleUserInput(UserInput input) {
+		public Car.Status Status { get { return this.status; } }
+
+		public void HandleUserInput(UserInput input)
+		{
 			this.status.RequestedMode = input.mode;
-			this.status.Gear = input.gears;
+			this.status.Gear = input.gear;
 			this.status.RequestedSignals = input.sigs;
+
+			#if DEBUG
+			Console.WriteLine("Set Mode={0}, Gear={1}, Signals={2}", input.mode, input.gear, input.sigs);
+			#endif
 		}
 
-		public void TxCanPacket() {
+		public void HandleCanPacket(Can.Packet p)
+		{
+			switch (p.ID)
+			{
+				case Can.Addr.pedals.Status:
+					// accel, regen, brake pedal
+					break;
+				case Can.Addr.ws20.motor_bus:
+					// voltage; current;
+					break;
+				case Can.Addr.ws20.motor_velocity:
+					// RPM; velocity;
+					break;
+			}
+		}
+
+		void TxCanPacket()
+		{
+			Can.Packet p = new Can.Packet(0, 8, 0);
+			p.frame.uint16x4.uint16_0 = (UInt16)this.status.RequestedMode;
 			// power :1
+			// drive :1
 			// array :1
 
+			p.frame.uint16x4.uint16_1 = (UInt16)this.status.Gear;
 			// gear/drive :1
 			// reverse :1
 
+			p.frame.uint16x4.uint16_2 = (UInt16)this.status.RequestedSignals;
 			// signals :3
 			// horn :1
+
+			this.canusb.TransmitPacket(p);
 		}
 
-		public void HandleCanPacket(CanPacket p) {
-			switch (p.ID) {
-				case CanAddr.Pedals.Status:
-					// accel, regen, brake pedal
-					break;
-				case CanAddr.WS20.motor_bus:
-					// voltage; current;
-					break;
-				case CanAddr.WS20.motor_velocity:
-					// RPM; velocity;
-					break;
+		public void TxCanLoop()
+		{
+			while (canusb != null)
+			{
+				this.TxCanPacket();
+				System.Threading.Thread.Sleep(Config.LOOP_INTERVAL_MS);
 			}
 		}
 	}

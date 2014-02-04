@@ -1,11 +1,13 @@
 using System;
 using System.IO.Ports;
 
-namespace SolarCar {
+namespace SolarCar
+{
 	/// <summary>
 	/// Wrapper to send to and receive packets from NUSolar Serial devices.
 	/// </summary>
-	class AsyncSerialPort {
+	class AsyncSerialPort
+	{
 		// The underlying SerialPort & its mutex:
 		readonly object port_lock = new Object();
 		readonly SerialPort port = new SerialPort();
@@ -21,7 +23,8 @@ namespace SolarCar {
 		/// Initializes a new instance of the SolarCar.SyncSerialPort class.
 		/// </summary>
 		/// <param name="name">Serial Port's name</param>
-		protected AsyncSerialPort(string name) {
+		protected AsyncSerialPort(string name)
+		{
 			port.PortName = name;
 			port.BaudRate = 115200;
 			port.ReadTimeout = 50; // 50 ms
@@ -36,13 +39,15 @@ namespace SolarCar {
 		/// Releases the SerialPort and performs other cleanup operations before the SolarCar.SyncSerialPort is
 		/// reclaimed by garbage collection.
 		/// </summary>
-		~AsyncSerialPort() {
+		~AsyncSerialPort()
+		{
 #if !DEBUG
 			port.Close();
 #endif
 		}
 
-		protected string NewLine {
+		protected string NewLine
+		{
 			get { return port.NewLine; }
 			set { port.NewLine = value; }
 		}
@@ -50,33 +55,43 @@ namespace SolarCar {
 		/// <summary>
 		/// Private Event Handler for this.port's SerialPort.DataReceived event.
 		/// Acquires the SerialPort, reads data into buffer. It is invoked on a separate thread by SerialPort.
+		/// Lines terminated by the NewLine character are passed to the LineReceivedDelegate.
 		/// </summary>
 		/// <param name="sender">Sender, a SerialPort.</param>
 		/// <param name="e">Event Args</param>
-		void ReadData(object sender, SerialDataReceivedEventArgs e) {
-			if (e.EventType != System.IO.Ports.SerialData.Chars) {
+		void ReadData(object sender, SerialDataReceivedEventArgs e)
+		{
+			if (e.EventType != System.IO.Ports.SerialData.Chars)
+			{
 				return;
 			}
-			if ((SerialPort)sender != this.port) {
+			if ((SerialPort)sender != this.port)
+			{
 				Console.WriteLine("Warning: ReadData was called with sender != this.port");
 			}
 
 			// acquire lock on CAN bus, read upto 21 bytes.
 			string temp_buffer = null;
-			try {
-				lock (port_lock) {
+			try
+			{
+				lock (port_lock)
+				{
 					temp_buffer = this.port.ReadExisting();
 				}
-			} catch (TimeoutException) {
+			}
+			catch (TimeoutException)
+			{
 				Console.WriteLine("CANBUS: read timed out. SerialPort may be busy.");
 				return;
 			}
 
 			// Add data to this.buffer, check for newlines.
 			string new_line = null;
-			lock (buffer_lock) {
+			lock (buffer_lock)
+			{
 				this.buffer += temp_buffer;
-				if (this.buffer.Contains(this.NewLine)) {
+				if (this.buffer.Contains(this.NewLine))
+				{
 					int newline_index = this.buffer.IndexOf(this.NewLine);
 					// copy the first line in the buffer.
 					new_line = this.buffer.Substring(0, newline_index + 1);
@@ -86,7 +101,8 @@ namespace SolarCar {
 			}
 
 			// Handle newline, if exists.
-			if (new_line != null) {
+			if (new_line != null)
+			{
 				this.LineReceived(new_line);
 			}
 		}
@@ -95,14 +111,21 @@ namespace SolarCar {
 		/// Acquire the SerialPort, and write a line.
 		/// </summary>
 		/// <param name="line">Line.</param>
-		public void SyncWriteLine(string line) {
-			try {
-				lock (port_lock) {
+		public void SyncWriteLine(string line)
+		{
+			try
+			{
+				lock (port_lock)
+				{
 #if !DEBUG
 					port.WriteLine(line);
+#else
+					Console.WriteLine(line);
 #endif
 				}
-			} catch (TimeoutException) {
+			}
+			catch (TimeoutException)
+			{
 				Console.WriteLine("CANBUS: write timed out. SerialPort may be busy.");
 			}
 		}

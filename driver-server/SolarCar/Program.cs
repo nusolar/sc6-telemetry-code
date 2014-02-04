@@ -3,30 +3,33 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 
-namespace SolarCar {
-	class MainClass {
-		static void RunCar() {
-			// UIs run on separate threads.
+namespace SolarCar
+{
+	class MainClass
+	{
+		static void RunCar()
+		{
+			// DataAggregator talks to CAN bus.
 			DataAggregator data = new DataAggregator();
-
-			CanHandler ch = new CanHandler(0, 0x7ff, data.HandleCanPacket);
-			CanUsb canusb = new CanUsb("/dev/tty.CANUSB");
-			canusb.handlers.Add(ch);
-
+			// UIs run on separate threads.
 			HttpServer web = new HttpServer(data);
 
 			// do RunLoops in separate threads:
 			Thread.Sleep(1); // 1ms
 			Thread web_loop = new Thread(new ThreadStart(web.RunLoop));
+			Thread txcan_loop = new Thread(new ThreadStart(data.TxCanLoop));
 			web_loop.Start();
+			txcan_loop.Start();
 			web_loop.Join();
+			txcan_loop.Join();
 		}
 
-		public static void Main(string[] args) {
+		public static void Main(string[] args)
+		{
 			Console.WriteLine("Hello World!");
 			CarData.Test();
 
-			// RunCar();
+			RunCar();
 
 			// Console.WriteLine("Press any key to continue...");
 			// Console.WriteLine();
