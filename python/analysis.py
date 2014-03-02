@@ -14,7 +14,7 @@ def derived():
 		bms_array_c, mppt_c, speed, current, current/speed, num)
 
 pi = 3.14159265358979323846264338327950
-R = 8314.4621 # PER KILOMOL
+R = 8314.4621  # PER KILOMOL
 
 
 rho_data = [[-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30, 35],
