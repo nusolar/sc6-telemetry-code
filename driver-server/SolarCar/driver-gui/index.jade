@@ -1,0 +1,87 @@
+doctype html
+html(lang="en", ng-app, ng-csp)
+	head
+		meta(charset='utf-8')
+		link(rel="icon", type="image/png", href="icon_64.png")
+		title
+			="NU Solar - ZELDA"
+		style
+			include:css main.css
+		style
+			include:css angular-1.2.10/angular-csp.css
+		script
+			include:js jquery-2.1.0.min.js
+		script
+			include:js angular-1.2.10/angular.min.js
+		script
+			include:js main.js
+
+	body
+		article.MainTable(ng-controller='MainTable')
+			header.HeaderRow
+				.TextCell.Title.TopLeftCorner
+				.TextCell.Title(colspan='2')
+					="Title PLACEHOLDER"
+				.TextCell.Title.TopRightCorner
+
+			.CentralRow
+				section.LeftPanel
+					.Button(ng-class="{ButtonOn: signals_btn==TurnSignals.Left}", ng-click="Left()")
+						="LEFT"
+					.Button(ng-class="{ButtonOn: signals_btn==TurnSignals.Hazards}", ng-click="Hazards()")
+						="HAZARDS"
+					.Button(ng-class="{ButtonOn: horn_btn}", ng-mousedown="SetHorn(true)", ng-mouseup="SetHorn(false)")
+						="HORN"
+					.Gap
+					.Button(ng-class="{ButtonOn: map_btn}", ng-click="Map()")
+						="MAP"
+					.Button(ng-class="{ButtonOn: sensors_btn}", ng-click="Sensors()")
+						="SENSORS"
+
+
+				.CenterPanel.ng-cloak
+					section.MapPanel(ng-show="map_btn")
+						img.Map(src='map.png')
+
+					section.BatteryBoxPanel(ng-show="sensors_btn")
+						table.BatteryBoxTable
+							mixin battery_cell(num)
+								td.Battery(id="battery_"+String(num))
+									=String(num)
+							tr
+								+battery_cell(31)
+							tr
+								+battery_cell(30)
+							each i in [29, 28, 27, 26, 25]
+								tr
+									each j in [i, i-10, i-20]
+										for k in [j, j - (2*(j%5) + 1)]
+											+battery_cell(k)
+					section.DrivePanel(ng-show="drive_btn")
+						.Button.SmallButton.MotorToggle(ng-class="{MotorToggleOn: motor_btn}", ng-click="Motor()")
+							="MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}"
+						.Gap
+						.Button.SmallButton(ng-class="{ButtonOn: reverse_btn}", ng-click="Reverse()")
+							="REVERSE"
+
+					section.CameraPanel(ng-show="camera_btn")
+						="CAMERA"
+
+				section.RightPanel
+					.Button(ng-class="{ButtonOn: signals_btn==TurnSignals.Right}", ng-click="Right()")
+						="RIGHT"
+					.Button(ng-class="{ButtonOn: headlights_btn}", ng-click="Headlights()")
+						="HEADLIGHTS"
+					.Button
+						=" | "
+					.Gap
+					.Button(ng-class="{ButtonOn: drive_btn}", ng-click="Drive()")
+						="DRIVE"
+					.Button(ng-class="{ButtonOn: camera_btn}", ng-click="Camera()")
+						="CAMERA"
+
+
+			footer.FooterRow(colspan='2')
+				.TextCell.Bottom.BottomLeftCorner
+				.TextCell.Bottom(colspan='2', ng-bind="query_string")
+				.TextCell.Bottom.BottomRightCorner

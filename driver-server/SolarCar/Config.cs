@@ -21,15 +21,17 @@ namespace SolarCar
 		public const float ACCEL_THRESH = 0.05f;
 		public const float REGEN_THRESH = 0.1f;
 		public const float MAX_VELOCITY = 101;
-		// Bootup files
-		public const string SAMPLE_BATTERY_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_bms.json";
-		public const string SAMPLE_MOTOR_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_motor.json";
-		public const string SAMPLE_INPUT_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_input.json";
-		public const string SAMPLE_OUTPUT_REPORT = "/Users/alex/GitHub/sc6-telemetry-code/sample_output.json";
-		// Tx CAN LOOP
-		public const int LOOP_INTERVAL_MS = 1000;
+		// Timers
+#if DEBUG
+		public const int CAN_TX_INTERVAL_MS = 1000;
+		public const int HTTP_TIMEOUT_MS = 1000;
+#else
+		public const int CAN_TX_INTERVAL_MS = 100;
+		public const int HTTP_TIMEOUT_MS = 100;
+#endif
 		// Platform-specific things
-		public const string CANUSB_DEV_FILE = "/dev/tty.CANUSB";
+		public const string CANUSB_DEV_FILE = "/dev/tty.usbserial-LWR8N2L2";
 		public const string HTTPSERVER_PREFIX = "http://+:8080/";
+		public const string GUI_SUBDIR = "driver-gui";
 	}
 }

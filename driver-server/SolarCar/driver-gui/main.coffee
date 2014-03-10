@@ -113,14 +113,16 @@ window.MainTable = ($scope, $timeout, $interval) ->
 	timer_id = $interval((=>
 		$scope.query_string = $.param($scope.commands)
 		$.ajax
-			# url: window.location.origin + ':8080/data.json'
-			url: 'http://localhost:8080/data.json'
-			dataType:'text'
+			url: window.location.origin + '/data.json'
+			# url: 'http://localhost:8080/data.json'
+			dataType: 'text'
 			data: $scope.commands
 			success: (json_text) =>
-				# TODO update values
-				json = JSON.parse(json_text)
-				$scope.commands
+				try
+					json = JSON.parse(json_text)
+					# TODO update values for $scope.commands
+				catch e
+					window.console.log(e)
 	), 1000) #ms
 	# Stop timer if the scope is destroyed (this should never happen).
 	$scope.$on '$destroy', ->

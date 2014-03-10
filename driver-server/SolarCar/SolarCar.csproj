@@ -54,6 +54,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Content\" />
+    <EmbeddedResource Include="driver-gui\index.html" />
+    <EmbeddedResource Include="driver-gui\map.png" />
+    <EmbeddedResource Include="driver-gui\icon_64.png" />
   </ItemGroup>
 </Project>

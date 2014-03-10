@@ -9,11 +9,12 @@ namespace SolarCar
 		enum Mode
 		{
 			Off = 0,
-			Discharging = 1,
-			Drive = 2 | 1,
-			EmptyCharging = 4,
-			Charging = 4 | 1,
-			DriveCharging = 4 | 2 | 1
+			Run = 1
+			//			Discharging = 1,
+			//			Drive = 2 | 1,
+			//			EmptyCharging = 4,
+			//			Charging = 4 | 1,
+			//			DriveCharging = 4 | 2 | 1
 		}
 
 		[Flags]
@@ -54,7 +55,6 @@ namespace SolarCar
 			public UInt16 ArrayCurrent;
 			// Lists range 0-31
 			public List<UInt16> BatteryVoltages = null;
-			public List<UInt16> BatteryTemps = null;
 		}
 	}
 	class UserInput
@@ -83,9 +83,9 @@ namespace SolarCar
 			this.status.RequestedGear = input.gear;
 			this.status.RequestedSignals = input.sigs;
 
-			#if DEBUG
-			Console.WriteLine("Set Mode={0}, Gear={1}, Signals={2}", input.mode, input.gear, input.sigs);
-			#endif
+#if DEBUG
+			Console.WriteLine("Data: input Mode={0}, Gear={1}, Signals={2}", input.mode, input.gear, input.sigs);
+#endif
 		}
 
 		public void HandleCanPacket(Can.Packet p)
@@ -150,7 +150,7 @@ namespace SolarCar
 			while (canusb != null)
 			{
 				this.TxCanPacket();
-				System.Threading.Thread.Sleep(Config.LOOP_INTERVAL_MS);
+				System.Threading.Thread.Sleep(Config.CAN_TX_INTERVAL_MS);
 			}
 		}
 	}

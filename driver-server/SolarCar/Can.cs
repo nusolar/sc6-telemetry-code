@@ -285,14 +285,14 @@ namespace SolarCar
 
 						public UInt32 bmsId
 					{
-						get { return this.frame.uint32x2.uint32_0; }
-						set { this.frame.uint32x2.uint32_0 = value; }
+						get { return this.frame.status.uint32_0; }
+						set { this.frame.status.uint32_0 = value; }
 					}
 
 					public UInt32 uptime_s
 					{
-						get { return this.frame.uint32x2.uint32_1; }
-						set { this.frame.uint32x2.uint32_1 = value; }
+						get { return this.frame.status.uint32_1; }
+						set { this.frame.status.uint32_1 = value; }
 					}
 
 				}
@@ -612,6 +612,580 @@ namespace SolarCar
 				}
 			}
 
+			namespace os
+			{
+				class user_cmds: Packet
+				{
+					public user_cmds(UInt64 data = 0) : base(0x310, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x310;
+
+						public UInt16 power
+					{
+						get { return this.frame.uint16x4.uint16_0; }
+						set { this.frame.uint16x4.uint16_0 = value; }
+					}
+
+					public UInt16 gearFlags
+					{
+						get { return this.frame.uint16x4.uint16_1; }
+						set { this.frame.uint16x4.uint16_1 = value; }
+					}
+
+					public UInt16 signalFlags
+					{
+						get { return this.frame.uint16x4.uint16_2; }
+						set { this.frame.uint16x4.uint16_2 = value; }
+					}
+
+					public UInt16 reserved
+					{
+						get { return this.frame.uint16x4.uint16_3; }
+						set { this.frame.uint16x4.uint16_3 = value; }
+					}
+
+				}
+
+				class cruise_cmd: Packet
+				{
+					public cruise_cmd(UInt64 data = 0) : base(0x311, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x311;
+
+						public Single velocity
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single current
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+			}
+
+			namespace ws20
+			{
+				class motor_id: Packet
+				{
+					public motor_id(UInt64 data = 0) : base(0x400, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x400;
+
+						public UInt32 tritiumId
+					{
+						get { return this.frame.status.uint32_0; }
+						set { this.frame.status.uint32_0 = value; }
+					}
+
+					public UInt32 serialNo
+					{
+						get { return this.frame.status.uint32_1; }
+						set { this.frame.status.uint32_1 = value; }
+					}
+
+				}
+
+				class motor_status_info: Packet
+				{
+					public motor_status_info(UInt64 data = 0) : base(0x401, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x401;
+
+						public UInt16 limitFlags
+					{
+						get { return this.frame.uint16x4.uint16_0; }
+						set { this.frame.uint16x4.uint16_0 = value; }
+					}
+
+					public UInt16 errorFlags
+					{
+						get { return this.frame.uint16x4.uint16_1; }
+						set { this.frame.uint16x4.uint16_1 = value; }
+					}
+
+					public UInt16 activeMotor
+					{
+						get { return this.frame.uint16x4.uint16_2; }
+						set { this.frame.uint16x4.uint16_2 = value; }
+					}
+
+					public UInt16 reserved
+					{
+						get { return this.frame.uint16x4.uint16_3; }
+						set { this.frame.uint16x4.uint16_3 = value; }
+					}
+
+				}
+
+				class motor_bus: Packet
+				{
+					public motor_bus(UInt64 data = 0) : base(0x402, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x402;
+
+						public Single busVoltage
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single busCurrent
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class motor_velocity: Packet
+				{
+					public motor_velocity(UInt64 data = 0) : base(0x403, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x403;
+
+						public Single motorVelocity
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single vehicleVelocity
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class motor_phase: Packet
+				{
+					public motor_phase(UInt64 data = 0) : base(0x404, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x404;
+
+						public Single phaseBCurrent
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single phaseACurrent
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class voltage_vector: Packet
+				{
+					public voltage_vector(UInt64 data = 0) : base(0x405, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x405;
+
+						public Single voltageIm
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single voltageRe
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class current_vector: Packet
+				{
+					public current_vector(UInt64 data = 0) : base(0x406, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x406;
+
+						public Single currentIm
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single currentRe
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class backemf: Packet
+				{
+					public backemf(UInt64 data = 0) : base(0x407, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x407;
+
+						public Single backEmfIm
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single backEmfRe
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class rail_15v_1pt65v: Packet
+				{
+					public rail_15v_1pt65v(UInt64 data = 0) : base(0x408, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x408;
+
+						public Single onePtSixtyFiveVRef
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single fifteenVPowerRail
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class rail_2pt5v_1pt2v: Packet
+				{
+					public rail_2pt5v_1pt2v(UInt64 data = 0) : base(0x409, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x409;
+
+						public Single onePtTwoVSupply
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single twoPtFiveVSupply
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class fanspeed: Packet
+				{
+					public fanspeed(UInt64 data = 0) : base(0x40a, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x40a;
+
+						public Single fanDrive
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single fanRpm
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class sinks_temp: Packet
+				{
+					public sinks_temp(UInt64 data = 0) : base(0x40b, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x40b;
+
+						public Single motorTemp
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single heatsinkTemp
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class cpu_airin_temp: Packet
+				{
+					public cpu_airin_temp(UInt64 data = 0) : base(0x40c, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x40c;
+
+						public Single processorTemp
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single airInletTemp
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class cap_airout_temp: Packet
+				{
+					public cap_airout_temp(UInt64 data = 0) : base(0x40d, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x40d;
+
+						public Single capacitorTemp
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single airOutTemp
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class odom_bus_ah: Packet
+				{
+					public odom_bus_ah(UInt64 data = 0) : base(0x40e, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x40e;
+
+						public Single odom
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single dcBusAmpHours
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+			}
+
+			namespace dc
+			{
+				class driver_controls_id: Packet
+				{
+					public driver_controls_id(UInt64 data = 0) : base(0x500, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x500;
+
+						public UInt32 drvId
+					{
+						get { return this.frame.status.uint32_0; }
+						set { this.frame.status.uint32_0 = value; }
+					}
+
+					public UInt32 serialNo
+					{
+						get { return this.frame.status.uint32_1; }
+						set { this.frame.status.uint32_1 = value; }
+					}
+
+				}
+
+				class drive_cmd: Packet
+				{
+					public drive_cmd(UInt64 data = 0) : base(0x501, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x501;
+
+						public Single motorVelocity
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single motorCurrent
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class power_cmd: Packet
+				{
+					public power_cmd(UInt64 data = 0) : base(0x502, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x502;
+
+						public Single reserved
+					{
+						get { return this.frame.float32x2.single_0; }
+						set { this.frame.float32x2.single_0 = value; }
+					}
+
+					public Single busCurrent
+					{
+						get { return this.frame.float32x2.single_1; }
+						set { this.frame.float32x2.single_1 = value; }
+					}
+
+				}
+
+				class reset_cmd: Packet
+				{
+					public reset_cmd(UInt64 data = 0) : base(0x503, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x503;
+
+						public UInt32 unused0
+					{
+						get { return this.frame.status.uint32_0; }
+						set { this.frame.status.uint32_0 = value; }
+					}
+
+					public UInt32 unused1
+					{
+						get { return this.frame.status.uint32_1; }
+						set { this.frame.status.uint32_1 = value; }
+					}
+
+				}
+
+				class unused0: Packet
+				{
+					public unused0(UInt64 data = 0) : base(0x504, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x504;
+
+	
+				}
+
+				class switches: Packet
+				{
+					public switches(UInt64 data = 0) : base(0x505, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x505;
+
+						public UInt16 switchFlags
+					{
+						get { return this.frame.uint16x4.uint16_0; }
+						set { this.frame.uint16x4.uint16_0 = value; }
+					}
+
+					public UInt16 unused0
+					{
+						get { return this.frame.uint16x4.uint16_1; }
+						set { this.frame.uint16x4.uint16_1 = value; }
+					}
+
+					public UInt16 unused1
+					{
+						get { return this.frame.uint16x4.uint16_2; }
+						set { this.frame.uint16x4.uint16_2 = value; }
+					}
+
+					public UInt16 unused2
+					{
+						get { return this.frame.uint16x4.uint16_3; }
+						set { this.frame.uint16x4.uint16_3 = value; }
+					}
+
+				}
+
+				class pedals: Packet
+				{
+					public pedals(UInt64 data = 0) : base(0x506, 8, data)
+					{
+					}
+
+					public const UInt16 _id = 0x506;
+
+						public UInt16 accel_pedal
+					{
+						get { return this.frame.uint16x4.uint16_0; }
+						set { this.frame.uint16x4.uint16_0 = value; }
+					}
+
+					public UInt16 regen_pedal
+					{
+						get { return this.frame.uint16x4.uint16_1; }
+						set { this.frame.uint16x4.uint16_1 = value; }
+					}
+
+					public UInt16 brake_pedal
+					{
+						get { return this.frame.uint16x4.uint16_2; }
+						set { this.frame.uint16x4.uint16_2 = value; }
+					}
+
+					public UInt16 reserved
+					{
+						get { return this.frame.uint16x4.uint16_3; }
+						set { this.frame.uint16x4.uint16_3 = value; }
+					}
+
+				}
+			}
+
 			namespace bms0
 			{
 				class heartbeat: Packet
@@ -624,14 +1198,14 @@ namespace SolarCar
 
 						public UInt32 bmsId
 					{
-						get { return this.frame.uint32x2.uint32_0; }
-						set { this.frame.uint32x2.uint32_0 = value; }
+						get { return this.frame.status.uint32_0; }
+						set { this.frame.status.uint32_0 = value; }
 					}
 
 					public UInt32 serialNo
 					{
-						get { return this.frame.uint32x2.uint32_1; }
-						set { this.frame.uint32x2.uint32_1 = value; }
+						get { return this.frame.status.uint32_1; }
+						set { this.frame.status.uint32_1 = value; }
 					}
 
 				}
@@ -1177,28 +1751,52 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6f7;
 
-						public UInt16 precharge_flags
+						public Byte precharge_flags
 					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
+						get { return this.frame.uint8x8.byte_0; }
+						set { this.frame.uint8x8.byte_0 = value; }
 					}
 
-					public UInt16 unused0
+					public Byte precharge_state
 					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
+						get { return this.frame.uint8x8.byte_1; }
+						set { this.frame.uint8x8.byte_1 = value; }
 					}
 
-					public UInt16 unused1
+					public Byte unused0
 					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
+						get { return this.frame.uint8x8.byte_2; }
+						set { this.frame.uint8x8.byte_2 = value; }
 					}
 
-					public UInt16 precharge_timer_flags
+					public Byte unused1
 					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
+						get { return this.frame.uint8x8.byte_3; }
+						set { this.frame.uint8x8.byte_3 = value; }
+					}
+
+					public Byte unused2
+					{
+						get { return this.frame.uint8x8.byte_4; }
+						set { this.frame.uint8x8.byte_4 = value; }
+					}
+
+					public Byte unused3
+					{
+						get { return this.frame.uint8x8.byte_5; }
+						set { this.frame.uint8x8.byte_5 = value; }
+					}
+
+					public Byte precharge_timer_flags
+					{
+						get { return this.frame.uint8x8.byte_6; }
+						set { this.frame.uint8x8.byte_6 = value; }
+					}
+
+					public Byte precharge_timer_10ms
+					{
+						get { return this.frame.uint8x8.byte_7; }
+						set { this.frame.uint8x8.byte_7 = value; }
 					}
 
 				}
@@ -1233,13 +1831,13 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6fa;
 
-						public Int32 voltage
+						public Int32 pack_voltage
 					{
 						get { return this.frame.int32x2.int32_0; }
 						set { this.frame.int32x2.int32_0 = value; }
 					}
 
-					public Int32 current
+					public Int32 pack_current
 					{
 						get { return this.frame.int32x2.int32_1; }
 						set { this.frame.int32x2.int32_1 = value; }
@@ -1345,580 +1943,6 @@ namespace SolarCar
 					{
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
-					}
-
-				}
-			}
-
-			namespace ws20
-			{
-				class motor_id: Packet
-				{
-					public motor_id(UInt64 data = 0) : base(0x400, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x400;
-
-						public UInt32 tritiumId
-					{
-						get { return this.frame.uint32x2.uint32_0; }
-						set { this.frame.uint32x2.uint32_0 = value; }
-					}
-
-					public UInt32 serialNo
-					{
-						get { return this.frame.uint32x2.uint32_1; }
-						set { this.frame.uint32x2.uint32_1 = value; }
-					}
-
-				}
-
-				class motor_status_info: Packet
-				{
-					public motor_status_info(UInt64 data = 0) : base(0x401, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x401;
-
-						public UInt16 limitFlags
-					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
-					}
-
-					public UInt16 errorFlags
-					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
-					}
-
-					public UInt16 activeMotor
-					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
-					}
-
-					public UInt16 reserved
-					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
-					}
-
-				}
-
-				class motor_bus: Packet
-				{
-					public motor_bus(UInt64 data = 0) : base(0x402, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x402;
-
-						public Single busVoltage
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single busCurrent
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class motor_velocity: Packet
-				{
-					public motor_velocity(UInt64 data = 0) : base(0x403, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x403;
-
-						public Single motorVelocity
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single vehicleVelocity
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class motor_phase: Packet
-				{
-					public motor_phase(UInt64 data = 0) : base(0x404, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x404;
-
-						public Single phaseBCurrent
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single phaseACurrent
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class voltage_vector: Packet
-				{
-					public voltage_vector(UInt64 data = 0) : base(0x405, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x405;
-
-						public Single voltageIm
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single voltageRe
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class current_vector: Packet
-				{
-					public current_vector(UInt64 data = 0) : base(0x406, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x406;
-
-						public Single currentIm
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single currentRe
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class backemf: Packet
-				{
-					public backemf(UInt64 data = 0) : base(0x407, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x407;
-
-						public Single backEmfIm
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single backEmfRe
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class rail_15v_1pt65v: Packet
-				{
-					public rail_15v_1pt65v(UInt64 data = 0) : base(0x408, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x408;
-
-						public Single onePtSixtyFiveVRef
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single fifteenVPowerRail
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class rail_2pt5v_1pt2v: Packet
-				{
-					public rail_2pt5v_1pt2v(UInt64 data = 0) : base(0x409, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x409;
-
-						public Single onePtTwoVSupply
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single twoPtFiveVSupply
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class fanspeed: Packet
-				{
-					public fanspeed(UInt64 data = 0) : base(0x40a, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x40a;
-
-						public Single fanDrive
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single fanRpm
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class sinks_temp: Packet
-				{
-					public sinks_temp(UInt64 data = 0) : base(0x40b, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x40b;
-
-						public Single motorTemp
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single heatsinkTemp
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class cpu_airin_temp: Packet
-				{
-					public cpu_airin_temp(UInt64 data = 0) : base(0x40c, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x40c;
-
-						public Single processorTemp
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single airInletTemp
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class cap_airout_temp: Packet
-				{
-					public cap_airout_temp(UInt64 data = 0) : base(0x40d, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x40d;
-
-						public Single capacitorTemp
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single airOutTemp
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class odom_bus_ah: Packet
-				{
-					public odom_bus_ah(UInt64 data = 0) : base(0x40e, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x40e;
-
-						public Single odom
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single dcBusAmpHours
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-			}
-
-			namespace dc
-			{
-				class driver_controls_id: Packet
-				{
-					public driver_controls_id(UInt64 data = 0) : base(0x500, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x500;
-
-						public UInt32 drvId
-					{
-						get { return this.frame.uint32x2.uint32_0; }
-						set { this.frame.uint32x2.uint32_0 = value; }
-					}
-
-					public UInt32 serialNo
-					{
-						get { return this.frame.uint32x2.uint32_1; }
-						set { this.frame.uint32x2.uint32_1 = value; }
-					}
-
-				}
-
-				class drive_cmd: Packet
-				{
-					public drive_cmd(UInt64 data = 0) : base(0x501, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x501;
-
-						public Single motorVelocity
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single motorCurrent
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class power_cmd: Packet
-				{
-					public power_cmd(UInt64 data = 0) : base(0x502, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x502;
-
-						public Single reserved
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single busCurrent
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
-					}
-
-				}
-
-				class reset_cmd: Packet
-				{
-					public reset_cmd(UInt64 data = 0) : base(0x503, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x503;
-
-						public UInt32 unused0
-					{
-						get { return this.frame.uint32x2.uint32_0; }
-						set { this.frame.uint32x2.uint32_0 = value; }
-					}
-
-					public UInt32 unused1
-					{
-						get { return this.frame.uint32x2.uint32_1; }
-						set { this.frame.uint32x2.uint32_1 = value; }
-					}
-
-				}
-
-				class unused0: Packet
-				{
-					public unused0(UInt64 data = 0) : base(0x504, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x504;
-
-	
-				}
-
-				class switches: Packet
-				{
-					public switches(UInt64 data = 0) : base(0x505, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x505;
-
-						public UInt16 switchFlags
-					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
-					}
-
-					public UInt16 unused0
-					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
-					}
-
-					public UInt16 unused1
-					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
-					}
-
-					public UInt16 unused2
-					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
-					}
-
-				}
-
-				class pedals: Packet
-				{
-					public pedals(UInt64 data = 0) : base(0x506, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x506;
-
-						public UInt16 accel_pedal
-					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
-					}
-
-					public UInt16 regen_pedal
-					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
-					}
-
-					public UInt16 brake_pedal
-					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
-					}
-
-					public UInt16 reserved
-					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
-					}
-
-				}
-			}
-
-			namespace os
-			{
-				class user_cmds: Packet
-				{
-					public user_cmds(UInt64 data = 0) : base(0x310, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x310;
-
-						public UInt16 power
-					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
-					}
-
-					public UInt16 gearFlags
-					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
-					}
-
-					public UInt16 signalFlags
-					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
-					}
-
-					public UInt16 reserved
-					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
-					}
-
-				}
-
-				class cruise_cmd: Packet
-				{
-					public cruise_cmd(UInt64 data = 0) : base(0x311, 8, data)
-					{
-					}
-
-					public const UInt16 _id = 0x311;
-
-						public Single velocity
-					{
-						get { return this.frame.float32x2.single_0; }
-						set { this.frame.float32x2.single_0 = value; }
-					}
-
-					public Single current
-					{
-						get { return this.frame.float32x2.single_1; }
-						set { this.frame.float32x2.single_1 = value; }
 					}
 
 				}

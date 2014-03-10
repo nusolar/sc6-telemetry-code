@@ -1,3 +1,4 @@
+#define SIMULATE_HARDWARE
 using System;
 using System.IO.Ports;
 
@@ -30,7 +31,7 @@ namespace SolarCar
 			port.ReadTimeout = 50; // 50 ms
 			port.WriteTimeout = 50; // 50 ms
 			port.DataReceived += new SerialDataReceivedEventHandler(this.ReadData);
-#if !DEBUG
+#if !SIMULATE_HARDWARE
 			port.Open();
 #endif
 		}
@@ -41,7 +42,7 @@ namespace SolarCar
 		/// </summary>
 		~AsyncSerialPort()
 		{
-#if !DEBUG
+#if !SIMULATE_HARDWARE
 			port.Close();
 #endif
 		}
@@ -67,7 +68,7 @@ namespace SolarCar
 			}
 			if ((SerialPort)sender != this.port)
 			{
-				Console.WriteLine("Warning: ReadData was called with sender != this.port");
+				Console.WriteLine("UART Warning: ReadData was called with sender != this.port");
 			}
 
 			// acquire lock on CAN bus, read upto 21 bytes.
@@ -81,7 +82,7 @@ namespace SolarCar
 			}
 			catch (TimeoutException)
 			{
-				Console.WriteLine("CANBUS: read timed out. SerialPort may be busy.");
+				Console.WriteLine("UART: read timed out. SerialPort may be busy.");
 				return;
 			}
 
@@ -103,6 +104,9 @@ namespace SolarCar
 			// Handle newline, if exists.
 			if (new_line != null)
 			{
+#if DEBUG
+				Console.WriteLine("UART recv: " + new_line);
+#endif
 				this.LineReceived(new_line);
 			}
 		}
@@ -117,16 +121,17 @@ namespace SolarCar
 			{
 				lock (port_lock)
 				{
-#if !DEBUG
+#if !SIMULATE_HARDWARE
 					port.WriteLine(line);
-#else
-					Console.WriteLine(line);
+#endif
+#if DEBUG
+					Console.WriteLine("UART send: " + line);
 #endif
 				}
 			}
 			catch (TimeoutException)
 			{
-				Console.WriteLine("CANBUS: write timed out. SerialPort may be busy.");
+				Console.WriteLine("UART: write timed out. SerialPort may be busy.");
 			}
 		}
 	}

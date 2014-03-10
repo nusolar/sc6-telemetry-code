@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace SolarCar
 {
-	class MainClass
+	class Program
 	{
 		static void RunCar()
 		{
@@ -20,6 +20,9 @@ namespace SolarCar
 			Thread txcan_loop = new Thread(new ThreadStart(data.TxCanLoop));
 			web_loop.Start();
 			txcan_loop.Start();
+
+			System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
+
 			web_loop.Join();
 			txcan_loop.Join();
 		}
