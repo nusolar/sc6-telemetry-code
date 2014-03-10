@@ -31,7 +31,7 @@
     $scope.motor_btn = false;
     $scope.reverse_btn = false;
     $scope.commands = {
-      signals: 0,
+      turn_signals: 0,
       headlights: 0,
       horn: 0,
       drive: 0,
@@ -58,7 +58,7 @@
       } else {
         $scope.signals_btn = $scope.TurnSignals.Left;
       }
-      return $scope.commands.signals = $scope.signals_btn;
+      return $scope.commands.turn_signals = $scope.signals_btn;
     };
     $scope.Right = function() {
       if ($scope.signals_btn === $scope.TurnSignals.Right) {
@@ -66,7 +66,7 @@
       } else {
         $scope.signals_btn = $scope.TurnSignals.Right;
       }
-      return $scope.commands.signals = $scope.signals_btn;
+      return $scope.commands.turn_signals = $scope.signals_btn;
     };
     $scope.Hazards = function() {
       if ($scope.signals_btn === $scope.TurnSignals.Hazards) {
@@ -74,7 +74,7 @@
       } else {
         $scope.signals_btn = $scope.TurnSignals.Hazards;
       }
-      return $scope.commands.signals = $scope.signals_btn;
+      return $scope.commands.turn_signals = $scope.signals_btn;
     };
     $scope.Headlights = function() {
       $scope.headlights_btn = !$scope.headlights_btn;
@@ -112,13 +112,21 @@
         return $scope.commands.reverse = 0;
       }
     };
+    $scope.serialize_commands = function() {
+      var commands;
+      commands = {
+        signals: $scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3,
+        gear: $scope.commands.drive | $scope.commands.reverse << 1
+      };
+      return commands;
+    };
     timer_id = $interval(((function(_this) {
       return function() {
-        $scope.query_string = $.param($scope.commands);
+        $scope.query_string = $.param($scope.serialize_commands());
         return $.ajax({
           url: window.location.origin + '/data.json',
           dataType: 'text',
-          data: $scope.commands,
+          data: $scope.serialize_commands(),
           success: function(json_text) {
             var e, json;
             try {

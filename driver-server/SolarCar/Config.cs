@@ -24,7 +24,7 @@ namespace SolarCar
 		// Timers
 #if DEBUG
 		public const int CAN_TX_INTERVAL_MS = 1000;
-		public const int HTTP_TIMEOUT_MS = 1000;
+		public const int HTTP_TIMEOUT_MS = 1200;
 #else
 		public const int CAN_TX_INTERVAL_MS = 100;
 		public const int HTTP_TIMEOUT_MS = 100;

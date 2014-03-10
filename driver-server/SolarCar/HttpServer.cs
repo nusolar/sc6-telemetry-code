@@ -70,14 +70,6 @@ namespace SolarCar
 			int sigs = 0;
 			Int32.TryParse(query["signals"], out sigs);
 			input.sigs = (Car.Signals)sigs;
-			if (query["headlights"] == "1")
-			{
-				input.sigs |= Car.Signals.Headlights;
-			}
-			if (query["horn"] == "1")
-			{
-				input.sigs |= Car.Signals.Horn;
-			}
 
 			db.HandleUserInput(input);
 		}

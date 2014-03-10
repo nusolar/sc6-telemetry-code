@@ -55,6 +55,7 @@ namespace SolarCar
 			public UInt16 ArrayCurrent;
 			// Lists range 0-31
 			public List<UInt16> BatteryVoltages = null;
+			public List<UInt16> BatteryTemps = null;
 		}
 	}
 	class UserInput

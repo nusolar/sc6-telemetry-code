@@ -25,7 +25,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 	# KEEP THIS OBJECT IN SYNC with its complementary interface in
 	# /driver-server/SolarCar/HttpServer.cs
 	$scope.commands =
-		signals: 0
+		turn_signals: 0
 		headlights: 0
 		horn: 0
 		drive: 0
@@ -54,7 +54,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		else
 			$scope.signals_btn = $scope.TurnSignals.Left
 		# if Left Button is depressed, specify Left signal (==1, from C# code)
-		$scope.commands.signals = $scope.signals_btn
+		$scope.commands.turn_signals = $scope.signals_btn
 
 	$scope.Right = ->
 		if $scope.signals_btn==$scope.TurnSignals.Right
@@ -62,7 +62,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		else
 			$scope.signals_btn = $scope.TurnSignals.Right
 		# if Right Button is depressed, specify Right signal (==2, from C# code)
-		$scope.commands.signals = $scope.signals_btn
+		$scope.commands.turn_signals = $scope.signals_btn
 
 	$scope.Hazards = ->
 		if $scope.signals_btn==$scope.TurnSignals.Hazards
@@ -70,7 +70,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		else
 			$scope.signals_btn = $scope.TurnSignals.Hazards
 		# if Hazards Button is depressed, specify Hazards (==3, from C# code)
-		$scope.commands.signals = $scope.signals_btn
+		$scope.commands.turn_signals = $scope.signals_btn
 
 	$scope.Headlights = ->
 		$scope.headlights_btn = not $scope.headlights_btn
@@ -109,14 +109,22 @@ window.MainTable = ($scope, $timeout, $interval) ->
 			$scope.reverse_btn = false
 			$scope.commands.reverse = 0
 
+
+	$scope.serialize_commands = ->
+		commands =
+			signals: ($scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3)
+			gear: ($scope.commands.drive | $scope.commands.reverse << 1)
+		return commands
+
+
 	# Create timer to submit commands, and receive updated Telemetry values.
 	timer_id = $interval((=>
-		$scope.query_string = $.param($scope.commands)
+		$scope.query_string = $.param($scope.serialize_commands())
 		$.ajax
-			url: window.location.origin + '/data.json'
 			# url: 'http://localhost:8080/data.json'
+			url: window.location.origin + '/data.json'
 			dataType: 'text'
-			data: $scope.commands
+			data: $scope.serialize_commands()
 			success: (json_text) =>
 				try
 					json = JSON.parse(json_text)
