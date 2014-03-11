@@ -9,16 +9,15 @@ namespace SolarCar
 	/// </summary>
 	class AsyncSerialPort
 	{
+		public delegate void LineReceivedDelegate(string line);
+
+		public event LineReceivedDelegate LineReceived;
 		// The underlying SerialPort & its mutex:
 		readonly object port_lock = new Object();
 		readonly SerialPort port = new SerialPort();
 		// The string buffer & its mutex:
 		readonly object buffer_lock = new Object();
 		string buffer = "";
-
-		public delegate void LineReceivedDelegate(string line);
-
-		public event LineReceivedDelegate LineReceived;
 
 		/// <summary>
 		/// Initializes a new instance of the SolarCar.SyncSerialPort class.

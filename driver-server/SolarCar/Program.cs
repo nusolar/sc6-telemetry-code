@@ -9,8 +9,15 @@ namespace SolarCar
 	{
 		static void RunCar()
 		{
-			// DataAggregator talks to CAN bus.
+			// CanUsb talks to CAN bus.
+			CanUsb canusb = new CanUsb(Config.CANUSB_DEV_FILE);
+			// DataAggregator collects all data
 			DataAggregator data = new DataAggregator();
+
+			// link up data
+			canusb.handlers += data.ProcessCanPacket;
+			data.tx_cans += canusb.TransmitPacket;
+
 			// UIs run on separate threads.
 			HttpServer web = new HttpServer(data);
 

@@ -3,29 +3,16 @@ using System.Collections.Generic;
 
 namespace SolarCar
 {
-	class CanHandler
-	{
-		public delegate void CallbackDelegate(Can.Packet p);
-
-		public UInt16 Address;
-		public UInt16 Bitmask;
-		public CallbackDelegate Callback;
-
-		public CanHandler(UInt16 InAddress, UInt16 InBitmask, CallbackDelegate InCallback)
-		{
-			this.Address = InAddress;
-			this.Bitmask = InBitmask;
-			this.Callback = InCallback;
-		}
-	}
-
 	/// <summary>
 	/// A CAN-USB wrapper. When running, constantly updates its MotorReport.
 	/// </summary>
 	class CanUsb: AsyncSerialPort
 	{
+		public delegate void CanHandlerDelegate(Can.Packet p);
+
+		public event CanHandlerDelegate handlers;
+
 		const string NEWLINE = "\r";
-		public List<CanHandler> handlers = new List<CanHandler>();
 
 		public CanUsb(string path) : base(path)
 		{
@@ -102,11 +89,7 @@ namespace SolarCar
 				UInt64 data = BitConverter.ToUInt64(bytes, 0);
 				Can.Packet packet = new Can.Packet(id, length, data);
 
-				foreach (var handler in this.handlers)
-				{
-					// TODO check ID against handler.Bitmask and handler.Address
-					handler.Callback(packet);
-				}
+				this.handlers(packet);
 			}
 		}
 	}

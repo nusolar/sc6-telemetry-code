@@ -49,22 +49,10 @@ namespace SolarCar
 		void DoCommands(NameValueCollection query)
 		{
 			UserInput input = new UserInput();
-
-			// Do the power & array Mode flags first
-			if (query["power"] == "1")
-			{
-				input.mode |= Car.Mode.Run;
-			}
-
 			// Gear flags
-			if (query["drive"] == "1")
-			{
-				input.gear |= Car.Gear.Drive;
-			}
-			if (query["reverse"] == "1")
-			{
-				input.gear |= Car.Gear.Reverse;
-			}
+			int gear = 0;
+			Int32.TryParse(query["gear"], out gear);
+			input.gear = (Car.Gear)gear;
 
 			// Signal flags
 			int sigs = 0;
@@ -133,7 +121,7 @@ namespace SolarCar
 		}
 
 		/**
-		 * Indefinitely serve HTTP, unless this.commander == null.
+		 * Indefinitely serve HTTP.
 		 */
 		public void RunLoop()
 		{
@@ -155,7 +143,7 @@ namespace SolarCar
 					}
 				}
 			}
-			catch (System.Net.HttpListenerException)
+			catch (HttpListenerException)
 			{
 				// Bail out - this happens on shutdown
 				return;

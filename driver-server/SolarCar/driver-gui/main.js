@@ -34,8 +34,17 @@
       turn_signals: 0,
       headlights: 0,
       horn: 0,
+      batteries: 0,
       drive: 0,
       reverse: 0
+    };
+    $scope.serialize_commands = function() {
+      var commands;
+      commands = {
+        signals: $scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3,
+        gear: $scope.commands.batteries | $scope.commands.drive << 1 | $scope.commands.reverse << 2
+      };
+      return commands;
     };
     $scope.set_panel_button = function(panel) {
       $scope.map_btn = false;
@@ -111,14 +120,6 @@
         $scope.reverse_btn = false;
         return $scope.commands.reverse = 0;
       }
-    };
-    $scope.serialize_commands = function() {
-      var commands;
-      commands = {
-        signals: $scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3,
-        gear: $scope.commands.drive | $scope.commands.reverse << 1
-      };
-      return commands;
     };
     timer_id = $interval(((function(_this) {
       return function() {

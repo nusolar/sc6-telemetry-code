@@ -20,16 +20,24 @@ window.MainTable = ($scope, $timeout, $interval) ->
 	$scope.motor_btn = false
 	$scope.reverse_btn = false
 
-	# This object is the state of the User Input. It is serialized and sent to
-	# the driver-server by $interval, below.
-	# KEEP THIS OBJECT IN SYNC with its complementary interface in
-	# /driver-server/SolarCar/HttpServer.cs
 	$scope.commands =
 		turn_signals: 0
 		headlights: 0
 		horn: 0
+		batteries: 0
 		drive: 0
 		reverse: 0
+
+	# This object is the state of the User Input. It is serialized and sent to
+	# the driver-server by $interval, below.
+	# KEEP THIS OBJECT IN SYNC with its complementary interface in
+	# /driver-server/SolarCar/HttpServer.cs
+	$scope.serialize_commands = ->
+		commands =
+			signals: ($scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3)
+			gear: ($scope.commands.batteries | $scope.commands.drive << 1 | $scope.commands.reverse << 2)
+		return commands
+
 
 	# initialize App buttons' states.
 	$scope.set_panel_button = (panel) ->
@@ -45,6 +53,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 				$scope[$scope.current_panel] = true
 			), 1 #ms
 	$scope.set_panel_button('sensors_btn')
+
 
 	# Peripheral Button callbacks - Hardware
 	$scope.Left = ->
@@ -108,13 +117,6 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		else
 			$scope.reverse_btn = false
 			$scope.commands.reverse = 0
-
-
-	$scope.serialize_commands = ->
-		commands =
-			signals: ($scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3)
-			gear: ($scope.commands.drive | $scope.commands.reverse << 1)
-		return commands
 
 
 	# Create timer to submit commands, and receive updated Telemetry values.
