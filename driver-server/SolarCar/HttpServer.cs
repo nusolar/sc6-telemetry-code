@@ -12,20 +12,16 @@ namespace SolarCar
 	class HttpServer
 	{
 		HttpListener listener = new HttpListener();
-		readonly DataAggregator db = null;
+		readonly DataAggregator data = null;
 		NameValueCollection default_query = new NameValueCollection();
 
-		public string json_data { get { return JsonConvert.SerializeObject(db.Status); } }
+		public string json_data { get { return JsonConvert.SerializeObject(data.Status); } }
 
 		public HttpServer(DataAggregator InDb)
 		{
-			db = InDb;
-			default_query["power"] = "0";
-			default_query["drive"] = "0";
-			default_query["reverse"] = "0";
+			data = InDb;
+			default_query["gear"] = "0";
 			default_query["signals"] = "0";
-			default_query["headlights"] = "0";
-			default_query["horn"] = "0";
 		}
 
 		/**
@@ -59,7 +55,7 @@ namespace SolarCar
 			Int32.TryParse(query["signals"], out sigs);
 			input.sigs = (Car.Signals)sigs;
 
-			db.HandleUserInput(input);
+			this.data.HandleUserInput(input);
 		}
 
 		public void ListenerCallback(IAsyncResult result)

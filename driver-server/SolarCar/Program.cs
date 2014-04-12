@@ -21,17 +21,29 @@ namespace SolarCar
 			// UIs run on separate threads.
 			HttpServer web = new HttpServer(data);
 
+			// Telemetry caching
+			CarData car = new CarData();
+
+
 			// do RunLoops in separate threads:
 			Thread.Sleep(1); // 1ms
 			Thread web_loop = new Thread(new ThreadStart(web.RunLoop));
 			Thread txcan_loop = new Thread(new ThreadStart(data.TxCanLoop));
 			web_loop.Start();
 			txcan_loop.Start();
+//			System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
 
-			System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
+#if DEBUG
+			Console.ReadKey();
+			web_loop.Abort();
+			txcan_loop.Abort();
+			Console.WriteLine("Aborted!");
+			canusb.Close();
+#else
 
 			web_loop.Join();
 			txcan_loop.Join();
+#endif
 		}
 
 		public static void Main(string[] args)
@@ -40,6 +52,8 @@ namespace SolarCar
 			CarData.Test();
 
 			RunCar();
+
+			Console.WriteLine("Run finished");
 
 			// Console.WriteLine("Press any key to continue...");
 			// Console.WriteLine();

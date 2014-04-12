@@ -133,7 +133,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 					# TODO update values for $scope.commands
 				catch e
 					window.console.log(e)
-	), 1000) #ms
+	), 500) #ms
 	# Stop timer if the scope is destroyed (this should never happen).
 	$scope.$on '$destroy', ->
 		$interval.cancel timer_id

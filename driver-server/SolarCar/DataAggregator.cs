@@ -48,12 +48,31 @@ namespace SolarCar
 			public float MotorRpm, MotorVelocity;
 			public float MotorVoltage, MotorCurrent;
 			// BPS
+			/// <summary>
+			/// The Ah consumed from the pack. 0=Full, counts to user-set max capacity.
+			/// </summary>
+			public Single PackSOC;
+			public Single PackSOCPerc;
 			public Precharge BMSPrecharge;
-			public UInt16 BatteryCurrent;
-			public UInt16 ArrayCurrent;
-			// Lists range 0-31
-			public List<UInt16> BatteryVoltages = null;
-			public List<UInt16> BatteryTemps = null;
+			/// <summary>
+			/// The highest cell voltage in mV.
+			/// </summary>
+			public UInt16 MaxVoltage;
+			public UInt16 MinVoltage;
+			/// <summary>
+			/// The highest cell temp in decidegrees Celcius.
+			/// </summary>
+			public UInt16 MaxTemp;
+			public UInt16 MinTemp;
+			/// <summary>
+			/// The pack voltage in mV.
+			/// </summary>
+			public Int32 PackVoltage;
+			/// <summary>
+			/// The pack current in mA.
+			/// </summary>
+			public Int32 PackCurrent;
+			public UInt32 BMSExtendedStatusFlags;
 		}
 	}
 	class UserInput
@@ -89,18 +108,23 @@ namespace SolarCar
 		{
 			switch (p.ID)
 			{
+				case Can.Addr.bms1.pack_soc._id:
+					var pack_soc_pkt = new Can.Addr.bms1.pack_soc();
+					this.status.PackSOC = pack_soc_pkt.soc_Ah;
+					this.status.PackSOCPerc	= pack_soc_pkt.soc_percentage;
+					break;
 				case Can.Addr.bms1.precharge._id:
 					var precharge_pkt = new Can.Addr.bms1.precharge();
-					this.status.BMSPrecharge = (Car.Precharge)precharge_pkt.precharge_state;
-				case Can.Addr.bps_tx.current._id:
-					var current_pkt = new Can.Addr.bps_tx.current(p.Data);
-					this.status.BatteryCurrent = current_pkt.battery;
-					this.status.ArrayCurrent = current_pkt.array;
+					this.status.BMSPrecharge	= (Car.Precharge)precharge_pkt.precharge_state;
 					break;
-				case Can.Addr.bps_tx.voltage_temp._id:
-					var vt_pkt = new Can.Addr.bps_tx.voltage_temp(p.Data);
-					this.status.BatteryVoltages[vt_pkt.module] = vt_pkt.voltage;
-					this.status.BatteryTemps[vt_pkt.temp] = vt_pkt.temp;
+				case Can.Addr.bms1.max_min_temps._id:
+					break;
+				case Can.Addr.bms1.max_min_volts._id:
+					break;
+				case Can.Addr.bms1.pack_volt_curr._id:
+					var current_pkt = new Can.Addr.bms1.pack_volt_curr(p.Data);
+					this.status.PackCurrent = current_pkt.pack_current;
+					this.status.PackVoltage = current_pkt.pack_voltage;
 					break;
 				case Can.Addr.dc.pedals._id:
 					var pedals_pkt = new Can.Addr.dc.pedals(p.Data);

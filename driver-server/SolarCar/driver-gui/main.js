@@ -139,7 +139,7 @@
           }
         });
       };
-    })(this)), 1000);
+    })(this)), 500);
     return $scope.$on('$destroy', function() {
       return $interval.cancel(timer_id);
     });

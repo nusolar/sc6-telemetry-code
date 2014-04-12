@@ -1,30 +1,41 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 
 namespace SolarCar
 {
 	/// <summary>
 	/// A CAN-USB wrapper. When running, constantly updates its MotorReport.
 	/// </summary>
-	class CanUsb: AsyncSerialPort
+	class CanUsb
 	{
 		public delegate void CanHandlerDelegate(Can.Packet p);
 
 		public event CanHandlerDelegate handlers;
 
 		const string NEWLINE = "\r";
+		AsyncSerialPort port = null;
 
-		public CanUsb(string path) : base(path)
+		public CanUsb(string path)
 		{
-			this.NewLine = NEWLINE; // CANUSB uses carriage returns
-			this.LineReceived += new LineReceivedDelegate(this.HandleLine);
-			this.SyncWriteLine("S8"); // set bitrate = 1 Mbit/s
-			this.SyncWriteLine("O"); // open CAN channel
+			port = new AsyncSerialPort(path, 115200, Parity.None, 8, StopBits.One);
+			port.NewLine = NEWLINE; // CANUSB uses carriage returns
+			port.LineReceived += this.HandleLine;
+			port.Open();
+			port.SyncWriteLine("\r\r"); // clear CANUSB buffer
+			port.SyncWriteLine("S8"); // set bitrate = 1 Mbit/s
+			port.SyncWriteLine("O"); // open CAN channel
 		}
 
 		~CanUsb()
 		{
-			this.SyncWriteLine("C");
+			this.Close();
+		}
+
+		public void Close()
+		{
+			port.SyncWriteLine("C");
+			port.Close();
 		}
 
 		public void TransmitPacket(Can.Packet packet)
@@ -33,7 +44,7 @@ namespace SolarCar
 			string hex_length = packet.Length.ToString("X");
 			byte[] bytes = BitConverter.GetBytes(packet.Data);
 			string hex_data = BitConverter.ToString(bytes).Replace("-", String.Empty);
-			this.SyncWriteLine("t" + hex_id + hex_length + hex_data);
+			port.SyncWriteLine("t" + hex_id + hex_length + hex_data);
 		}
 
 		/// <summary>
@@ -50,7 +61,7 @@ namespace SolarCar
 			string cur_hex = BitConverter.ToString(cur_bytes).Replace("-", String.Empty);
 			// write packet in CAN-USB format:
 			string packet = "t4038" + vel_hex + cur_hex;
-			this.SyncWriteLine(packet);
+			port.SyncWriteLine(packet);
 		}
 
 		/// <summary>
