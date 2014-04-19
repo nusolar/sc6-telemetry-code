@@ -112,11 +112,11 @@ body {
 	max-width: 20%;
 }
 
-.MotorToggle {
+.DangerousToggle {
 	background-color: red;
 }
 
-.MotorToggleOn {
+.DangerousToggleOn {
 	background-color: #FFFF33;
 }
 

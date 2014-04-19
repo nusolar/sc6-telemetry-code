@@ -13,10 +13,12 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		Right: 2,
 		Hazards: 3
 
-	# initialize button states. TODO: load from car
+	# initialize button states.
+	# View Handles:
 	$scope.signals_btn = $scope.TurnSignals.Off
 	$scope.headlights_btn = false
 	$scope.horn_btn = false
+	$scope.battery_btn = false
 	$scope.motor_btn = false
 	$scope.reverse_btn = false
 
@@ -24,7 +26,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		turn_signals: 0
 		headlights: 0
 		horn: 0
-		batteries: 0
+		run_battery: 0
 		drive: 0
 		reverse: 0
 
@@ -34,8 +36,8 @@ window.MainTable = ($scope, $timeout, $interval) ->
 	# /driver-server/SolarCar/HttpServer.cs
 	$scope.serialize_commands = ->
 		commands =
-			signals: ($scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3)
-			gear: ($scope.commands.batteries | $scope.commands.drive << 1 | $scope.commands.reverse << 2)
+			signals: ($scope.commands.turn_signals << 0 | $scope.commands.headlights << 2 | $scope.commands.horn << 3)
+			gear:  ($scope.commands.run_battery << 0 | $scope.commands.drive << 1 | $scope.commands.reverse << 2)
 		return commands
 
 
@@ -101,12 +103,20 @@ window.MainTable = ($scope, $timeout, $interval) ->
 	$scope.Camera = ->
 		$scope.set_panel_button('camera_btn')
 
-	# Motor Tab - Button callbacks
+	# Driving Tab - Button callbacks
+	$scope.Battery = ->
+		$scope.battery_btn = not $scope.battery_btn
+		# if Battery Button is depressed, activate Run
+		$scope.commands.run_battery = if $scope.battery_btn then 1 else 0
+		# always deactivate Motor and Reverse when Battery is toggled
+		if $scope.motor_btn
+			$scope.Motor() # this should also kill Reverse
+
 	$scope.Motor = ->
 		$scope.motor_btn = not $scope.motor_btn
 		# if Motor Button is depressed, activate Drive
 		$scope.commands.drive = if $scope.motor_btn then 1 else 0
-		# always deactivate Reverse, if on
+		# always deactivate Reverse, if ON
 		if $scope.reverse_btn
 			$scope.Reverse()
 
@@ -121,7 +131,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 
 	# Create timer to submit commands, and receive updated Telemetry values.
 	timer_id = $interval((=>
-		$scope.query_string = $.param($scope.serialize_commands())
+		$scope.print_query_string = $.param($scope.serialize_commands())
 		$.ajax
 			# url: 'http://localhost:8080/data.json'
 			url: window.location.origin + '/data.json'
@@ -133,7 +143,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 					# TODO update values for $scope.commands
 				catch e
 					window.console.log(e)
-	), 500) #ms
+	), 250) #ms
 	# Stop timer if the scope is destroyed (this should never happen).
 	$scope.$on '$destroy', ->
 		$interval.cancel timer_id

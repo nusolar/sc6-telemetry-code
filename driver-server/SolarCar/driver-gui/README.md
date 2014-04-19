@@ -14,9 +14,9 @@ The Driver GUI is a single-page, single-HTTP-call web app. The App's HTML is wri
 All scripts and CSS are directly copied into the final `index.html` file, including the libraries, by Jade's '`include`" directives.
 
 #### Compiling
-To generate the final product, run
+To generate the final product, run the compilation script:
 ```
-	jade -P index.jade
+	COMPILE.sh
 ```
 
-The file `index.html` is the self-contained application.
+The file `index.html` is a self-contained application, and may be included into the Telemetry binary.

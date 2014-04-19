@@ -6,22 +6,21 @@ using Encoding = System.Text.Encoding;
 using NameValueCollection = System.Collections.Specialized.NameValueCollection;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 using Assembly = System.Reflection.Assembly;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SolarCar
 {
 	class HttpServer
 	{
-		HttpListener listener = new HttpListener();
-		readonly DataAggregator data = null;
-		NameValueCollection default_query = new NameValueCollection();
+		readonly NameValueCollection default_query = new NameValueCollection { { "gear", "0" }, { "signals", "0" } };
+		readonly CarFrontend data = null;
 
 		public string json_data { get { return JsonConvert.SerializeObject(data.Status); } }
 
-		public HttpServer(DataAggregator InDb)
+		public HttpServer(CarFrontend InDb)
 		{
 			data = InDb;
-			default_query["gear"] = "0";
-			default_query["signals"] = "0";
 		}
 
 		/**
@@ -31,11 +30,8 @@ namespace SolarCar
 		{
 			byte[] buffer = Encoding.UTF8.GetBytes(message);
 			response.ContentLength64 = buffer.Length;
-
 			using (Stream output = response.OutputStream)
-			{
 				output.Write(buffer, 0, buffer.Length);
-			}
 		}
 
 		/// <summary>
@@ -44,24 +40,18 @@ namespace SolarCar
 		/// <param name="query">Query.</param>
 		void DoCommands(NameValueCollection query)
 		{
-			UserInput input = new UserInput();
-			// Gear flags
-			int gear = 0;
+			// Gear flags and Signal flags
+			int gear = 0, sigs = 0;
 			Int32.TryParse(query["gear"], out gear);
-			input.gear = (Car.Gear)gear;
-
-			// Signal flags
-			int sigs = 0;
 			Int32.TryParse(query["signals"], out sigs);
-			input.sigs = (Car.Signals)sigs;
-
-			this.data.HandleUserInput(input);
+			this.data.HandleUserInput((Car.Gear)gear, (Car.Signals)sigs);
 		}
 
-		public void ListenerCallback(IAsyncResult result)
+		public void ListenerCallback(object result)
 		{
-			HttpListener listener = (HttpListener)result.AsyncState;
-			HttpListenerContext context = listener.EndGetContext(result); // Blocks until HTTP request
+			// HttpListener listener = (HttpListener)result.AsyncState;
+			// context = listener.EndGetContext(result); // Blocks until HTTP request
+			HttpListenerContext context = (HttpListenerContext)result;
 			HttpListenerRequest request = context.Request;
 			HttpListenerResponse response = context.Response;
 			string url = request.Url.AbsolutePath;
@@ -78,71 +68,98 @@ namespace SolarCar
 			if (url == "/data.json")
 			{
 				this.DoCommands(request.QueryString);
+
+				byte[] buffer = Encoding.Default.GetBytes(this.json_data);
+				response.ContentLength64 = buffer.Length;
 				response.ContentType = "application/json";
+
+				using (Stream output = response.OutputStream)
+					output.Write(buffer, 0, buffer.Length);
 #if DEBUG
 				Console.WriteLine("HTTP json: " + this.json_data);
 #endif
-				this.SendResponse(response, this.json_data);
 			}
 			else // e.g. url == "/index.html"
 			{
 				url = url.Replace('/', '.');
 				Assembly _assembly = Assembly.GetExecutingAssembly();
-				using (Stream _stream = _assembly.GetManifestResourceStream("SolarCar." + Config.GUI_SUBDIR + url))
+				using (Stream _stream = _assembly.GetManifestResourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url))
 				{
 					response.ContentLength64 = _stream.Length;
 					response.SendChunked = false;
-//					response.ContentType = MediaTypeNames.Text.Html;
+					// response.ContentType = MediaTypeNames.Text.Html;
 					response.StatusCode = (int)HttpStatusCode.OK;
 					response.StatusDescription = "OK";
 
-					// transfer file in buffered 64kB blocks
-					byte[] buffer = new byte[64 * 1024];
-					int read;
-					using (BinaryWriter bw = new BinaryWriter(response.OutputStream))
+					using (Stream output = response.OutputStream)
 					{
-						while ((read = _stream.Read(buffer, 0, buffer.Length)) > 0)
+						// transfer file in buffered 64kB blocks
+						byte[] buffer = new byte[64 * 1024];
+						int read;
+						using (BinaryWriter bw = new BinaryWriter(output))
 						{
-							bw.Write(buffer, 0, read);
-							bw.Flush(); //seems to have no effect
+							while ((read = _stream.Read(buffer, 0, buffer.Length)) > 0)
+							{
+								bw.Write(buffer, 0, read);
+								bw.Flush(); //seems to have no effect
+							}
+
+							bw.Close();
 						}
-
-						bw.Close();
 					}
-
-					response.OutputStream.Close();
 				}
 				this.DoCommands(this.default_query);
 			}
 		}
 
-		/**
-		 * Indefinitely serve HTTP.
-		 */
-		public void RunLoop()
+		/// <summary>
+		/// Indefinitely serve the Car's HTTP GUI.
+		/// </summary>
+		/// <param name="obj">A Task cancellation token.</param>
+		public async Task ReceiveLoop(object obj)
 		{
+			CancellationToken token = (CancellationToken)obj;
+
 			try
 			{
-				listener.Prefixes.Add(Config.HTTPSERVER_PREFIX);
-				listener.Start();
-
-				while (listener.IsListening)
+				using (HttpListener listener = new HttpListener())
 				{
-					IAsyncResult result = listener.BeginGetContext(new AsyncCallback(ListenerCallback), listener);
-					bool received_http = result.AsyncWaitHandle.WaitOne(Config.HTTP_TIMEOUT_MS);
-#if DEBUG
-					Console.WriteLine("HTTP timed out: " + !received_http);
-#endif
-					if (!received_http)
+					listener.Prefixes.Add(Config.HTTPSERVER_CAR_PREFIX);
+					listener.Start();
+
+					while (!token.IsCancellationRequested)
 					{
-						this.DoCommands(this.default_query);
+						Task<HttpListenerContext> task = listener.GetContextAsync();
+						// IAsyncResult result = listener.BeginGetContext(new AsyncCallback(ListenerCallback), listener);
+						// bool received_http = result.AsyncWaitHandle.WaitOne(Config.HTTP_TIMEOUT_MS);
+
+						while (!task.IsCompleted && !task.IsCanceled && !task.IsFaulted)
+						{
+							await Task.Delay(Config.HTTPSERVER_TIMEOUT_MS, token);
+#if DEBUG
+							Console.WriteLine("HTTP timed out: " + (task.Status != TaskStatus.RanToCompletion));
+#endif
+							if (task.Status == TaskStatus.RanToCompletion)
+							{
+								this.ListenerCallback(task.Result);
+								break;
+							}
+							else
+							{
+								this.DoCommands(this.default_query);
+							}
+						}
 					}
 				}
 			}
 			catch (HttpListenerException)
 			{
 				// Bail out - this happens on shutdown
-				return;
+				Console.WriteLine("HTTP Listener has shutdown");
+			}
+			catch (TaskCanceledException)
+			{
+				Console.WriteLine("HTTP Task Cancelled");
 			}
 			catch (Exception e)
 			{

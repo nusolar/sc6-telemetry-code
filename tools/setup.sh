@@ -8,14 +8,14 @@ sudo apt-get update
 sudo apt-get upgrade
 
 sudo apt-get install locales
-sudo apt-get install at
 
 
-## configure Dynamic DNS - must be done manually
-# apt-get install ddclient
-# domain name: nusolar.no-ip.biz
+echo WARNING configure Dynamic DNS - must be done manually
+echo WARNING apt-get install ddclient
+echo WARNING domain name: nusolar.no-ip.biz
 
 ## configure USB Tethering
+sudo apt-get install at
 sudo tee "/usr/local/bin/dialer.sh" <<-EOF
 	echo "sudo wvdial" | at now
 EOF
@@ -26,8 +26,6 @@ EOF
 
 
 ## configure telemetry
-git clone git://github.com/nusolar/sc6-telemetry-code.git
-
 sudo tee -a "/etc/inittab"  <<-EOF
-	python3 /home/debian/sc6-telemetry-code/car.py
+	python3 /home/debian/SolarCar.exe
 EOF

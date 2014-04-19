@@ -3,12 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarCar", "SolarCar\SolarCar.csproj", "{D9083BF5-0E20-4421-A288-4ACD975655B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseStation", "BaseStation\BaseStation.csproj", "{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}.Debug|x86.ActiveCfg = Debug|x86
+		{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}.Debug|x86.Build.0 = Debug|x86
+		{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}.Release|x86.ActiveCfg = Release|x86
+		{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}.Release|x86.Build.0 = Release|x86
 		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Debug|x86.ActiveCfg = Debug|x86
 		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Debug|x86.Build.0 = Debug|x86
 		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Release|x86.ActiveCfg = Release|x86

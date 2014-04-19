@@ -28,21 +28,22 @@
     $scope.signals_btn = $scope.TurnSignals.Off;
     $scope.headlights_btn = false;
     $scope.horn_btn = false;
+    $scope.battery_btn = false;
     $scope.motor_btn = false;
     $scope.reverse_btn = false;
     $scope.commands = {
       turn_signals: 0,
       headlights: 0,
       horn: 0,
-      batteries: 0,
+      run_battery: 0,
       drive: 0,
       reverse: 0
     };
     $scope.serialize_commands = function() {
       var commands;
       commands = {
-        signals: $scope.commands.turn_signals | $scope.commands.headlights << 2 | $scope.commands.horn << 3,
-        gear: $scope.commands.batteries | $scope.commands.drive << 1 | $scope.commands.reverse << 2
+        signals: $scope.commands.turn_signals << 0 | $scope.commands.headlights << 2 | $scope.commands.horn << 3,
+        gear: $scope.commands.run_battery << 0 | $scope.commands.drive << 1 | $scope.commands.reverse << 2
       };
       return commands;
     };
@@ -105,6 +106,13 @@
     $scope.Camera = function() {
       return $scope.set_panel_button('camera_btn');
     };
+    $scope.Battery = function() {
+      $scope.battery_btn = !$scope.battery_btn;
+      $scope.commands.run_battery = $scope.battery_btn ? 1 : 0;
+      if ($scope.motor_btn) {
+        return $scope.Motor();
+      }
+    };
     $scope.Motor = function() {
       $scope.motor_btn = !$scope.motor_btn;
       $scope.commands.drive = $scope.motor_btn ? 1 : 0;
@@ -123,7 +131,7 @@
     };
     timer_id = $interval(((function(_this) {
       return function() {
-        $scope.query_string = $.param($scope.serialize_commands());
+        $scope.print_query_string = $.param($scope.serialize_commands());
         return $.ajax({
           url: window.location.origin + '/data.json',
           dataType: 'text',
@@ -139,7 +147,7 @@
           }
         });
       };
-    })(this)), 500);
+    })(this)), 250);
     return $scope.$on('$destroy', function() {
       return $interval.cancel(timer_id);
     });

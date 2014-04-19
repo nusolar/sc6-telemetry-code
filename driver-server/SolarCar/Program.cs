@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 
@@ -9,51 +10,53 @@ namespace SolarCar
 	{
 		static void RunCar()
 		{
-			// CanUsb talks to CAN bus.
-			CanUsb canusb = new CanUsb(Config.CANUSB_DEV_FILE);
 			// DataAggregator collects all data
-			DataAggregator data = new DataAggregator();
-
-			// link up data
-			canusb.handlers += data.ProcessCanPacket;
-			data.tx_cans += canusb.TransmitPacket;
-
+			CarFrontend car = new CarFrontend();
 			// UIs run on separate threads.
-			HttpServer web = new HttpServer(data);
-
+			HttpServer web = new HttpServer(car);
 			// Telemetry caching
-			CarData car = new CarData();
+			CarDatabase db = new CarDatabase();
 
-
-			// do RunLoops in separate threads:
 			Thread.Sleep(1); // 1ms
-			Thread web_loop = new Thread(new ThreadStart(web.RunLoop));
-			Thread txcan_loop = new Thread(new ThreadStart(data.TxCanLoop));
-			web_loop.Start();
-			txcan_loop.Start();
-//			System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
+
+			// spawn cancellable CAN and GUI communication threads:
+			using (var tokenSource = new CancellationTokenSource())
+			{
+				var token = tokenSource.Token;
+				Task web_loop = web.ReceiveLoop(token);
+				Task can_loop = car.CanLoop(token);
+				Task prod_loop = db.ProduceCarTelemetry(token, car);
+				Task cons_loop = db.ConsumeCarTelemetry(token);
+
+				// open GUI
+				System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
 
 #if DEBUG
-			Console.ReadKey();
-			web_loop.Abort();
-			txcan_loop.Abort();
-			Console.WriteLine("Aborted!");
-			canusb.Close();
+				Console.ReadKey();
+				tokenSource.Cancel();
+				Console.WriteLine("PROGRAM: Aborted");
+				web_loop.Wait();
+				can_loop.Wait();
+				prod_loop.Wait();
+				cons_loop.Wait();
 #else
-
-			web_loop.Join();
-			txcan_loop.Join();
+				web_loop.Wait();
+				tokenSource.Cancel();
+				can_loop.Wait();
+				prod_loop.Wait();
+				cons_loop.Wait();
 #endif
+			}
 		}
 
 		public static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
-			CarData.Test();
+			Console.WriteLine("PROGRAM: Hello World!");
 
 			RunCar();
+			// Thread.Sleep(1000); // delay for canusb destruction
 
-			Console.WriteLine("Run finished");
+			Console.WriteLine("PROGRAM: Run finished");
 
 			// Console.WriteLine("Press any key to continue...");
 			// Console.WriteLine();

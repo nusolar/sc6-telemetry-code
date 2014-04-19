@@ -5,16 +5,19 @@ using System.IO.Ports;
 namespace SolarCar
 {
 	/// <summary>
-	/// Wrapper to send to and receive packets from NUSolar Serial devices.
+	/// A customized SerialPort, with support for our BUGGY CAN-USB cable.
+	/// * asynchronously reads lines from a SerialPort, firing the LineReceived event.
+	/// * locks the SerialPort for all reading and writing.
+	/// * drains the SerialPort Read buffer when closing (WARNING this can infinite loop)
 	/// </summary>
-	class AsyncSerialPort
+	class AsyncSerialPort: IDisposable
 	{
 		// The underlying SerialPort & its mutex:
-		readonly object port_lock = new Object();
 		private SerialPort port = null;
+		readonly object port_lock = new Object();
 		// The string buffer & its mutex:
-		readonly object buffer_lock = new Object();
 		string buffer = "";
+		readonly object buffer_lock = new Object();
 
 		public delegate void LineReceivedDelegate(string line);
 
@@ -28,18 +31,8 @@ namespace SolarCar
 			this.port = new SerialPort(portName, baudRate, parity, dataBits, stopBits);
 			port.ReadTimeout = 50; // 50 ms
 			port.WriteTimeout = 50; // 50 ms
-			port.DataReceived += new SerialDataReceivedEventHandler(this.ReadData);
-		}
-
-		/// <summary>
-		/// Releases the SerialPort and performs other cleanup operations before the SolarCar.SyncSerialPort is
-		/// reclaimed by garbage collection.
-		/// </summary>
-		~AsyncSerialPort()
-		{
-#if !SIMULATE_HARDWARE
-			this.Close();
-#endif
+			// port.DataReceived += new SerialDataReceivedEventHandler(this.LockReadData);
+			// DataReceived IS NOT IMPLEMENTED IN MONO.NET
 		}
 
 		public void Open()
@@ -49,14 +42,18 @@ namespace SolarCar
 #endif
 		}
 
+		/// <summary>
+		/// Releases the SerialPort and performs other cleanup operations before the SolarCar.SyncSerialPort is
+		/// reclaimed by garbage collection.
+		/// </summary>
 		public void Close()
 		{
-			Console.WriteLine("UART : closing");
-			if (port.IsOpen)
-			{
-				port.Close();
-			}
-			Console.WriteLine("UART : closed");
+			this.Dispose();
+		}
+
+		public bool IsOpen
+		{
+			get { return port.IsOpen; }
 		}
 
 		public string NewLine
@@ -70,33 +67,29 @@ namespace SolarCar
 		/// Acquires the SerialPort, reads data into buffer. It is invoked on a separate thread by SerialPort.
 		/// Lines terminated by the NewLine character are passed to the LineReceivedDelegate.
 		/// </summary>
-		/// <param name="sender">Sender, a SerialPort.</param>
-		/// <param name="e">Event Args</param>
-		void ReadData(object sender, SerialDataReceivedEventArgs e)
+		public void LockReadData()
 		{
 #if DEBUG
-			Console.WriteLine("UART data received.");
+			Console.WriteLine("UART ReadData.");
 #endif
-			if (e.EventType != System.IO.Ports.SerialData.Chars)
-			{
-				return;
-			}
-			if ((SerialPort)sender != this.port)
-			{
-				Console.WriteLine("UART Warning: ReadData was called with sender != this.port");
-			}
 
-			// acquire lock on CAN bus, read upto 21 bytes.
+			// acquire lock on CAN bus, read buffer out.
 			string temp_buffer = null;
 			try
 			{
 				lock (port_lock)
 				{
+#if !SIMULATE_HARDWARE
+					Console.WriteLine("UART ReadData: BytesToRead before " + port.BytesToRead);
 					temp_buffer = this.port.ReadExisting();
-#if DEBUG
-					Console.WriteLine("UART data: " + temp_buffer);
+					Console.WriteLine("UART ReadData: BytesToRead after " + port.BytesToRead);
 #endif
-					if (temp_buffer.Length >= 1020)
+#if DEBUG
+					Console.WriteLine("UART ReadData: Bytes:\n" + temp_buffer.Substring(0, Math.Min(21, temp_buffer.Length)));
+					Console.WriteLine("UART ReadData: Bytes# " + temp_buffer.Length);
+#endif
+					// If CANUSB has overflown, then prepend a carriage return
+					if (temp_buffer.Length >= Config.CANUSB_READ_BUFFER_LIMIT)
 					{
 						temp_buffer = temp_buffer.Insert(0, "\r");
 					}
@@ -104,32 +97,51 @@ namespace SolarCar
 			}
 			catch (TimeoutException)
 			{
-				Console.WriteLine("UART: read timed out. SerialPort may be busy.");
+				Console.WriteLine("UART ReadData: TimeoutException. SerialPort may be busy.");
 				return;
 			}
 
+			if (temp_buffer == null)
+				return;
+
 			// Add data to this.buffer, check for newlines.
-			string new_line = null;
-			lock (buffer_lock)
+			lock (this.buffer_lock)
 			{
 				this.buffer += temp_buffer;
-				if (this.buffer.Contains(this.NewLine))
-				{
-					int newline_index = this.buffer.IndexOf(this.NewLine);
-					// copy the first line in the buffer.
-					new_line = this.buffer.Substring(0, newline_index + 1);
-					// then remove copied data from buffer.
-					this.buffer = this.buffer.Substring(newline_index + 1);
-				}
 			}
 
-			// Handle newline, if exists.
-			if (new_line != null)
+
+			// set Empty initially to enter the loop;
+			bool found_newline = true;
+			while (found_newline == true)
 			{
+				string new_line = null;
+				lock (this.buffer_lock)
+				{
+					if (this.buffer.Contains(this.NewLine))
+					{
+						// TODO check status
+
+						int newline_index = this.buffer.IndexOf(this.NewLine);
+						// copy the first line in the buffer.
+						new_line = this.buffer.Substring(0, newline_index + 1);
+						// then remove copied data from buffer.
+						this.buffer = this.buffer.Substring(newline_index + 1);
+					}
+					else
+					{
+						// break loop if NewLine isn't found
+						break;
+					}
+				}
 #if DEBUG
-				Console.WriteLine("UART recv: " + new_line);
+				Console.WriteLine("UART ReadData: NewLine: " + new_line.Substring(0, new_line.Length - 1));
+				Console.WriteLine("UART ReadData: NewLine# " + new_line.Length);
 #endif
-				this.LineReceived(new_line);
+				// Handle non-empty lines, since a NewLine was found;
+				if (new_line.Length > 1)
+					this.LineReceived(new_line);
+				new_line = String.Empty;
 			}
 		}
 
@@ -137,25 +149,88 @@ namespace SolarCar
 		/// Acquire the SerialPort, and write a line.
 		/// </summary>
 		/// <param name="line">Line.</param>
-		public void SyncWriteLine(string line)
+		public void LockWriteLine(string line)
 		{
 			try
 			{
 				lock (port_lock)
 				{
+					Console.WriteLine("UART WriteLine: send " + line);
 #if !SIMULATE_HARDWARE
-					port.WriteLine(line);
-#endif
+					if (port.BytesToWrite < Config.CANUSB_WRITE_BUFFER_LIMIT)
+					{
+						port.WriteLine(line);
 #if DEBUG
-					Console.WriteLine("UART send: " + line);
+						Console.WriteLine("UART WriteLine: bytes to write = {0}", port.BytesToWrite);
+#endif
+					}
+					else
+					{
+#if DEBUG
+						Console.WriteLine("UART WriteLine: EXCEPTION: bytes to write = {0}", port.BytesToWrite);
+#endif
+						throw new System.IO.InternalBufferOverflowException("UART WriteLine: buffer is clogged.");
+					}
 #endif
 				}
 			}
 			catch (TimeoutException)
 			{
-				Console.WriteLine("UART: write timed out. SerialPort may be busy.");
+				Console.WriteLine("UART WriteLine: timed out. SerialPort may be busy.");
 			}
 		}
+
+#region IDisposable implementation
+
+		bool disposed = false;
+
+		public void Dispose()
+		{
+#if DEBUG
+			Console.WriteLine("UART Dispose: Called");
+#endif
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			Console.WriteLine("UART disposing: {0}", disposed);
+			if (!disposed)
+			{
+				// disposing managed resources
+				if (this.port != null)
+				{
+#if DEBUG
+					Console.WriteLine("UART closing: draining buffer...");
+#endif
+					if (port.IsOpen)
+					{
+						// drain Read buffer before closing
+						while (port.BytesToRead > 0)
+						{
+							var s = port.ReadExisting();
+#if DEBUG
+							Console.WriteLine("UART closing: cleared {0} bytes.", s.Length);
+#endif
+						}
+						port.Close();
+					}
+#if DEBUG
+					Console.WriteLine("UART closed");
+#endif
+					
+				}
+				// disposing managed resources
+				if (disposing)
+				{
+					this.port.Dispose();
+				}
+				disposed = true;
+			}
+		}
+
+#endregion
 	}
 }
 

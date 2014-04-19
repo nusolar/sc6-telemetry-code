@@ -6,7 +6,7 @@ html(lang="en", ng-app, ng-csp)
 		title
 			="NU Solar - ZELDA"
 		style
-			include:css main.css
+			include:css index.css
 		style
 			include:css angular-1.2.10/angular-csp.css
 		script
@@ -14,7 +14,7 @@ html(lang="en", ng-app, ng-csp)
 		script
 			include:js angular-1.2.10/angular.min.js
 		script
-			include:js main.js
+			include:js index.js
 
 	body
 		article.MainTable(ng-controller='MainTable')
@@ -58,11 +58,14 @@ html(lang="en", ng-app, ng-csp)
 										for k in [j, j - (2*(j%5) + 1)]
 											+battery_cell(k)
 					section.DrivePanel(ng-show="drive_btn")
-						.Button.SmallButton.MotorToggle(ng-class="{MotorToggleOn: motor_btn}", ng-click="Motor()")
+						.Button.SmallButton.DangerousToggle(ng-class="{DangerousToggleOn: battery_btn}", ng-click="Battery()")
+							="BATTERIES {{ (battery_btn? 'ARE': 'NOT') }} RUNNING"
+						.Gap
+						.Button.SmallButton.DangerousToggle(ng-class="{DangerousToggleOn: motor_btn}", ng-click="Motor()")
 							="MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}"
 						.Gap
 						.Button.SmallButton(ng-class="{ButtonOn: reverse_btn}", ng-click="Reverse()")
-							="REVERSE"
+							="{{(reverse_btn? 'REVERSE': 'FORWARD')}}"
 
 					section.CameraPanel(ng-show="camera_btn")
 						="CAMERA"
@@ -83,5 +86,5 @@ html(lang="en", ng-app, ng-csp)
 
 			footer.FooterRow(colspan='2')
 				.TextCell.Bottom.BottomLeftCorner
-				.TextCell.Bottom(colspan='2', ng-bind="query_string")
+				.TextCell.Bottom(colspan='2', ng-bind="print_query_string")
 				.TextCell.Bottom.BottomRightCorner
