@@ -15,7 +15,7 @@ namespace SolarCar
 			// UIs run on separate threads.
 			HttpServer web = new HttpServer(car);
 			// Telemetry caching
-			CarDatabase db = new CarDatabase();
+			Database db = new Database();
 
 			Thread.Sleep(1); // 1ms
 
@@ -47,15 +47,14 @@ namespace SolarCar
 				cons_loop.Wait();
 #endif
 			}
+
+			Thread.Sleep(1); // 1ms delay for canusb destruction
 		}
 
 		public static void Main(string[] args)
 		{
 			Console.WriteLine("PROGRAM: Hello World!");
-
 			RunCar();
-			// Thread.Sleep(1000); // delay for canusb destruction
-
 			Console.WriteLine("PROGRAM: Run finished");
 
 			// Console.WriteLine("Press any key to continue...");

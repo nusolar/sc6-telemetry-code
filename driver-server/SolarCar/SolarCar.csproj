@@ -53,11 +53,9 @@
     <Compile Include="HttpServer.cs" />
     <Compile Include="AsyncSerialPort.cs" />
     <Compile Include="Can.cs" />
-    <Compile Include="CarDatabase.cs">
-      <DependentUpon>Config.cs</DependentUpon>
-    </Compile>
     <Compile Include="CarFrontend.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="Database.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

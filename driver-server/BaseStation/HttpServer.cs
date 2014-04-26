@@ -3,19 +3,21 @@ using System.Net;
 using System.Threading.Tasks;
 using CancellationToken = System.Threading.CancellationToken;
 using NameValueCollection = System.Collections.Specialized.NameValueCollection;
-using CarDatabase = SolarCar.CarDatabase;
+using CarDatabase = SolarCar.Database;
 using Stream = System.IO.Stream;
 using Encoding = System.Text.Encoding;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 using SolarCar.Car;
+using Database = SolarCar.Database;
+using Config = SolarCar.Config;
 
 namespace BaseStation
 {
 	class HttpServer
 	{
-		CarDatabase _db = null;
+		Database _db = null;
 
-		public HttpServer(CarDatabase InDb)
+		public HttpServer(Database InDb)
 		{
 			this._db = InDb;
 		}
@@ -60,7 +62,7 @@ namespace BaseStation
 			{
 				using (HttpListener listener = new HttpListener())
 				{
-					listener.Prefixes.Add(Config.HTTPSERVER_SERVER_PREFIX);
+					listener.Prefixes.Add(Config.HTTPSERVER_LAPTOP_PREFIX);
 					listener.Start();
 
 					while (!token.IsCancellationRequested && listener.IsListening)

@@ -14,7 +14,7 @@ namespace SolarCar
 	/// <summary>
 	/// Database for telemetry, trip events, and commands.
 	/// </summary>
-	public class CarDatabase
+	public class Database
 	{
 		static DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0);
 
@@ -48,7 +48,7 @@ namespace SolarCar
 		/// <summary>
 		/// Initializes a new instance of the CarDatabase class, creates Status table.
 		/// </summary>
-		public CarDatabase()
+		public Database()
 		{
 			if (!System.IO.File.Exists(Config.SQLITE_DB_FILE))
 				SqliteConnection.CreateFile(Config.SQLITE_DB_FILE);

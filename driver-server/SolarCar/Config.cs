@@ -35,6 +35,7 @@ namespace SolarCar
 		public const int CANUSB_RX_INTERVAL_MS = 50;
 		/// HTTP Server paths
 		public const string HTTPSERVER_CAR_PREFIX = "http://+:8080/";
+		public const string HTTPSERVER_LAPTOP_PREFIX = "http://+:8081/";
 		public const int HTTPSERVER_TIMEOUT_MS = 1000;
 		public const string HTTPSERVER_GUI_SUBDIR = "driver-gui";
 		/// Database location
