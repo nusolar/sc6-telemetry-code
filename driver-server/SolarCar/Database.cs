@@ -42,8 +42,8 @@ namespace SolarCar
 		//                        "@PackSOC, @PackSOCPerc, @BMSPrecharge, " +
 		//                        "@MaxVoltage, @MinVoltage, @MaxTemp, @MinTemp, " +
 		//                        "@PackVoltage, @PackCurrent, @BMSExtendedStatusFlags)";
-		static string _connection_string = "Data Source=" + Config.SQLITE_DB_FILE +
-		                                   ";DbLinqProvider=Sqlite;DbLinqConnectionType=" + Config.SQLITE_CONNECTION_CLASS_AQN + ";";
+		static string _connection_string = //"DbLinqConnectionType=" + Config.SQLITE_CONNECTION_CLASS_AQN + ";" +
+			"DbLinqProvider=Sqlite;Data Source=" + Config.SQLITE_DB_FILE + ";";
 
 		/// <summary>
 		/// Initializes a new instance of the CarDatabase class, creates Status table.
@@ -53,7 +53,8 @@ namespace SolarCar
 			if (!System.IO.File.Exists(Config.SQLITE_DB_FILE))
 				SqliteConnection.CreateFile(Config.SQLITE_DB_FILE);
 			// don't use "Data Source=:memory:"
-			using (DataContext db = new DataContext(_connection_string))
+			using (SqliteConnection conn = new SqliteConnection(_connection_string))
+			using (DataContext db = new DataContext(conn))
 			{
 #if DEBUG
 				db.Log = Console.Out;
@@ -72,7 +73,8 @@ namespace SolarCar
 		/// <returns>Number of rows.</returns>
 		public int CountStatus()
 		{
-			using (DataContext db = new DataContext(_connection_string + "Read Only=True;"))
+			using (SqliteConnection conn = new SqliteConnection(_connection_string + "Read Only=True;"))
+			using (DataContext db = new DataContext(conn))
 			{
 #if DEBUG
 				db.Log = Console.Out;
@@ -89,7 +91,8 @@ namespace SolarCar
 		public void PushStatus(Car.Status data)
 		{
 			data.Timestamp = UnixTimeNow();
-			using (DataContext db = new DataContext(_connection_string))
+			using (SqliteConnection conn = new SqliteConnection(_connection_string))
+			using (DataContext db = new DataContext(conn))
 			{
 #if DEBUG
 				db.Log = Console.Out;
@@ -151,7 +154,8 @@ namespace SolarCar
 		/// <returns>The row.</returns>
 		public Car.Status GetFirstRow()
 		{
-			using (DataContext db = new DataContext(_connection_string))
+			using (SqliteConnection conn = new SqliteConnection(_connection_string))
+			using (DataContext db = new DataContext(conn))
 			{
 #if DEBUG
 				db.Log = Console.Out;
@@ -169,7 +173,8 @@ namespace SolarCar
 
 		public void DeleteFirstRow()
 		{
-			using (DataContext db = new DataContext(_connection_string))
+			using (SqliteConnection conn = new SqliteConnection(_connection_string))
+			using (DataContext db = new DataContext(conn))
 			{
 #if DEBUG
 				db.Log = Console.Out;

@@ -51,6 +51,13 @@ namespace SolarCar
 			Thread.Sleep(1); // 1ms delay for canusb destruction
 		}
 
+		static void RestartAsAdmin()
+		{
+			var startInfo = new System.Diagnostics.ProcessStartInfo("SolarCar.exe") { Verb = "runas" };
+			System.Diagnostics.Process.Start(startInfo);
+			Environment.Exit(0);
+		}
+
 		public static void Main(string[] args)
 		{
 			Console.WriteLine("PROGRAM: Hello World!");

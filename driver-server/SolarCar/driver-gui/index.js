@@ -114,10 +114,17 @@
       }
     };
     $scope.Motor = function() {
-      $scope.motor_btn = !$scope.motor_btn;
-      $scope.commands.drive = $scope.motor_btn ? 1 : 0;
-      if ($scope.reverse_btn) {
-        return $scope.Reverse();
+      if ($scope.commands.run_battery) {
+        $scope.motor_btn = !$scope.motor_btn;
+        $scope.commands.drive = $scope.motor_btn ? 1 : 0;
+        if ($scope.reverse_btn) {
+          return $scope.Reverse();
+        }
+      } else {
+        $scope.motor_btn = false;
+        $scope.commands.drive = 0;
+        $scope.reverse_btn = false;
+        return $scope.commands.reverse = 0;
       }
     };
     $scope.Reverse = function() {

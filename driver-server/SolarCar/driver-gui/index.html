@@ -74,7 +74,7 @@
 	background-color: #FF9900;
 	border-style: solid;
 	border-width: 1px 0;
-	padding: 0.5em 0;
+	padding: 0.8em 0;
 	width: 100%;
 	text-align: center;
 	margin-left: auto;
@@ -86,7 +86,7 @@
 
 .Gap {
 	width: 100%;
-	height: 0.3em;
+	height: 0.5em;
 }
 
 /*
@@ -474,10 +474,17 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
       }
     };
     $scope.Motor = function() {
-      $scope.motor_btn = !$scope.motor_btn;
-      $scope.commands.drive = $scope.motor_btn ? 1 : 0;
-      if ($scope.reverse_btn) {
-        return $scope.Reverse();
+      if ($scope.commands.run_battery) {
+        $scope.motor_btn = !$scope.motor_btn;
+        $scope.commands.drive = $scope.motor_btn ? 1 : 0;
+        if ($scope.reverse_btn) {
+          return $scope.Reverse();
+        }
+      } else {
+        $scope.motor_btn = false;
+        $scope.commands.drive = 0;
+        $scope.reverse_btn = false;
+        return $scope.commands.reverse = 0;
       }
     };
     $scope.Reverse = function() {

@@ -10,6 +10,7 @@
     <RootNamespace>BaseStation</RootNamespace>
     <AssemblyName>BaseStation</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ApplicationIcon>..\SolarCar\driver-gui\icon_64.png</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>

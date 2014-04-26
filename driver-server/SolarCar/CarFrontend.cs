@@ -106,15 +106,15 @@ namespace SolarCar
 			while (!token.IsCancellationRequested)
 			{
 				// CanUsb communicates with car's CAN bus.
-				using (CanUsb canusb = new CanUsb(Config.CANUSB_DEV_FILE))
+				using (CanUsb canusb = new CanUsb(Config.CANUSB_SERIAL_DEV))
 				{
-					canusb.Open();
-
 					// attach handler for CAN Read Event
 					canusb.handlers += this.ProcessCanPacket;
 
 					try
 					{
+						canusb.Open();
+
 						using (var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(token))
 						{
 							var child_token = tokenSource.Token;
@@ -127,11 +127,19 @@ namespace SolarCar
 					catch (System.IO.InternalBufferOverflowException ex)
 					{
 #if DEBUG
-						Console.WriteLine("CARFRONT EXCEPTION: " + ex.Message);
+						Console.WriteLine("CARFRONT Buffer Exception: " + ex.Message);
 #endif
 					}
-
-					canusb.Close();
+					catch (System.IO.IOException ex)
+					{
+#if DEBUG
+						Console.WriteLine("CARFRONT IO Exception: " + ex.Message);
+#endif
+					}
+					finally
+					{
+						canusb.Close();
+					}
 				}
 
 				await Task.Delay(1000); // wait 1s before reopening SerialPort

@@ -19,6 +19,9 @@ namespace SolarCar
 
 		public CanUsb(string path)
 		{
+#if DEBUG
+			Console.WriteLine("CANUSB path: " + path);
+#endif
 			port = new AsyncSerialPort(path, 115200, Parity.None, 8, StopBits.One);
 			port.NewLine = NEWLINE; // CANUSB uses carriage returns
 			port.LineReceived += this.HandleLineReceived;

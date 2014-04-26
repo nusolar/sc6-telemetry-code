@@ -49,66 +49,77 @@ namespace SolarCar
 
 		public void ListenerCallback(object result)
 		{
-			// HttpListener listener = (HttpListener)result.AsyncState;
-			// context = listener.EndGetContext(result); // Blocks until HTTP request
-			HttpListenerContext context = (HttpListenerContext)result;
-			HttpListenerRequest request = context.Request;
-			HttpListenerResponse response = context.Response;
-			string url = request.Url.AbsolutePath;
+			try
+			{
+
+			
+				// HttpListener listener = (HttpListener)result.AsyncState;
+				// context = listener.EndGetContext(result); // Blocks until HTTP request
+				HttpListenerContext context = (HttpListenerContext)result;
+				HttpListenerRequest request = context.Request;
+				HttpListenerResponse response = context.Response;
+				string url = request.Url.AbsolutePath;
 #if DEBUG
-			Console.WriteLine("HTTP URL: " + request.RawUrl);
+				Console.WriteLine("HTTP URL: " + request.RawUrl);
 #endif
 
-			if (context.Request.HttpMethod != "GET")
-			{
-				context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-				context.Response.Close();
-			}
-
-			if (url == "/data.json")
-			{
-				this.DoCommands(request.QueryString);
-
-				byte[] buffer = Encoding.Default.GetBytes(this.json_data);
-				response.ContentLength64 = buffer.Length;
-				response.ContentType = "application/json";
-
-				using (Stream output = response.OutputStream)
-					output.Write(buffer, 0, buffer.Length);
-#if DEBUG
-				Console.WriteLine("HTTP json: " + this.json_data);
-#endif
-			}
-			else // e.g. url == "/index.html"
-			{
-				url = url.Replace('/', '.');
-				Assembly _assembly = Assembly.GetExecutingAssembly();
-				using (Stream _stream = _assembly.GetManifestResourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url))
+				if (context.Request.HttpMethod != "GET")
 				{
-					response.ContentLength64 = _stream.Length;
-					response.SendChunked = false;
-					// response.ContentType = MediaTypeNames.Text.Html;
-					response.StatusCode = (int)HttpStatusCode.OK;
-					response.StatusDescription = "OK";
+					context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+					context.Response.Close();
+				}
+
+				if (url == "/data.json")
+				{
+					this.DoCommands(request.QueryString);
+
+					byte[] buffer = Encoding.Default.GetBytes(this.json_data);
+					response.ContentLength64 = buffer.Length;
+					response.ContentType = "application/json";
 
 					using (Stream output = response.OutputStream)
+						output.Write(buffer, 0, buffer.Length);
+#if DEBUG
+					Console.WriteLine("HTTP json: " + this.json_data);
+#endif
+				}
+				else // e.g. url == "/index.html"
+				{
+					url = url.Replace('/', '.');
+					Assembly _assembly = Assembly.GetExecutingAssembly();
+					using (Stream _stream = _assembly.GetManifestResourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url))
 					{
-						// transfer file in buffered 64kB blocks
-						byte[] buffer = new byte[64 * 1024];
-						int read;
-						using (BinaryWriter bw = new BinaryWriter(output))
-						{
-							while ((read = _stream.Read(buffer, 0, buffer.Length)) > 0)
-							{
-								bw.Write(buffer, 0, read);
-								bw.Flush(); //seems to have no effect
-							}
+						response.ContentLength64 = _stream.Length;
+						response.SendChunked = false;
+						// response.ContentType = MediaTypeNames.Text.Html;
+						response.StatusCode = (int)HttpStatusCode.OK;
+						response.StatusDescription = "OK";
 
-							bw.Close();
+						using (Stream output = response.OutputStream)
+						{
+							// transfer file in buffered 64kB blocks
+							byte[] buffer = new byte[64 * 1024];
+							int read;
+							using (BinaryWriter bw = new BinaryWriter(output))
+							{
+								while ((read = _stream.Read(buffer, 0, buffer.Length)) > 0)
+								{
+									bw.Write(buffer, 0, read);
+									bw.Flush(); //seems to have no effect
+								}
+
+								bw.Close();
+							}
 						}
 					}
+					this.DoCommands(this.default_query);
 				}
-				this.DoCommands(this.default_query);
+			}
+			catch (NullReferenceException)
+			{
+#if DEBUG
+				Console.WriteLine("HTTP ListenerCallback: nullptr, context is bad or FNF");
+#endif
 			}
 		}
 
@@ -152,14 +163,14 @@ namespace SolarCar
 					}
 				}
 			}
-			catch (HttpListenerException)
+			catch (HttpListenerException e)
 			{
 				// Bail out - this happens on shutdown
-				Console.WriteLine("HTTP Listener has shutdown");
+				Console.WriteLine("HTTP Listener has shutdown: {0}", e.Message);
 			}
-			catch (TaskCanceledException)
+			catch (TaskCanceledException e)
 			{
-				Console.WriteLine("HTTP Task Cancelled");
+				Console.WriteLine("HTTP Task Cancelled: {0}", e.Message);
 			}
 			catch (Exception e)
 			{

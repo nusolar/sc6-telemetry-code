@@ -10,6 +10,7 @@
     <RootNamespace>SolarCar</RootNamespace>
     <AssemblyName>SolarCar</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ApplicationIcon>driver-gui\icon_64.png</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,14 +36,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="Mono.Data.Sqlite">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="RestSharp">
-      <HintPath>..\lib\RestSharp.dll</HintPath>
+    <Reference Include="System.Data.Linq">
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -62,5 +64,11 @@
     <EmbeddedResource Include="driver-gui\index.html" />
     <EmbeddedResource Include="driver-gui\map.png" />
     <EmbeddedResource Include="driver-gui\icon_64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\lib\sqlite3.dll">
+      <Link>sqlite3.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -113,12 +113,18 @@ window.MainTable = ($scope, $timeout, $interval) ->
 			$scope.Motor() # this should also kill Reverse
 
 	$scope.Motor = ->
-		$scope.motor_btn = not $scope.motor_btn
-		# if Motor Button is depressed, activate Drive
-		$scope.commands.drive = if $scope.motor_btn then 1 else 0
-		# always deactivate Reverse, if ON
-		if $scope.reverse_btn
-			$scope.Reverse()
+		if $scope.commands.run_battery
+			$scope.motor_btn = not $scope.motor_btn
+			# if Motor Button is depressed, activate Drive
+			$scope.commands.drive = if $scope.motor_btn then 1 else 0
+			# always deactivate Reverse, if it's ON
+			if $scope.reverse_btn
+				$scope.Reverse()
+		else
+			$scope.motor_btn = false
+			$scope.commands.drive = 0
+			$scope.reverse_btn = false
+			$scope.commands.reverse = 0
 
 	$scope.Reverse = ->
 		if $scope.commands.drive
