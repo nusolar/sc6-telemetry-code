@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Debug = System.Diagnostics.Debug;
 
-namespace BaseStation
+namespace Solar.Laptop
 {
 	class Program
 	{
-		public static void Main(string[] args)
+		public static void RunLaptop()
 		{
-			Console.WriteLine("Hello World!");
-
-			SolarCar.Database db = new SolarCar.Database();
-			BaseStation.HttpServer web = new BaseStation.HttpServer(db);
+			Solar.Car.Database db = new Solar.Car.Database();
+			Solar.Laptop.HttpServer web = new Solar.Laptop.HttpServer(db);
 
 			var tokenSource = new CancellationTokenSource();
 			var token = tokenSource.Token;
@@ -19,8 +18,15 @@ namespace BaseStation
 
 			Console.ReadKey();
 			tokenSource.Cancel();
-			Console.WriteLine("Aborted!");
+			Debug.WriteLine("PROGRAM: Aborted!");
 			web_loop.Wait();
+		}
+
+		public static void Main(string[] args)
+		{
+			Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener(System.Console.Out));
+			Debug.WriteLine("PROGRAM: Hello World!");
+			RunLaptop();
 		}
 	}
 }

@@ -3,7 +3,7 @@ using Mono.Data.Sqlite;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 
-namespace SolarCar
+namespace Solar.Car
 {
 	namespace Car
 	{

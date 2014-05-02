@@ -3,15 +3,15 @@ using System.Net;
 using System.Threading.Tasks;
 using CancellationToken = System.Threading.CancellationToken;
 using NameValueCollection = System.Collections.Specialized.NameValueCollection;
-using CarDatabase = SolarCar.Database;
+using CarDatabase = Solar.Car.Database;
 using Stream = System.IO.Stream;
 using Encoding = System.Text.Encoding;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
-using SolarCar.Car;
-using Database = SolarCar.Database;
-using Config = SolarCar.Config;
+using Solar.Car.Car;
+using Database = Solar.Car.Database;
+using Config = Solar.Car.Config;
 
-namespace BaseStation
+namespace Solar.Laptop
 {
 	class HttpServer
 	{

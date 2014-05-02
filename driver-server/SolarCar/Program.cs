@@ -1,23 +1,27 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using System.Runtime.InteropServices;
+using Debug = System.Diagnostics.Debug;
 
-namespace SolarCar
+namespace Solar.Car
 {
-	class Program
+	/// <summary>
+	/// Centralized tasks for running the solar car.
+	/// </summary>
+	public class Program
 	{
-		static void RunCar()
+		/// <summary>
+		/// Run the solar car's HttpGui, command Driver Controls, gather telemetry.
+		/// </summary>
+		public static async Task RunCar()
 		{
 			// DataAggregator collects all data
 			CarFrontend car = new CarFrontend();
 			// UIs run on separate threads.
-			HttpServer web = new HttpServer(car);
+			HttpGui web = new HttpGui(car);
 			// Telemetry caching
 			Database db = new Database();
-
-			Thread.Sleep(1); // 1ms
 
 			// spawn cancellable CAN and GUI communication threads:
 			using (var tokenSource = new CancellationTokenSource())
@@ -33,40 +37,16 @@ namespace SolarCar
 
 #if DEBUG
 				Console.ReadKey();
-				tokenSource.Cancel();
-				Console.WriteLine("PROGRAM: Aborted");
-				web_loop.Wait();
-				can_loop.Wait();
-				prod_loop.Wait();
-				cons_loop.Wait();
 #else
-				web_loop.Wait();
-				tokenSource.Cancel();
-				can_loop.Wait();
-				prod_loop.Wait();
-				cons_loop.Wait();
+				await web_loop;
 #endif
+				tokenSource.Cancel();
+				Debug.WriteLine("PROGRAM: Aborted");
+				await web_loop;
+				await can_loop;
+				await prod_loop;
+				await cons_loop;
 			}
-
-			Thread.Sleep(1); // 1ms delay for canusb destruction
-		}
-
-		static void RestartAsAdmin()
-		{
-			var startInfo = new System.Diagnostics.ProcessStartInfo("SolarCar.exe") { Verb = "runas" };
-			System.Diagnostics.Process.Start(startInfo);
-			Environment.Exit(0);
-		}
-
-		public static void Main(string[] args)
-		{
-			Console.WriteLine("PROGRAM: Hello World!");
-			RunCar();
-			Console.WriteLine("PROGRAM: Run finished");
-
-			// Console.WriteLine("Press any key to continue...");
-			// Console.WriteLine();
-			// Console.ReadKey();
 		}
 	}
 }

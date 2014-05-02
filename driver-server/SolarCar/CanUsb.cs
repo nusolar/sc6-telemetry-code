@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using Debug = System.Diagnostics.Debug;
 
-namespace SolarCar
+namespace Solar.Car
 {
 	/// <summary>
 	/// Communication with the CAN-USB cable, which is a serial port.
@@ -19,9 +20,8 @@ namespace SolarCar
 
 		public CanUsb(string path)
 		{
-#if DEBUG
-			Console.WriteLine("CANUSB path: " + path);
-#endif
+			Debug.WriteLine("CANUSB path: " + path);
+
 			port = new AsyncSerialPort(path, 115200, Parity.None, 8, StopBits.One);
 			port.NewLine = NEWLINE; // CANUSB uses carriage returns
 			port.LineReceived += this.HandleLineReceived;
@@ -66,20 +66,20 @@ namespace SolarCar
 			// Validate packet
 			if (InLine[0] == 'z')
 			{
-				Console.WriteLine("CANBUS Line: [z] packet written");
+				Debug.WriteLine("CANBUS Line: [z] packet written");
 			}
 			if (InLine[0] != 't')
 			{
-				Console.WriteLine("CANBUS Line: Expected first character to be t");
+				Debug.WriteLine("CANBUS Line: Expected first character to be t");
 			}
 			else if (InLine[InLine.Length - 1] != '\r')
 			{
-				Console.WriteLine("CANBUS Line: Expected last character to be Carriage Return");
+				Debug.WriteLine("CANBUS Line: Expected last character to be Carriage Return");
 			}
 			else if (InLine.Length > 22)
 			{
 				// 1 't', 3 ID, 1 length, upto 16 data, 1 CR
-				Console.WriteLine("CANBUS Line: Max packet size is 22 characters.");
+				Debug.WriteLine("CANBUS Line: Max packet size is 22 characters.");
 			}
 			else
 			{
@@ -116,8 +116,8 @@ namespace SolarCar
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("CANUSB LINE: EXCEPTION:  " + e.Message);
-					Console.WriteLine("CANUSB LINE: for packet: " + InLine);
+					Debug.WriteLine("CANUSB LINE: EXCEPTION:  " + e.Message);
+					Debug.WriteLine("CANUSB LINE: for packet: " + InLine);
 					return;
 				}
 				this.handlers(packet);
@@ -130,16 +130,15 @@ namespace SolarCar
 
 		public void Dispose()
 		{
-#if DEBUG
-			Console.WriteLine("CANUSB Dispose(): called");
-#endif
+			Debug.WriteLine("CANUSB Dispose(): called");
+
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
 		protected virtual void Dispose(bool disposing)
 		{
-			Console.WriteLine("CANUSB disposing: {0}", disposed);
+			Debug.WriteLine("CANUSB disposing: {0}", disposed);
 			if (!disposed)
 			{
 				// dispose unmanaged resources

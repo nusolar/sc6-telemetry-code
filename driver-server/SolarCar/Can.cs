@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-
-namespace SolarCar
+namespace Solar.Car
 {
 	namespace Can
 	{
@@ -168,7 +167,6 @@ namespace SolarCar
 				this.frame.data = data;
 			}
 		}
-
 		namespace Addr
 		{
 			namespace bps_rx
@@ -181,7 +179,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x200;
 
-						public Int16 trip_code
+					public Int16 trip_code
 					{
 						get { return this.frame.trip.int16_0; }
 						set { this.frame.trip.int16_0 = value; }
@@ -192,7 +190,6 @@ namespace SolarCar
 						get { return this.frame.trip.uint16_1; }
 						set { this.frame.trip.uint16_1 = value; }
 					}
-
 				}
 
 				class reset_cc_batt: Packet
@@ -202,8 +199,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x201;
-
-	
 				}
 
 				class reset_cc_array: Packet
@@ -213,8 +208,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x202;
-
-	
 				}
 
 				class reset_cc_mppt1: Packet
@@ -224,8 +217,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x203;
-
-	
 				}
 
 				class reset_cc_mppt2: Packet
@@ -235,8 +226,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x204;
-
-	
 				}
 
 				class reset_cc_mppt3: Packet
@@ -246,8 +235,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x205;
-
-	
 				}
 
 				class reset_cc_Wh: Packet
@@ -257,8 +244,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x206;
-
-	
 				}
 
 				class reset_cc_all: Packet
@@ -268,11 +253,8 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x207;
-
-	
 				}
 			}
-
 			namespace bps_tx
 			{
 				class heartbeat: Packet
@@ -283,7 +265,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x210;
 
-						public UInt32 bmsId
+					public UInt32 bmsId
 					{
 						get { return this.frame.status.uint32_0; }
 						set { this.frame.status.uint32_0 = value; }
@@ -294,7 +276,6 @@ namespace SolarCar
 						get { return this.frame.status.uint32_1; }
 						set { this.frame.status.uint32_1 = value; }
 					}
-
 				}
 
 				class bps_status: Packet
@@ -305,7 +286,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x211;
 
-						public UInt16 mode
+					public UInt16 mode
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -328,7 +309,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class current: Packet
@@ -339,7 +319,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x212;
 
-						public UInt16 array
+					public UInt16 array
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -362,7 +342,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class voltage_temp: Packet
@@ -373,7 +352,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x213;
 
-						public UInt16 module
+					public UInt16 module
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -396,7 +375,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class cc_array: Packet
@@ -407,12 +385,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x214;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class cc_batt: Packet
@@ -423,12 +400,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x215;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class cc_mppt1: Packet
@@ -439,12 +415,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x216;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class cc_mppt2: Packet
@@ -455,12 +430,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x217;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class cc_mppt3: Packet
@@ -471,12 +445,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x218;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class Wh_batt: Packet
@@ -487,12 +460,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x219;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class Wh_mppt1: Packet
@@ -503,12 +475,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x21a;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class Wh_mppt2: Packet
@@ -519,12 +490,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x21b;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class Wh_mppt3: Packet
@@ -535,12 +505,11 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x21c;
 
-						public Double count
+					public Double count
 					{
 						get { return this.frame.float64x1.double_0; }
 						set { this.frame.float64x1.double_0 = value; }
 					}
-
 				}
 
 				class last_trip: Packet
@@ -551,7 +520,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x21d;
 
-						public Int16 trip_code
+					public Int16 trip_code
 					{
 						get { return this.frame.trip.int16_0; }
 						set { this.frame.trip.int16_0 = value; }
@@ -574,7 +543,6 @@ namespace SolarCar
 						get { return this.frame.trip.uint16_3; }
 						set { this.frame.trip.uint16_3 = value; }
 					}
-
 				}
 
 				class last_trip_voltage_temp: Packet
@@ -585,7 +553,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x21e;
 
-						public UInt16 low_volt
+					public UInt16 low_volt
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -608,10 +576,8 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 			}
-
 			namespace os
 			{
 				class user_cmds: Packet
@@ -622,7 +588,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x310;
 
-						public UInt16 power
+					public UInt16 power
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -645,7 +611,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class cruise_cmd: Packet
@@ -656,7 +621,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x311;
 
-						public Single velocity
+					public Single velocity
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -667,10 +632,8 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 			}
-
 			namespace ws20
 			{
 				class motor_id: Packet
@@ -681,7 +644,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x400;
 
-						public UInt32 tritiumId
+					public UInt32 tritiumId
 					{
 						get { return this.frame.status.uint32_0; }
 						set { this.frame.status.uint32_0 = value; }
@@ -692,7 +655,6 @@ namespace SolarCar
 						get { return this.frame.status.uint32_1; }
 						set { this.frame.status.uint32_1 = value; }
 					}
-
 				}
 
 				class motor_status_info: Packet
@@ -703,7 +665,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x401;
 
-						public UInt16 limitFlags
+					public UInt16 limitFlags
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -726,7 +688,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class motor_bus: Packet
@@ -737,7 +698,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x402;
 
-						public Single busVoltage
+					public Single busVoltage
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -748,7 +709,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class motor_velocity: Packet
@@ -759,7 +719,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x403;
 
-						public Single motorVelocity
+					public Single motorVelocity
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -770,7 +730,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class motor_phase: Packet
@@ -781,7 +740,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x404;
 
-						public Single phaseBCurrent
+					public Single phaseBCurrent
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -792,7 +751,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class voltage_vector: Packet
@@ -803,7 +761,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x405;
 
-						public Single voltageIm
+					public Single voltageIm
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -814,7 +772,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class current_vector: Packet
@@ -825,7 +782,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x406;
 
-						public Single currentIm
+					public Single currentIm
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -836,7 +793,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class backemf: Packet
@@ -847,7 +803,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x407;
 
-						public Single backEmfIm
+					public Single backEmfIm
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -858,7 +814,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class rail_15v_1pt65v: Packet
@@ -869,7 +824,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x408;
 
-						public Single onePtSixtyFiveVRef
+					public Single onePtSixtyFiveVRef
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -880,7 +835,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class rail_2pt5v_1pt2v: Packet
@@ -891,7 +845,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x409;
 
-						public Single onePtTwoVSupply
+					public Single onePtTwoVSupply
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -902,7 +856,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class fanspeed: Packet
@@ -913,7 +866,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x40a;
 
-						public Single fanDrive
+					public Single fanDrive
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -924,7 +877,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class sinks_temp: Packet
@@ -935,7 +887,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x40b;
 
-						public Single motorTemp
+					public Single motorTemp
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -946,7 +898,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class cpu_airin_temp: Packet
@@ -957,7 +908,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x40c;
 
-						public Single processorTemp
+					public Single processorTemp
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -968,7 +919,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class cap_airout_temp: Packet
@@ -979,7 +929,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x40d;
 
-						public Single capacitorTemp
+					public Single capacitorTemp
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -990,7 +940,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class odom_bus_ah: Packet
@@ -1001,7 +950,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x40e;
 
-						public Single odom
+					public Single odom
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -1012,10 +961,8 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 			}
-
 			namespace dc
 			{
 				class driver_controls_id: Packet
@@ -1026,7 +973,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x500;
 
-						public UInt32 drvId
+					public UInt32 drvId
 					{
 						get { return this.frame.status.uint32_0; }
 						set { this.frame.status.uint32_0 = value; }
@@ -1037,7 +984,6 @@ namespace SolarCar
 						get { return this.frame.status.uint32_1; }
 						set { this.frame.status.uint32_1 = value; }
 					}
-
 				}
 
 				class drive_cmd: Packet
@@ -1048,7 +994,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x501;
 
-						public Single motorVelocity
+					public Single motorVelocity
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -1059,7 +1005,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class power_cmd: Packet
@@ -1070,7 +1015,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x502;
 
-						public Single reserved
+					public Single reserved
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -1081,7 +1026,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class reset_cmd: Packet
@@ -1092,7 +1036,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x503;
 
-						public UInt32 unused0
+					public UInt32 unused0
 					{
 						get { return this.frame.status.uint32_0; }
 						set { this.frame.status.uint32_0 = value; }
@@ -1103,7 +1047,6 @@ namespace SolarCar
 						get { return this.frame.status.uint32_1; }
 						set { this.frame.status.uint32_1 = value; }
 					}
-
 				}
 
 				class unused0: Packet
@@ -1113,8 +1056,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x504;
-
-	
 				}
 
 				class switches: Packet
@@ -1125,7 +1066,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x505;
 
-						public UInt16 switchFlags
+					public UInt16 switchFlags
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -1148,7 +1089,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class pedals: Packet
@@ -1159,7 +1099,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x506;
 
-						public UInt16 accel_pedal
+					public UInt16 accel_pedal
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -1182,10 +1122,8 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 			}
-
 			namespace bms0
 			{
 				class heartbeat: Packet
@@ -1196,7 +1134,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x600;
 
-						public UInt32 bmsId
+					public UInt32 bmsId
 					{
 						get { return this.frame.status.uint32_0; }
 						set { this.frame.status.uint32_0 = value; }
@@ -1207,7 +1145,6 @@ namespace SolarCar
 						get { return this.frame.status.uint32_1; }
 						set { this.frame.status.uint32_1 = value; }
 					}
-
 				}
 
 				class cmu1_status: Packet
@@ -1218,7 +1155,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x601;
 
-						public Int16 serialNo0
+					public Int16 serialNo0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1241,7 +1178,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu1_volts0: Packet
@@ -1252,7 +1188,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x602;
 
-						public Int16 cell0
+					public Int16 cell0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1275,7 +1211,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu1_volts1: Packet
@@ -1286,7 +1221,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x603;
 
-						public Int16 cell4
+					public Int16 cell4
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1309,7 +1244,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu2_status: Packet
@@ -1320,7 +1254,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x604;
 
-						public Int16 serialNo0
+					public Int16 serialNo0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1343,7 +1277,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu2_volts0: Packet
@@ -1354,7 +1287,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x605;
 
-						public Int16 cell0
+					public Int16 cell0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1377,7 +1310,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu2_volts1: Packet
@@ -1388,7 +1320,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x606;
 
-						public Int16 cell4
+					public Int16 cell4
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1411,7 +1343,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu3_status: Packet
@@ -1422,7 +1353,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x607;
 
-						public Int16 serialNo0
+					public Int16 serialNo0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1445,7 +1376,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu3_volts0: Packet
@@ -1456,7 +1386,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x608;
 
-						public Int16 cell0
+					public Int16 cell0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1479,7 +1409,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu3_volts1: Packet
@@ -1490,7 +1419,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x609;
 
-						public Int16 cell4
+					public Int16 cell4
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1513,7 +1442,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu4_status: Packet
@@ -1524,7 +1452,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x60a;
 
-						public Int16 serialNo0
+					public Int16 serialNo0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1547,7 +1475,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu4_volts0: Packet
@@ -1558,7 +1485,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x60b;
 
-						public Int16 cell0
+					public Int16 cell0
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1581,7 +1508,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class cmu4_volts1: Packet
@@ -1592,7 +1518,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x60c;
 
-						public Int16 cell4
+					public Int16 cell4
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1615,10 +1541,8 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 			}
-
 			namespace bms1
 			{
 				class reserved0: Packet
@@ -1628,8 +1552,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x6f0;
-
-	
 				}
 
 				class reserved1: Packet
@@ -1639,8 +1561,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x6f1;
-
-	
 				}
 
 				class reserved2: Packet
@@ -1650,8 +1570,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x6f2;
-
-	
 				}
 
 				class reserved3: Packet
@@ -1661,8 +1579,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x6f3;
-
-	
 				}
 
 				class pack_soc: Packet
@@ -1673,7 +1589,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6f4;
 
-						public Single soc_Ah
+					public Single soc_Ah
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -1684,7 +1600,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class pack_bal_soc: Packet
@@ -1695,7 +1610,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6f5;
 
-						public Single soc_Ah
+					public Single soc_Ah
 					{
 						get { return this.frame.float32x2.single_0; }
 						set { this.frame.float32x2.single_0 = value; }
@@ -1706,7 +1621,6 @@ namespace SolarCar
 						get { return this.frame.float32x2.single_1; }
 						set { this.frame.float32x2.single_1 = value; }
 					}
-
 				}
 
 				class charger_cmd: Packet
@@ -1717,7 +1631,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6f6;
 
-						public Int16 charging_mV_err
+					public Int16 charging_mV_err
 					{
 						get { return this.frame.int16x4.int16_0; }
 						set { this.frame.int16x4.int16_0 = value; }
@@ -1740,7 +1654,6 @@ namespace SolarCar
 						get { return this.frame.int16x4.int16_3; }
 						set { this.frame.int16x4.int16_3 = value; }
 					}
-
 				}
 
 				class precharge: Packet
@@ -1751,7 +1664,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6f7;
 
-						public Byte precharge_flags
+					public Byte precharge_flags
 					{
 						get { return this.frame.uint8x8.byte_0; }
 						set { this.frame.uint8x8.byte_0 = value; }
@@ -1798,7 +1711,6 @@ namespace SolarCar
 						get { return this.frame.uint8x8.byte_7; }
 						set { this.frame.uint8x8.byte_7 = value; }
 					}
-
 				}
 
 				class max_min_volts: Packet
@@ -1808,8 +1720,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x6f8;
-
-	
 				}
 
 				class max_min_temps: Packet
@@ -1819,8 +1729,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x6f9;
-
-	
 				}
 
 				class pack_volt_curr: Packet
@@ -1831,7 +1739,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6fa;
 
-						public Int32 pack_voltage
+					public Int32 pack_voltage
 					{
 						get { return this.frame.int32x2.int32_0; }
 						set { this.frame.int32x2.int32_0 = value; }
@@ -1842,7 +1750,6 @@ namespace SolarCar
 						get { return this.frame.int32x2.int32_1; }
 						set { this.frame.int32x2.int32_1 = value; }
 					}
-
 				}
 
 				class pack_status: Packet
@@ -1853,7 +1760,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6fb;
 
-						public UInt16 thresh_rising
+					public UInt16 thresh_rising
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -1876,7 +1783,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class fan_status: Packet
@@ -1887,7 +1793,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6fc;
 
-						public UInt16 fan0_rpm
+					public UInt16 fan0_rpm
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -1910,7 +1816,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class extended_status: Packet
@@ -1921,7 +1826,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x6fd;
 
-						public UInt16 pack_flags0
+					public UInt16 pack_flags0
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -1944,10 +1849,8 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 			}
-
 			namespace mppt_master
 			{
 				class unused0: Packet
@@ -1957,8 +1860,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x710;
-
-	
 				}
 
 				class mppt1: Packet
@@ -1968,8 +1869,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x711;
-
-	
 				}
 
 				class mppt2: Packet
@@ -1979,8 +1878,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x712;
-
-	
 				}
 
 				class mppt3: Packet
@@ -1990,11 +1887,8 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x713;
-
-	
 				}
 			}
-
 			namespace mppt
 			{
 				class unused0: Packet
@@ -2004,8 +1898,6 @@ namespace SolarCar
 					}
 
 					public const UInt16 _id = 0x770;
-
-	
 				}
 
 				class mppt1: Packet
@@ -2016,7 +1908,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x771;
 
-						public UInt16 flags_Vin
+					public UInt16 flags_Vin
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -2039,7 +1931,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class mppt2: Packet
@@ -2050,7 +1941,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x772;
 
-						public UInt16 flags_Vin
+					public UInt16 flags_Vin
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -2073,7 +1964,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 
 				class mppt3: Packet
@@ -2084,7 +1974,7 @@ namespace SolarCar
 
 					public const UInt16 _id = 0x773;
 
-						public UInt16 flags_Vin
+					public UInt16 flags_Vin
 					{
 						get { return this.frame.uint16x4.uint16_0; }
 						set { this.frame.uint16x4.uint16_0 = value; }
@@ -2107,7 +1997,6 @@ namespace SolarCar
 						get { return this.frame.uint16x4.uint16_3; }
 						set { this.frame.uint16x4.uint16_3 = value; }
 					}
-
 				}
 			}
 		}

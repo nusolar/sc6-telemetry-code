@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D9083BF5-0E20-4421-A288-4ACD975655B1}</ProjectGuid>
+    <ProjectGuid>{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SolarCar</RootNamespace>
-    <AssemblyName>SolarCar</AssemblyName>
+    <RootNamespace>Solar.Laptop</RootNamespace>
+    <AssemblyName>BaseStation</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <ApplicationIcon>driver-gui\icon_64.png</ApplicationIcon>
+    <ApplicationIcon>..\SolarCar\driver-gui\icon_64.png</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,53 +22,32 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DocumentationFile>bin\Debug\SolarCar.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
-    <DocumentationFile>bin\Release\SolarCar.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Mono.Data.Sqlite">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.Linq">
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="CanUsb.cs" />
     <Compile Include="HttpServer.cs" />
-    <Compile Include="AsyncSerialPort.cs" />
-    <Compile Include="Can.cs" />
-    <Compile Include="CarFrontend.cs" />
-    <Compile Include="Car.cs" />
-    <Compile Include="Database.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <EmbeddedResource Include="driver-gui\index.html" />
-    <EmbeddedResource Include="driver-gui\map.png" />
-    <EmbeddedResource Include="driver-gui\icon_64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\lib\sqlite3.dll">
-      <Link>sqlite3.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\SolarCar\Solar.Car.csproj">
+      <Project>{D9083BF5-0E20-4421-A288-4ACD975655B1}</Project>
+      <Name>Solar.Car</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

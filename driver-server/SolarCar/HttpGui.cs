@@ -8,17 +8,18 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 using Assembly = System.Reflection.Assembly;
 using System.Threading;
 using System.Threading.Tasks;
+using Debug = System.Diagnostics.Debug;
 
-namespace SolarCar
+namespace Solar.Car
 {
-	class HttpServer
+	class HttpGui
 	{
 		readonly NameValueCollection default_query = new NameValueCollection { { "gear", "0" }, { "signals", "0" } };
 		readonly CarFrontend data = null;
 
 		public string json_data { get { return JsonConvert.SerializeObject(data.Status); } }
 
-		public HttpServer(CarFrontend InDb)
+		public HttpGui(CarFrontend InDb)
 		{
 			data = InDb;
 		}
@@ -51,17 +52,14 @@ namespace SolarCar
 		{
 			try
 			{
-
-			
 				// HttpListener listener = (HttpListener)result.AsyncState;
 				// context = listener.EndGetContext(result); // Blocks until HTTP request
 				HttpListenerContext context = (HttpListenerContext)result;
 				HttpListenerRequest request = context.Request;
 				HttpListenerResponse response = context.Response;
 				string url = request.Url.AbsolutePath;
-#if DEBUG
-				Console.WriteLine("HTTP URL: " + request.RawUrl);
-#endif
+
+				Debug.WriteLine("HTTP URL: " + request.RawUrl);
 
 				if (context.Request.HttpMethod != "GET")
 				{
@@ -79,10 +77,15 @@ namespace SolarCar
 
 					using (Stream output = response.OutputStream)
 						output.Write(buffer, 0, buffer.Length);
-#if DEBUG
-					Console.WriteLine("HTTP json: " + this.json_data);
-#endif
+
+					Debug.WriteLine("HTTP json: " + this.json_data);
 				}
+//				else if (url == "/shutdown")
+//				{
+//					Program.Shutdown();
+//					context.Response.StatusCode = (int)HttpStatusCode.OK;
+//					context.Response.Close();
+//				}
 				else // e.g. url == "/index.html"
 				{
 					url = url.Replace('/', '.');
@@ -117,9 +120,7 @@ namespace SolarCar
 			}
 			catch (NullReferenceException)
 			{
-#if DEBUG
-				Console.WriteLine("HTTP ListenerCallback: nullptr, context is bad or FNF");
-#endif
+				Debug.WriteLine("HTTP ListenerCallback: nullptr, context is bad or FNF");
 			}
 		}
 
@@ -147,9 +148,8 @@ namespace SolarCar
 						while (!task.IsCompleted && !task.IsCanceled && !task.IsFaulted)
 						{
 							await Task.Delay(Config.HTTPSERVER_TIMEOUT_MS, token);
-#if DEBUG
-							Console.WriteLine("HTTP timed out: " + (task.Status != TaskStatus.RanToCompletion));
-#endif
+
+							Debug.WriteLine("HTTP timed out: " + (task.Status != TaskStatus.RanToCompletion));
 							if (task.Status == TaskStatus.RanToCompletion)
 							{
 								this.ListenerCallback(task.Result);
@@ -166,15 +166,15 @@ namespace SolarCar
 			catch (HttpListenerException e)
 			{
 				// Bail out - this happens on shutdown
-				Console.WriteLine("HTTP Listener has shutdown: {0}", e.Message);
+				Debug.WriteLine("HTTP Listener has shutdown: {0}", e.Message);
 			}
 			catch (TaskCanceledException e)
 			{
-				Console.WriteLine("HTTP Task Cancelled: {0}", e.Message);
+				Debug.WriteLine("HTTP Task Cancelled: {0}", e.Message);
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("HTTP Unexpected exception: {0}", e.Message);
+				Debug.WriteLine("HTTP Unexpected exception: {0}", e.Message);
 			}
 		}
 	}

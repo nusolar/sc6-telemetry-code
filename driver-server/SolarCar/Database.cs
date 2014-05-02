@@ -8,8 +8,9 @@ using CancellationToken = System.Threading.CancellationToken;
 using WebClient = System.Net.WebClient;
 using Stream = System.IO.Stream;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
+using Debug = System.Diagnostics.Debug;
 
-namespace SolarCar
+namespace Solar.Car
 {
 	/// <summary>
 	/// Database for telemetry, trip events, and commands.
@@ -62,9 +63,7 @@ namespace SolarCar
 				db.ExecuteCommand("CREATE TABLE IF NOT EXISTS " + _table + _create);
 				db.SubmitChanges();
 			}
-#if DEBUG
-			Console.WriteLine("DB connected: " + Config.SQLITE_DB_FILE);
-#endif
+			Debug.WriteLine("DB connected: " + Config.SQLITE_DB_FILE);
 		}
 
 		/// <summary>
@@ -99,8 +98,8 @@ namespace SolarCar
 #endif
 				Table<Car.Status> statuses = db.GetTable<Car.Status>();
 				statuses.InsertOnSubmit(data);
-				Console.WriteLine("DB submitting: " + statuses.ToString());
 
+				Debug.WriteLine("DB submitting: " + statuses.ToString());
 				db.SubmitChanges();
 			}
 //			using (SqliteConnection con = new SqliteConnection("Data Source=" + Config.SQLITE_DB_FILE + ";Version=3;"))
@@ -136,12 +135,12 @@ namespace SolarCar
 //					cmd.Parameters.Add(new SqliteParameter("@BMSExtendedStatusFlags", data.BMSExtendedStatusFlags));
 //
 //					object num_rows = cmd.ExecuteNonQuery();
-//					Console.WriteLine("DB: " + num_rows.ToString());
+//					Debug.WriteLine("DB: " + num_rows.ToString());
 //				}
 //
 //				using (SqliteCommand cmd = new SqliteCommand("SELECT SQLITE_VERSION()", con))
 //				{
-//					Console.WriteLine("DB: " + cmd.ExecuteScalar().ToString());
+//					Debug.WriteLine("DB: " + cmd.ExecuteScalar().ToString());
 //				}
 //
 //				con.Close();
@@ -196,16 +195,15 @@ namespace SolarCar
 			CancellationToken token = (CancellationToken)obj;
 			while (!token.IsCancellationRequested)
 			{
-#if DEBUG
-				Console.WriteLine("DB: pushing");
-#endif
+				Debug.WriteLine("DB: pushing");
+
 				try
 				{
 					await Task.Run(() => this.PushStatus(car.Status));
 				}
 				catch (SqliteException e)
 				{
-					Console.WriteLine("DB EXCEPTION: " + e.Message);
+					Debug.WriteLine("DB EXCEPTION: " + e.Message);
 				}
 
 				await Task.Delay(1000); // 1s
@@ -219,13 +217,13 @@ namespace SolarCar
 			{
 				if (this.CountStatus() > 0)
 				{
-					Console.WriteLine("DB popping row");
+					Debug.WriteLine("DB Consumer popping row");
 					Car.Status status = await Task.Run(() => this.GetFirstRow());
 					string json = await JsonConvert.SerializeObjectAsync(status);
 					byte[] encoded = System.Text.Encoding.Default.GetBytes(json);
 
 					// upload with POST
-					Console.WriteLine("DB uploading");
+					Debug.WriteLine("DB Consumer uploading");
 					using (WebClient myWebClient = new WebClient())
 					{
 						try
@@ -237,22 +235,18 @@ namespace SolarCar
 								// TODO check response status
 								this.DeleteFirstRow();
 							}
-#if DEBUG
-							Console.WriteLine("DB uploaded: " + System.Text.Encoding.Default.GetString(response));
-#endif
+							Debug.WriteLine("DB Consumer uploaded: " + System.Text.Encoding.Default.GetString(response));
 						}
 						catch (System.Net.WebException e)
 						{
-							Console.WriteLine("DB WebException: " + e.Message);
+							Debug.WriteLine("DB Consumer WebException: " + e.Message);
 						}
 					}
 				}
-#if DEBUG
 				else
 				{
-					Console.WriteLine("DB count: " + this.CountStatus());
+					Debug.WriteLine("DB Consumer count: " + this.CountStatus());
 				}
-#endif
 				await Task.Delay(100); // 100ms
 			}
 		}

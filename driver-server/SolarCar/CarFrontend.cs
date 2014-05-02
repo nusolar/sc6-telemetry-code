@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Debug = System.Diagnostics.Debug;
 
-namespace SolarCar
+namespace Solar.Car
 {
 	class CarFrontend
 	{
@@ -24,9 +25,8 @@ namespace SolarCar
 		{
 			this.DriverInput.gear = gear;
 			this.DriverInput.sigs = sigs;
-#if DEBUG
-			Console.WriteLine("CARFRONT: input Gear={0}, Signals={1}", gear, sigs);
-#endif
+
+			Debug.WriteLine("CARFRONT: input Gear={0}, Signals={1}", gear, sigs);
 		}
 
 		public void ProcessCanPacket(Can.Packet p)
@@ -71,18 +71,22 @@ namespace SolarCar
 			}
 		}
 
+		public void SendCanPackets(CanUsb canusb)
+		{
+			// Write a CAN packet
+			Can.Addr.os.user_cmds p = new Can.Addr.os.user_cmds(0);
+			p.gearFlags = (UInt16)(this.DriverInput.gear);
+			p.signalFlags = (UInt16)this.DriverInput.sigs;
+			canusb.TransmitPacket(p);
+		}
+
 		async Task SendCanLoop(CancellationToken token, CanUsb canusb)
 		{
 			while (!token.IsCancellationRequested)
 			{
-#if DEBUG
-				Console.WriteLine("CARFRONT: writing packet");
-#endif
-				// Write a CAN packet
-				Can.Addr.os.user_cmds p = new Can.Addr.os.user_cmds(0);
-				p.gearFlags = (UInt16)(this.DriverInput.gear);
-				p.signalFlags = (UInt16)this.DriverInput.sigs;
-				canusb.TransmitPacket(p);
+				Debug.WriteLine("CARFRONT: writing packet");
+
+				this.SendCanPackets(canusb);
 				await Task.Delay(Config.CANUSB_TX_INTERVAL_MS);
 			}
 		}
@@ -91,9 +95,8 @@ namespace SolarCar
 		{
 			while (!token.IsCancellationRequested)
 			{
-#if DEBUG
-				Console.WriteLine("CARFRONT: checking packets");
-#endif
+				Debug.WriteLine("CARFRONT: checking packets");
+
 				canusb.CheckPackets();
 				await Task.Delay(Config.CANUSB_RX_INTERVAL_MS);
 			}
@@ -126,22 +129,17 @@ namespace SolarCar
 					}
 					catch (System.IO.InternalBufferOverflowException ex)
 					{
-#if DEBUG
-						Console.WriteLine("CARFRONT Buffer Exception: " + ex.Message);
-#endif
+						Debug.WriteLine("CARFRONT Buffer Exception: " + ex.Message);
 					}
 					catch (System.IO.IOException ex)
 					{
-#if DEBUG
-						Console.WriteLine("CARFRONT IO Exception: " + ex.Message);
-#endif
+						Debug.WriteLine("CARFRONT IO Exception: " + ex.Message);
 					}
 					finally
 					{
 						canusb.Close();
 					}
 				}
-
 				await Task.Delay(1000); // wait 1s before reopening SerialPort
 			}
 		}

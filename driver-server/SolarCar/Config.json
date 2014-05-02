@@ -1,0 +1,22 @@
+{
+	"CANUSB_READ_BUFFER_LIMIT": 1020,
+	"CANUSB_WRITE_BUFFER_LIMIT": 500,
+
+	"CANUSB_SERIAL_DEV_WINDOWS": "COM3",
+	"CANUSB_SERIAL_DEV_MAC": "/dev/tty.usbserial-LWR8N2L2",
+	"CANUSB_TX_INTERVAL_MS": 50,
+	"CANUSB_RX_INTERVAL_MS": 50,
+
+	"HTTPSERVER_CAR_PREFIX": "http://+:8080/",
+	"HTTPSERVER_LAPTOP_PREFIX": "http://+:8081/",
+	"HTTPSERVER_TIMEOUT_MS": 1000,
+	"HTTPSERVER_GUI_SUBDIR": "driver-gui",
+
+	"HTTPSERVER_CAR_URL": "http://localhost:8080/",
+	"HTTPSERVER_LAPTOP_URL": "http://localhost:8081/telemetry",
+	"HTTPSERVER_EXTRA_URL": "localhost",
+
+	/*"HTTPSERVER_CAR_URL": "http://nusolar-car.no-ip.org:8080/",
+	"HTTPSERVER_LAPTOP_URL": "http://nusolar-server.no-ip.org:8081/telemetry",
+	"HTTPSERVER_EXTRA_URL": "nusolar.no-ip.biz",*/
+}
