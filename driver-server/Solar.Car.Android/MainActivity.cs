@@ -17,7 +17,7 @@ namespace Solar.Car.Android
 		protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
-
+			
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
 
@@ -31,7 +31,7 @@ namespace Solar.Car.Android
 			};
 
 			WebView webView = this.FindViewById<WebView>(Resource.Id.webView);
-			webView.LoadUrl("http://www.google.com/");
+			webView.LoadUrl("file:///android_asset/index.html");
 		}
 	}
 }

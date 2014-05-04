@@ -18,7 +18,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 	$scope.signals_btn = $scope.TurnSignals.Off
 	$scope.headlights_btn = false
 	$scope.horn_btn = false
-	$scope.battery_btn = false
+	$scope.battery_btn = true
 	$scope.motor_btn = false
 	$scope.reverse_btn = false
 
@@ -26,7 +26,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 		turn_signals: 0
 		headlights: 0
 		horn: 0
-		run_battery: 0
+		run_battery: 1
 		drive: 0
 		reverse: 0
 
@@ -145,7 +145,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 			data: $scope.serialize_commands()
 			success: (json_text) =>
 				try
-					json = JSON.parse(json_text)
+					json = window.JSON.parse(json_text)
 					# TODO update values for $scope.commands
 				catch e
 					window.console.log(e)

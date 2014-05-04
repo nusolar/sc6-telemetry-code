@@ -28,14 +28,14 @@
     $scope.signals_btn = $scope.TurnSignals.Off;
     $scope.headlights_btn = false;
     $scope.horn_btn = false;
-    $scope.battery_btn = false;
+    $scope.battery_btn = true;
     $scope.motor_btn = false;
     $scope.reverse_btn = false;
     $scope.commands = {
       turn_signals: 0,
       headlights: 0,
       horn: 0,
-      run_battery: 0,
+      run_battery: 1,
       drive: 0,
       reverse: 0
     };
@@ -146,7 +146,7 @@
           success: function(json_text) {
             var e, json;
             try {
-              return json = JSON.parse(json_text);
+              return json = window.JSON.parse(json_text);
             } catch (_error) {
               e = _error;
               return window.console.log(e);

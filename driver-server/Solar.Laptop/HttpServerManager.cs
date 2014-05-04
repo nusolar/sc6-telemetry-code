@@ -3,23 +3,28 @@ using System.Net;
 using System.Threading.Tasks;
 using CancellationToken = System.Threading.CancellationToken;
 using NameValueCollection = System.Collections.Specialized.NameValueCollection;
-using CarDatabase = Solar.Car.Database;
+using Database = Solar.Database;
 using Stream = System.IO.Stream;
 using Encoding = System.Text.Encoding;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
-using Solar.Car.Car;
-using Database = Solar.Car.Database;
 using Config = Solar.Car.Config;
+using Debug = System.Diagnostics.Debug;
 
 namespace Solar.Laptop
 {
-	class HttpServer
+	/// <summary>
+	/// Business-Layer driving the underlying Database and exposing the Status.
+	/// Http server.
+	/// </summary>
+	class HttpServerManager: Solar.IBusinessLayer
 	{
-		Database _db = null;
+		public IDataServiceLayer DataLayer { get; set; }
 
-		public HttpServer(Database InDb)
+		public Solar.Status Status { get { return (Solar.Status)this.DataLayer.GetFirstStatus().DeepClone(); } }
+
+		public void HandleUserInput(Solar.Gear gear, Solar.Signals sigs)
 		{
-			this._db = InDb;
+			// TODO
 		}
 
 		void ListenerCallback(HttpListenerContext context)
@@ -27,9 +32,8 @@ namespace Solar.Laptop
 			HttpListenerRequest request = context.Request;
 			HttpListenerResponse response = context.Response;
 			string url = request.Url.AbsolutePath;
-#if DEBUG
-			Console.WriteLine("HTTP URL: " + request.RawUrl);
-#endif
+
+			Debug.WriteLine("HTTP URL: " + request.RawUrl);
 
 			if (url == "/telemetry" && context.Request.HttpMethod == "POST")
 			{
@@ -38,12 +42,11 @@ namespace Solar.Laptop
 					input.Read(buffer, 0, buffer.Length);
 				string decoded = Encoding.Default.GetString(buffer);
 				Status status = JsonConvert.DeserializeObject<Status>(decoded);
-				// this._db.PushStatus(status);
-#if DEBUG
-				Console.WriteLine("HTTP telemetry: " + decoded);
-#endif
+				this.DataLayer.PushStatus(status);
 
-				buffer = Encoding.Default.GetBytes("{Response = true}\n");
+				Debug.WriteLine("HTTP telemetry: " + decoded);
+
+				buffer = Encoding.Default.GetBytes("{\"Response\": true}\n");
 				response.StatusCode = (int)HttpStatusCode.OK;
 				response.StatusDescription = "OK";
 				response.ContentLength64 = buffer.LongLength;
@@ -54,10 +57,10 @@ namespace Solar.Laptop
 			}
 		}
 
-		public async Task ReceiveLoop(object obj)
-		{
-			CancellationToken token = (CancellationToken)obj;
+#region Tasks
 
+		public async Task BusinessLoop(CancellationToken token)
+		{
 			try
 			{
 				using (HttpListener listener = new HttpListener())
@@ -69,35 +72,44 @@ namespace Solar.Laptop
 					{
 						Task<HttpListenerContext> task = listener.GetContextAsync();
 
-						while (!task.IsCompleted && !task.IsCanceled && !task.IsFaulted)
+						while (!(task.IsCompleted || task.IsCanceled || task.IsFaulted || token.IsCancellationRequested))
 						{
-							await Task.Delay(Config.HTTPSERVER_TIMEOUT_MS, token);
-#if DEBUG
-							Console.WriteLine("HTTP timed out: " + (task.Status != TaskStatus.RanToCompletion));
-#endif
+							await Task.WhenAny(task, Task.Delay(Config.HTTPSERVER_TIMEOUT_MS));
+
 							if (task.Status == TaskStatus.RanToCompletion)
 							{
+								Debug.WriteLine("HTTP Context: Received");
 								this.ListenerCallback(task.Result);
 								break;
+							}
+							else if (task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted)
+							{
+								Debug.WriteLine("HTTP Context: Errored");
+								// Error, do nothing
+							}
+							else
+							{
+								Debug.WriteLine("HTTP Context: Timedout/Still waiting");
+								// Timeout, do nothing
 							}
 						}
 					}
 				}
 			}
-			catch (HttpListenerException)
+			catch (HttpListenerException e)
 			{
 				// Bail out - this happens on shutdown
-				return;
+				Debug.WriteLine("HTTP Listener has shutdown: {0}", e.Message);
 			}
 			catch (TaskCanceledException)
 			{
-				Console.WriteLine("HTTP Task Cancelled");
+				Debug.WriteLine("HTTP Task Cancelled");
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("HTTP Unexpected exception: {0}", e.Message);
+				Debug.WriteLine("HTTP Unexpected exception: {0}", e.Message);
 			}
 		}
 	}
+#endregion
 }
-

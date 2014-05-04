@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar.Car", "SolarCar\Solar.Car.csproj", "{D9083BF5-0E20-4421-A288-4ACD975655B1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar.Laptop", "BaseStation\Solar.Laptop.csproj", "{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar.Car.Console", "SolarCar.Console\Solar.Car.Console.csproj", "{05576BBF-F309-42B1-851F-EE09F8462194}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar.Car.Android", "Solar.Car.Android\Solar.Car.Android.csproj", "{C846C080-DC0F-48DF-BE24-9EDF3A090D4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar.Car", "Solar.Car\Solar.Car.csproj", "{3285B9A0-0336-4B17-AB1A-DB1D1A9B6071}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar", "Solar\Solar.csproj", "{0E34F0AB-ACB4-4E02-8441-CF4D74B73953}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar.Laptop", "Solar.Laptop\Solar.Laptop.csproj", "{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,14 @@ Global
 		{05576BBF-F309-42B1-851F-EE09F8462194}.Debug|x86.Build.0 = Debug|x86
 		{05576BBF-F309-42B1-851F-EE09F8462194}.Release|x86.ActiveCfg = Release|x86
 		{05576BBF-F309-42B1-851F-EE09F8462194}.Release|x86.Build.0 = Release|x86
+		{0E34F0AB-ACB4-4E02-8441-CF4D74B73953}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0E34F0AB-ACB4-4E02-8441-CF4D74B73953}.Debug|x86.Build.0 = Debug|Any CPU
+		{0E34F0AB-ACB4-4E02-8441-CF4D74B73953}.Release|x86.ActiveCfg = Release|Any CPU
+		{0E34F0AB-ACB4-4E02-8441-CF4D74B73953}.Release|x86.Build.0 = Release|Any CPU
+		{3285B9A0-0336-4B17-AB1A-DB1D1A9B6071}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3285B9A0-0336-4B17-AB1A-DB1D1A9B6071}.Debug|x86.Build.0 = Debug|Any CPU
+		{3285B9A0-0336-4B17-AB1A-DB1D1A9B6071}.Release|x86.ActiveCfg = Release|Any CPU
+		{3285B9A0-0336-4B17-AB1A-DB1D1A9B6071}.Release|x86.Build.0 = Release|Any CPU
 		{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}.Debug|x86.ActiveCfg = Debug|x86
 		{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}.Debug|x86.Build.0 = Debug|x86
 		{B69A2B22-4A12-48CB-B4F4-78A6C69067ED}.Release|x86.ActiveCfg = Release|x86
@@ -27,13 +37,9 @@ Global
 		{C846C080-DC0F-48DF-BE24-9EDF3A090D4F}.Debug|x86.Build.0 = Debug|Any CPU
 		{C846C080-DC0F-48DF-BE24-9EDF3A090D4F}.Release|x86.ActiveCfg = Release|Any CPU
 		{C846C080-DC0F-48DF-BE24-9EDF3A090D4F}.Release|x86.Build.0 = Release|Any CPU
-		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Debug|x86.ActiveCfg = Debug|x86
-		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Debug|x86.Build.0 = Debug|x86
-		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Release|x86.ActiveCfg = Release|x86
-		{D9083BF5-0E20-4421-A288-4ACD975655B1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SolarCar\Solar.Car.csproj
+		StartupItem = SolarCar.Console\Solar.Car.Console.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
 		$1.TabsToSpaces = False

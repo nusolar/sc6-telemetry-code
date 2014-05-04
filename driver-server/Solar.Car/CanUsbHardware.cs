@@ -11,7 +11,7 @@ namespace Solar.Car
 	/// * locks the SerialPort for all reading and writing.
 	/// * drains the SerialPort Read buffer when closing (WARNING this can infinite loop)
 	/// </summary>
-	class AsyncSerialPort: IDisposable
+	class CanUsbHardware: ICanUsbHardware
 	{
 		// The underlying SerialPort & its mutex:
 		private SerialPort port = null;
@@ -19,17 +19,18 @@ namespace Solar.Car
 		// The string buffer & its mutex:
 		string buffer = "";
 		readonly object buffer_lock = new Object();
-
-		public delegate void LineReceivedDelegate(string line);
-
-		public event LineReceivedDelegate LineReceived;
+		// NewLine character
+		readonly string NewLine = "\r";
 
 		/// <summary>
 		/// Initializes a new instance of the SolarCar.SyncSerialPort class.
 		/// </summary>
-		public AsyncSerialPort(string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits)
+		public CanUsbHardware()
 		{
-			this.port = new SerialPort(portName, baudRate, parity, dataBits, stopBits);
+			string portName = Config.CANUSB_SERIAL_DEV;
+			Debug.WriteLine("UART path: " + portName);
+			this.port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One);
+			port.NewLine = this.NewLine; // CANUSB uses carriage returns
 			port.ReadTimeout = 50; // 50 ms
 			port.WriteTimeout = 50; // 50 ms
 			port.Handshake = Handshake.None; // no flow control
@@ -37,7 +38,7 @@ namespace Solar.Car
 			// DataReceived IS NOT IMPLEMENTED IN MONO.NET
 		}
 
-		public void Open()
+		public override void Open()
 		{
 #if !SIMULATE_HARDWARE
 			port.Open();
@@ -48,20 +49,14 @@ namespace Solar.Car
 		/// Releases the SerialPort and performs other cleanup operations before the SolarCar.SyncSerialPort is
 		/// reclaimed by garbage collection.
 		/// </summary>
-		public void Close()
+		public override void Close()
 		{
 			this.Dispose();
 		}
 
-		public bool IsOpen
+		public override bool IsOpen
 		{
 			get { return port.IsOpen; }
-		}
-
-		public string NewLine
-		{
-			get { return port.NewLine; }
-			set { port.NewLine = value; }
 		}
 
 		/// <summary>
@@ -69,7 +64,7 @@ namespace Solar.Car
 		/// Acquires the SerialPort, reads data into buffer. It is invoked on a separate thread by SerialPort.
 		/// Lines terminated by the NewLine character are passed to the LineReceivedDelegate.
 		/// </summary>
-		public void LockReadData()
+		public override void LockReadData()
 		{
 			Debug.WriteLine("UART ReadData.");
 
@@ -138,7 +133,7 @@ namespace Solar.Car
 
 				// Handle non-empty lines, since a NewLine was found;
 				if (new_line.Length > 1)
-					this.LineReceived(new_line);
+					this.RaiseLineReceived(new_line);
 				new_line = String.Empty;
 			}
 		}
@@ -147,7 +142,7 @@ namespace Solar.Car
 		/// Acquire the SerialPort, and write a line.
 		/// </summary>
 		/// <param name="line">Line.</param>
-		public void LockWriteLine(string line)
+		public override void LockWriteLine(string line)
 		{
 			try
 			{
@@ -163,7 +158,7 @@ namespace Solar.Car
 					else
 					{
 						Debug.WriteLine("UART WriteLine: EXCEPTION: bytes to write = {0}", port.BytesToWrite);
-						throw new System.IO.InternalBufferOverflowException("UART WriteLine: buffer is clogged.");
+						throw new System.IO.IOException("UART WriteLine: buffer is clogged.");
 					}
 #endif
 				}
@@ -178,7 +173,7 @@ namespace Solar.Car
 
 		bool disposed = false;
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Debug.WriteLine("UART Dispose: Called");
 

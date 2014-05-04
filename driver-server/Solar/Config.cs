@@ -9,12 +9,23 @@ namespace Solar.Car
 	/// </summary>
 	public static class Config
 	{
-		static PlatformID _pid = Environment.OSVersion.Platform;
-		static JObject config = LoadConfig();
-
-		static JObject LoadConfig()
+		public enum PlatformID
 		{
-			return JObject.Parse(System.IO.File.ReadAllText(@"Config.json"));
+			Unix,
+			Win32,
+			Android,
+			IOS,
+			WinPhone
+		}
+
+		public static PlatformID Platform = PlatformID.Unix;
+		// public static Type CanUsbHardwareType = typeof(CanUsbHardware);
+		static JObject config = JObject.Parse(System.IO.File.ReadAllText(@"Config.json"));
+
+		public static void LoadConfig(Func<String> loader)
+		{
+			// return JObject.Parse(System.IO.File.ReadAllText(@"Config.json"));
+			config = JObject.Parse(loader());
 		}
 
 		/// CANUSB safety limit for reading
@@ -22,7 +33,7 @@ namespace Solar.Car
 		/// CANUSB safety limits for writing
 		public static int CANUSB_WRITE_BUFFER_LIMIT = (int)config["CANUSB_WRITE_BUFFER_LIMIT"];
 		/// CANUSB port name
-		public static string CANUSB_SERIAL_DEV = _pid.HasFlag(PlatformID.Unix) || _pid.HasFlag(PlatformID.MacOSX) ?
+		public static string CANUSB_SERIAL_DEV = (Platform == PlatformID.Unix) || (Platform == PlatformID.Android) ?
 			(string)config["CANUSB_SERIAL_DEV_MAC"] : (string)config["CANUSB_SERIAL_DEV_WINDOWS"];
 		/// CANUSB interval between write attempts
 		public static int CANUSB_TX_INTERVAL_MS = (int)config["CANUSB_TX_INTERVAL_MS"];
@@ -37,8 +48,19 @@ namespace Solar.Car
 		/// Car HTTP server's directory. This folder should be compiled into the Assembly.
 		public static string HTTPSERVER_GUI_SUBDIR = (string)config["HTTPSERVER_GUI_SUBDIR"];
 		/// Database location
+		public static string DB_JSON_CAR_FILE = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + (string)config["DB_JSON_CAR_FILE"];
+		public static string DB_JSON_LAPTOP_FILE = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + (string)config["DB_JSON_LAPTOP_FILE"];
+		/// <summary>
+		/// Time between Writeouts to JSON file.
+		/// </summary>
+		public static int DB_SAVE_INTERVAL_MS = (int)config["DB_SAVE_INTERVAL_MS"];
 		public static string SQLITE_DB_FILE = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/solarcar.sqlite3";
-		public static string SQLITE_CONNECTION_CLASS_AQN = typeof(Mono.Data.Sqlite.SqliteConnection).AssemblyQualifiedName;
+		/// <summary>
+		/// typeof(Mono.Data.Sqlite.SqliteConnection).AssemblyQualifiedName
+		/// ==
+		/// "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756"
+		/// </summary>
+		public static string SQLITE_CONNECTION_CLASS_AQN = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756";
 		/// Car DNS name and HTTP port
 		public static string HTTPSERVER_CAR_URL = (string)config["HTTPSERVER_CAR_URL"];
 		/// Laptop's DNS name, HTTP port, and URL of telemetry

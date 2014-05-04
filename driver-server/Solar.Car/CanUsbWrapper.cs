@@ -1,29 +1,48 @@
 using System;
 using System.Collections.Generic;
-using System.IO.Ports;
 using Debug = System.Diagnostics.Debug;
 
 namespace Solar.Car
 {
+	abstract class ICanUsbHardware: IDisposable
+	{
+		public delegate void LineReceivedDelegate(string line);
+
+		public event LineReceivedDelegate LineReceived;
+
+		public void RaiseLineReceived(string line)
+		{
+			this.LineReceived(line);
+		}
+
+		public abstract void Open();
+
+		public abstract void Close();
+
+		public abstract bool IsOpen { get; }
+
+		public abstract void LockReadData();
+
+		public abstract void LockWriteLine(string line);
+
+		public abstract void Dispose();
+	}
+
 	/// <summary>
 	/// Communication with the CAN-USB cable, which is a serial port.
 	/// Issues: CAN-USB 
 	/// </summary>
-	class CanUsb: IDisposable
+	public class CanUsbWrapper: IDisposable
 	{
 		public delegate void CanHandlerDelegate(Can.Packet p);
 
 		public event CanHandlerDelegate handlers;
 
-		const string NEWLINE = "\r";
-		AsyncSerialPort port = null;
+		ICanUsbHardware port = null;
 
-		public CanUsb(string path)
+		public CanUsbWrapper()
 		{
-			Debug.WriteLine("CANUSB path: " + path);
-
-			port = new AsyncSerialPort(path, 115200, Parity.None, 8, StopBits.One);
-			port.NewLine = NEWLINE; // CANUSB uses carriage returns
+			port = new CanUsbHardware(); // (ICanUsbHardware)Activator.CreateInstance(Config.CanUsbHardwareType);
 			port.LineReceived += this.HandleLineReceived;
 		}
 

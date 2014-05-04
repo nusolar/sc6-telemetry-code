@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Net;
-using MediaTypeNames = System.Net.Mime.MediaTypeNames;
 using Encoding = System.Text.Encoding;
 using NameValueCollection = System.Collections.Specialized.NameValueCollection;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
@@ -12,17 +11,20 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Solar.Car
 {
-	class HttpGui
+	/// <summary>
+	/// Application-Layer connecting the Web GUI with the Business-Layer Comm.
+	/// </summary>
+	public class HttpGui: IAppLayer
 	{
 		readonly NameValueCollection default_query = new NameValueCollection { { "gear", "0" }, { "signals", "0" } };
-		readonly CarFrontend data = null;
 
-		public string json_data { get { return JsonConvert.SerializeObject(data.Status); } }
+		/// <summary>
+		/// Injected by App
+		/// </summary>
+		/// <value>The Data/Hardware manager.</value>
+		public IBusinessLayer Manager { get; set; }
 
-		public HttpGui(CarFrontend InDb)
-		{
-			data = InDb;
-		}
+		public string json_data { get { return JsonConvert.SerializeObject(this.Manager.Status); } }
 
 		/**
 		 * Respond with current JSON data.
@@ -45,7 +47,7 @@ namespace Solar.Car
 			int gear = 0, sigs = 0;
 			Int32.TryParse(query["gear"], out gear);
 			Int32.TryParse(query["signals"], out sigs);
-			this.data.HandleUserInput((Car.Gear)gear, (Car.Signals)sigs);
+			this.Manager.HandleUserInput((Solar.Gear)gear, (Solar.Signals)sigs);
 		}
 
 		public void ListenerCallback(object result)
@@ -88,9 +90,10 @@ namespace Solar.Car
 //				}
 				else // e.g. url == "/index.html"
 				{
-					url = url.Replace('/', '.');
-					Assembly _assembly = Assembly.GetExecutingAssembly();
-					using (Stream _stream = _assembly.GetManifestResourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url))
+//					url = url.Replace('/', '.');
+//					Assembly _assembly = typeof(HttpGui).Assembly;
+//					_assembly.GetManifestReourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url);
+					using (Stream _stream = File.OpenRead(Config.HTTPSERVER_GUI_SUBDIR + url))
 					{
 						response.ContentLength64 = _stream.Length;
 						response.SendChunked = false;
@@ -128,10 +131,8 @@ namespace Solar.Car
 		/// Indefinitely serve the Car's HTTP GUI.
 		/// </summary>
 		/// <param name="obj">A Task cancellation token.</param>
-		public async Task ReceiveLoop(object obj)
+		public async Task HttpReceiveLoop(CancellationToken token)
 		{
-			CancellationToken token = (CancellationToken)obj;
-
 			try
 			{
 				using (HttpListener listener = new HttpListener())
@@ -139,24 +140,30 @@ namespace Solar.Car
 					listener.Prefixes.Add(Config.HTTPSERVER_CAR_PREFIX);
 					listener.Start();
 
-					while (!token.IsCancellationRequested)
+					while (!token.IsCancellationRequested && listener.IsListening)
 					{
 						Task<HttpListenerContext> task = listener.GetContextAsync();
 						// IAsyncResult result = listener.BeginGetContext(new AsyncCallback(ListenerCallback), listener);
 						// bool received_http = result.AsyncWaitHandle.WaitOne(Config.HTTP_TIMEOUT_MS);
 
-						while (!task.IsCompleted && !task.IsCanceled && !task.IsFaulted)
+						while (!(task.IsCompleted || task.IsCanceled || task.IsFaulted || token.IsCancellationRequested))
 						{
-							await Task.Delay(Config.HTTPSERVER_TIMEOUT_MS, token);
+							await Task.WhenAny(task, Task.Delay(Config.HTTPSERVER_TIMEOUT_MS));
 
-							Debug.WriteLine("HTTP timed out: " + (task.Status != TaskStatus.RanToCompletion));
 							if (task.Status == TaskStatus.RanToCompletion)
 							{
+								Debug.WriteLine("HTTP Context: Received");
 								this.ListenerCallback(task.Result);
 								break;
 							}
+							else if (task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted)
+							{
+								Debug.WriteLine("HTTP Context: Errored");
+								this.DoCommands(this.default_query);
+							}
 							else
 							{
+								Debug.WriteLine("HTTP Context: Timedout/Still waiting");
 								this.DoCommands(this.default_query);
 							}
 						}
@@ -176,6 +183,13 @@ namespace Solar.Car
 			{
 				Debug.WriteLine("HTTP Unexpected exception: {0}", e.Message);
 			}
+		}
+
+		public async Task AppLayerLoop(CancellationToken token)
+		{
+			// open GUI
+			//System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
+			await this.HttpReceiveLoop(token);
 		}
 	}
 }

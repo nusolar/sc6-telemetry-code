@@ -5,7 +5,7 @@ namespace Solar.Car
 {
 	namespace Can
 	{
-		class Packet
+		public class Packet
 		{
 			[StructLayout(LayoutKind.Explicit)]
 			public struct UInt64x1
