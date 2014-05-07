@@ -54,8 +54,6 @@ window.MainTable = ($scope, $timeout, $interval) ->
 				$scope.current_panel = panel
 				$scope[$scope.current_panel] = true
 			), 1 #ms
-	$scope.set_panel_button('sensors_btn')
-
 
 	# Peripheral Button callbacks - Hardware
 	$scope.Left = ->
@@ -146,6 +144,7 @@ window.MainTable = ($scope, $timeout, $interval) ->
 			success: (json_text) =>
 				try
 					json = window.JSON.parse(json_text)
+					$scope.title_string = "v = " + json["MotorVelocity"] + " m/s"
 					# TODO update values for $scope.commands
 				catch e
 					window.console.log(e)
@@ -153,4 +152,10 @@ window.MainTable = ($scope, $timeout, $interval) ->
 	# Stop timer if the scope is destroyed (this should never happen).
 	$scope.$on '$destroy', ->
 		$interval.cancel timer_id
+
+
+	### INITIALIZE ###
+	$scope.print_query_string = $.param($scope.serialize_commands())
+	$scope.title_string = "v = 0 m/s"
+	$scope.set_panel_button('drive_btn')
 

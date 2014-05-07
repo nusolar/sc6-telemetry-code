@@ -29,31 +29,42 @@ namespace Solar.Laptop
 
 		void ListenerCallback(HttpListenerContext context)
 		{
-			HttpListenerRequest request = context.Request;
-			HttpListenerResponse response = context.Response;
-			string url = request.Url.AbsolutePath;
-
-			Debug.WriteLine("HTTP URL: " + request.RawUrl);
-
-			if (url == "/telemetry" && context.Request.HttpMethod == "POST")
+			try
 			{
-				byte[] buffer = new byte[request.ContentLength64];
-				using (Stream input = request.InputStream)
-					input.Read(buffer, 0, buffer.Length);
-				string decoded = Encoding.Default.GetString(buffer);
-				Status status = JsonConvert.DeserializeObject<Status>(decoded);
-				this.DataLayer.PushStatus(status);
+				HttpListenerRequest request = context.Request;
+				HttpListenerResponse response = context.Response;
+				string url = request.Url.AbsolutePath;
 
-				Debug.WriteLine("HTTP telemetry: " + decoded);
+				Debug.WriteLine("HTTP URL: " + request.RawUrl);
 
-				buffer = Encoding.Default.GetBytes("{\"Response\": true}\n");
-				response.StatusCode = (int)HttpStatusCode.OK;
-				response.StatusDescription = "OK";
-				response.ContentLength64 = buffer.LongLength;
-				response.ContentEncoding = Encoding.Default;
-				using (Stream output = response.OutputStream)
-					output.Write(buffer, 0, buffer.Length);
-				response.Close();
+				if (url == "/telemetry" && context.Request.HttpMethod == "POST")
+				{
+					byte[] buffer = new byte[request.ContentLength64];
+					using (Stream input = request.InputStream)
+						input.Read(buffer, 0, buffer.Length);
+					string decoded = Encoding.Default.GetString(buffer);
+					Status status = JsonConvert.DeserializeObject<Status>(decoded);
+					this.DataLayer.PushStatus(status);
+
+					Debug.WriteLine("HTTP telemetry: " + decoded);
+
+					buffer = Encoding.Default.GetBytes("{\"Response\": true}\n");
+					response.StatusCode = (int)HttpStatusCode.OK;
+					response.StatusDescription = "OK";
+					response.ContentLength64 = buffer.LongLength;
+					response.ContentEncoding = Encoding.Default;
+					using (Stream output = response.OutputStream)
+						output.Write(buffer, 0, buffer.Length);
+					response.Close();
+				}
+			}
+			catch (NullReferenceException e)
+			{
+				Debug.WriteLine("HTTP ListenerCallback: NullReferenceException: " + e.TargetSite);
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine("HTTP ListenerCallback: EXCEPTION: " + e.ToString());
 			}
 		}
 

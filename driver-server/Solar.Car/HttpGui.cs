@@ -16,7 +16,7 @@ namespace Solar.Car
 	/// </summary>
 	public class HttpGui: IAppLayer
 	{
-		readonly NameValueCollection default_query = new NameValueCollection { { "gear", "0" }, { "signals", "0" } };
+		readonly NameValueCollection default_query = new NameValueCollection { { "gear", "1" }, { "signals", "0" } };
 
 		/// <summary>
 		/// Injected by App
@@ -80,7 +80,7 @@ namespace Solar.Car
 					using (Stream output = response.OutputStream)
 						output.Write(buffer, 0, buffer.Length);
 
-					Debug.WriteLine("HTTP json: " + this.json_data);
+					Debug.WriteLine("HTTP ListenerCallback: json: " + this.json_data);
 				}
 //				else if (url == "/shutdown")
 //				{
@@ -93,37 +93,48 @@ namespace Solar.Car
 //					url = url.Replace('/', '.');
 //					Assembly _assembly = typeof(HttpGui).Assembly;
 //					_assembly.GetManifestReourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url);
-					using (Stream _stream = File.OpenRead(Config.HTTPSERVER_GUI_SUBDIR + url))
+					try
 					{
-						response.ContentLength64 = _stream.Length;
-						response.SendChunked = false;
-						// response.ContentType = MediaTypeNames.Text.Html;
-						response.StatusCode = (int)HttpStatusCode.OK;
-						response.StatusDescription = "OK";
-
-						using (Stream output = response.OutputStream)
+						using (Stream _stream = File.OpenRead(Config.HTTPSERVER_GUI_SUBDIR + url))
 						{
-							// transfer file in buffered 64kB blocks
-							byte[] buffer = new byte[64 * 1024];
-							int read;
-							using (BinaryWriter bw = new BinaryWriter(output))
-							{
-								while ((read = _stream.Read(buffer, 0, buffer.Length)) > 0)
-								{
-									bw.Write(buffer, 0, read);
-									bw.Flush(); //seems to have no effect
-								}
+							response.ContentLength64 = _stream.Length;
+							response.SendChunked = false;
+							// response.ContentType = MediaTypeNames.Text.Html;
+							response.StatusCode = (int)HttpStatusCode.OK;
+							response.StatusDescription = "OK";
 
-								bw.Close();
+							using (Stream output = response.OutputStream)
+							{
+								// transfer file in buffered 64kB blocks
+								byte[] buffer = new byte[64 * 1024];
+								int read;
+								using (BinaryWriter bw = new BinaryWriter(output))
+								{
+									while ((read = _stream.Read(buffer, 0, buffer.Length)) > 0)
+									{
+										bw.Write(buffer, 0, read);
+										bw.Flush(); //seems to have no effect
+									}
+
+									bw.Close();
+								}
 							}
 						}
+					}
+					catch (FileNotFoundException e)
+					{
+						Debug.WriteLine("HTTP ListenerCallback: FileNotFound: " + e.FileName);
 					}
 					this.DoCommands(this.default_query);
 				}
 			}
-			catch (NullReferenceException)
+			catch (NullReferenceException e)
 			{
-				Debug.WriteLine("HTTP ListenerCallback: nullptr, context is bad or FNF");
+				Debug.WriteLine("HTTP ListenerCallback: NullReferenceException: " + e.TargetSite);
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine("HTTP ListenerCallback: EXCEPTION: " + e.ToString());
 			}
 		}
 
@@ -188,8 +199,9 @@ namespace Solar.Car
 		public async Task AppLayerLoop(CancellationToken token)
 		{
 			// open GUI
-			//System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
-			await this.HttpReceiveLoop(token);
+			Task http_loop = this.HttpReceiveLoop(token);
+			System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
+			await http_loop;
 		}
 	}
 }

@@ -20,8 +20,7 @@ html(lang="en", ng-app, ng-csp)
 		article.MainTable(ng-controller='MainTable')
 			header.HeaderRow
 				.TextCell.Title.TopLeftCorner
-				.TextCell.Title(colspan='2')
-					="Title PLACEHOLDER"
+				.TextCell.Title(colspan='2', ng-bind="title_string")
 				.TextCell.Title.TopRightCorner
 
 			.CentralRow
@@ -41,7 +40,7 @@ html(lang="en", ng-app, ng-csp)
 
 				.CenterPanel.ng-cloak
 					section.MapPanel(ng-show="map_btn")
-						img.Map(src='map.png')
+						img.Map(src='http://maps.googleapis.com/maps/api/staticmap?center=42.0578757,-87.6769789&zoom=17&size=640x600&sensor=false')
 
 					section.BatteryBoxPanel(ng-show="sensors_btn")
 						table.BatteryBoxTable

@@ -7,21 +7,6 @@ using System.Linq;
 
 namespace Solar.Car.Console
 {
-	//	class SqliteDataSource: IDataSource
-	//	{
-	//		static string _connection_string = "DbLinqConnectionType=" + typeof(Mono.Data.Sqlite.SqliteConnection).AssemblyQualifiedName + ";" +
-	//		                                    "DbLinqProvider=Sqlite;Data Source=" + Car.Config.SQLITE_DB_FILE + ";";
-	//
-	//		public DbConnection GetConnection(bool ReadOnly = false)
-	//		{
-	//			if (!System.IO.File.Exists(Car.Config.SQLITE_DB_FILE))
-	//				SqliteConnection.CreateFile(Car.Config.SQLITE_DB_FILE);
-	//			if (ReadOnly)
-	//				return new SqliteConnection(_connection_string + "Read Only=True;");
-	//			else
-	//				return new SqliteConnection(_connection_string);
-	//		}
-	//	}
 	/// <summary>
 	/// Maintains a ConcurrentQueue in memory, saves to JSON at shutdown.
 	/// WARNING: Can leak memory!
@@ -155,12 +140,19 @@ namespace Solar.Car.Console
 				Solar.Car.Config.Platform = Solar.Car.Config.PlatformID.Win32;
 			}
 			// Load configuration from file
-			Solar.Car.Config.LoadConfig(() => System.IO.File.ReadAllText(@"Config.json"));
+			Solar.Car.Config.LoadConfig(System.IO.File.ReadAllText(@"Config.json"));
 
 			// Inject platform-specific logic
-			using (var ds = new JsonDataSource())
+			try
 			{
-				Solar.Car.Program.RunCar(ds, new CommManager(), new HttpGui()).Wait();
+				using (var ds = new JsonDataSource())
+				{
+					Solar.Program.RunProgram(ds, new CommManager(), new HttpGui()).Wait();
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine("PROGRAM: EXCEPTION: " + e.ToString());
 			}
 
 			Debug.WriteLine("PROGRAM: Run finished");

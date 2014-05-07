@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd $(dirname $0)
+
 if [[ $(basename "$(pwd)") != "driver-gui" ]]; then
 	echo "COMPILE.sh must be run from the 'driver-gui' folder."
 	exit

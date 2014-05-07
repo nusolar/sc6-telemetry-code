@@ -61,7 +61,6 @@
         })(this)), 1);
       }
     };
-    $scope.set_panel_button('sensors_btn');
     $scope.Left = function() {
       if ($scope.signals_btn === $scope.TurnSignals.Left) {
         $scope.signals_btn = $scope.TurnSignals.Off;
@@ -146,7 +145,8 @@
           success: function(json_text) {
             var e, json;
             try {
-              return json = window.JSON.parse(json_text);
+              json = window.JSON.parse(json_text);
+              return $scope.title_string = "v = " + json["MotorVelocity"] + " m/s";
             } catch (_error) {
               e = _error;
               return window.console.log(e);
@@ -155,9 +155,14 @@
         });
       };
     })(this)), 250);
-    return $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function() {
       return $interval.cancel(timer_id);
     });
+
+    /* INITIALIZE */
+    $scope.print_query_string = $.param($scope.serialize_commands());
+    $scope.title_string = "v = 0 m/s";
+    return $scope.set_panel_button('drive_btn');
   };
 
 }).call(this);

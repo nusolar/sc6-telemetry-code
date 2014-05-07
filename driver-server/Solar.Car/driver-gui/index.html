@@ -421,7 +421,6 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
         })(this)), 1);
       }
     };
-    $scope.set_panel_button('sensors_btn');
     $scope.Left = function() {
       if ($scope.signals_btn === $scope.TurnSignals.Left) {
         $scope.signals_btn = $scope.TurnSignals.Off;
@@ -506,7 +505,8 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
           success: function(json_text) {
             var e, json;
             try {
-              return json = window.JSON.parse(json_text);
+              json = window.JSON.parse(json_text);
+              return $scope.title_string = "v = " + json["MotorVelocity"] + " m/s";
             } catch (_error) {
               e = _error;
               return window.console.log(e);
@@ -515,9 +515,14 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
         });
       };
     })(this)), 250);
-    return $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function() {
       return $interval.cancel(timer_id);
     });
+
+    /* INITIALIZE */
+    $scope.print_query_string = $.param($scope.serialize_commands());
+    $scope.title_string = "v = 0 m/s";
+    return $scope.set_panel_button('drive_btn');
   };
 
 }).call(this);
@@ -528,8 +533,7 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
     <article ng-controller="MainTable" class="MainTable">
       <header class="HeaderRow">
         <div class="TextCell Title TopLeftCorner"></div>
-        <div colspan="2" class="TextCell Title">Title PLACEHOLDER
-        </div>
+        <div colspan="2" ng-bind="title_string" class="TextCell Title"></div>
         <div class="TextCell Title TopRightCorner"></div>
       </header>
       <div class="CentralRow">
@@ -547,7 +551,7 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
           </div>
         </section>
         <div class="CenterPanel ng-cloak">
-          <section ng-show="map_btn" class="MapPanel"><img src="map.png" class="Map"></section>
+          <section ng-show="map_btn" class="MapPanel"><img src="http://maps.googleapis.com/maps/api/staticmap?center=42.0578757,-87.6769789&amp;zoom=17&amp;size=640x600&amp;sensor=false" class="Map"></section>
           <section ng-show="sensors_btn" class="BatteryBoxPanel">
             <table class="BatteryBoxTable">
               <tr>

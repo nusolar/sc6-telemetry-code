@@ -16,7 +16,7 @@ namespace Solar.Car
 #region Model
 
 		Solar.Status status = new Solar.Status();
-		Solar.DriverInput DriverInput = new Solar.DriverInput();
+		Solar.DriverInput DriverInput = new Solar.DriverInput { gear = Solar.Gear.Run, sigs = Solar.Signals.None };
 
 #endregion
 
@@ -172,9 +172,11 @@ namespace Solar.Car
 			using (var childTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token))
 			{
 				Task can_loop = this.CanLoop(childTokenSource.Token);
-				Task prod_loop = this.ProduceCarTelemetry(childTokenSource.Token);
+				Task make_telemetry_loop = this.ProduceCarTelemetry(childTokenSource.Token);
+				Task send_telemetry_loop = this.DataLayer.ConsumeCarTelemetry(token);
 				await can_loop;
-				await prod_loop;
+				await make_telemetry_loop;
+				await send_telemetry_loop;
 			}
 		}
 

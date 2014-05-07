@@ -40,17 +40,18 @@
     <Compile Include="Can.cs" />
     <Compile Include="CanUsbHardware.cs" />
     <Compile Include="HttpGui.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="CommManager.cs" />
     <Compile Include="CanUsbWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="..\lib\sqlite3.dll">
-      <Link>sqlite3.dll</Link>
+    <Content Include="driver-gui\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="driver-gui\index.html">
+    <Content Include="driver-gui\icon_64.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="driver-gui\map.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -59,9 +60,5 @@
       <Project>{0E34F0AB-ACB4-4E02-8441-CF4D74B73953}</Project>
       <Name>Solar</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="driver-gui\icon_64.png" />
-    <None Include="driver-gui\map.png" />
   </ItemGroup>
 </Project>

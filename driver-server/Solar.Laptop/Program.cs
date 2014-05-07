@@ -84,34 +84,6 @@ namespace Solar.Laptop
 
 	class Program
 	{
-		public static async Task RunLaptop(IDataSource dataSource, IBusinessLayer car, IAppLayer web = null)
-		{
-			IDataServiceLayer db = new Database();
-			db.DataSource = dataSource;
-			if (car != null)
-				car.DataLayer = db;
-			if (web != null)
-				web.Manager = car;
-
-			using (var tokenSource = new CancellationTokenSource())
-			{
-				List<Task> tasks = new List<Task>();
-				if (web != null)
-					tasks.Add(web.AppLayerLoop(tokenSource.Token));
-				if (car != null)
-					tasks.Add(car.BusinessLoop(tokenSource.Token));
-				//tasks.Add(db.ConsumeCarTelemetry(tokenSource.Token));
-#if DEBUG
-				tasks.Add(Task.Run(() => Console.ReadKey(), tokenSource.Token));
-#endif
-
-				await Task.WhenAny(tasks.ToArray());
-				tokenSource.Cancel();
-				Debug.WriteLine("PROGRAM: Aborted");
-				await Task.WhenAll(tasks.ToArray());
-			}
-		}
-
 		public static void Main(string[] args)
 		{
 			// Enable debugging
@@ -128,10 +100,10 @@ namespace Solar.Laptop
 				Solar.Car.Config.Platform = Solar.Car.Config.PlatformID.Win32;
 			}
 			// Load configuration from file
-			Solar.Car.Config.LoadConfig(() => System.IO.File.ReadAllText(@"Config.json"));
+			Solar.Car.Config.LoadConfig(System.IO.File.ReadAllText(@"Config.json"));
 
 			using (var ds = new JsonDataSource())
-				RunLaptop(ds, new HttpServerManager(), null).Wait();
+				Solar.Program.RunProgram(ds, new HttpServerManager(), null).Wait();
 		}
 	}
 }

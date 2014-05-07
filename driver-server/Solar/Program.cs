@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Debug = System.Diagnostics.Debug;
 using System.Collections.Generic;
 
-namespace Solar.Car
+namespace Solar
 {
 	/// <summary>
 	/// Centralized tasks for running the solar car.
@@ -15,7 +15,7 @@ namespace Solar.Car
 		/// <summary>
 		/// Run the solar car's HttpGui, command Driver Controls, gather telemetry.
 		/// </summary>
-		public static async Task RunCar(IDataSource dataSource, IBusinessLayer car, IAppLayer web = null)
+		public static async Task RunProgram(IDataSource dataSource, IBusinessLayer car, IAppLayer gui = null)
 		{
 			// Telemetry caching
 			IDataServiceLayer db = new Database();
@@ -24,18 +24,17 @@ namespace Solar.Car
 			if (car != null)
 				car.DataLayer = db;
 			// UIs run on separate threads.
-			if (web != null)
-				web.Manager = car;
+			if (gui != null)
+				gui.Manager = car;
 				
 			// spawn cancellable CAN and GUI communication threads:
 			using (var tokenSource = new CancellationTokenSource())
 			{
 				List<Task> tasks = new List<Task>();
-				if (web != null)
-					tasks.Add(web.AppLayerLoop(tokenSource.Token));
+				if (gui != null)
+					tasks.Add(gui.AppLayerLoop(tokenSource.Token));
 				if (car != null)
 					tasks.Add(car.BusinessLoop(tokenSource.Token));
-				tasks.Add(db.ConsumeCarTelemetry(tokenSource.Token));
 #if DEBUG
 				tasks.Add(Task.Run(() => Console.ReadKey(), tokenSource.Token));
 #endif

@@ -1,11 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Solar/Database.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Solar.Car/CommManager.cs">
     <Files>
-      <File FileName="Solar.Car/CommManager.cs" Line="164" Column="3" />
-      <File FileName="Solar/Database.cs" Line="152" Column="40" />
-      <File FileName="Solar.Car/Program.cs" Line="22" Column="31" />
-      <File FileName="SolarCar.Console/Program.cs" Line="154" Column="5" />
+      <File FileName="Solar/Database.cs" Line="43" Column="3" />
+      <File FileName="Solar.Car/CommManager.cs" Line="22" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

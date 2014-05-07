@@ -40,6 +40,7 @@
     <Compile Include="Data.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
