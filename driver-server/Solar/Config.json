@@ -7,8 +7,8 @@
 	"CANUSB_TX_INTERVAL_MS": 50,
 	"CANUSB_RX_INTERVAL_MS": 50,
 
-	"DB_JSON_CAR_FILE": "/solarcar.json",
-	"DB_JSON_LAPTOP_FILE": "/solarcar2.json",
+	"DB_JSON_CAR_FILE": "solarcar.json",
+	"DB_JSON_LAPTOP_FILE": "solarcar2.json",
 	"DB_SAVE_INTERVAL_MS": 30000,
 
 	"HTTPSERVER_CAR_PREFIX": "http://+:8080/",
@@ -16,7 +16,7 @@
 	"HTTPSERVER_TIMEOUT_MS": 1000,
 	"HTTPSERVER_GUI_SUBDIR": "driver-gui",
 
-	"HTTPSERVER_CAR_URL": "http://localhost:8080/",
+	"HTTPSERVER_CAR_URL": "http://localhost:8080/index.html",
 	"HTTPSERVER_LAPTOP_URL": "http://localhost:8081/telemetry",
 	"HTTPSERVER_EXTRA_URL": "localhost",
 

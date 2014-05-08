@@ -38,7 +38,7 @@ namespace Solar.Car
 			this.DriverInput.gear = gear;
 			this.DriverInput.sigs = sigs;
 
-			Debug.WriteLine("CARFRONT: input Gear={0}, Signals={1}", gear, sigs);
+			Debug.WriteLine("CARMANAGER: input Gear={0}, Signals={1}", gear, sigs);
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace Solar.Car
 					{
 						while (!token.IsCancellationRequested)
 						{
-							Debug.WriteLine("CARFRONT: writing packet");
+							Debug.WriteLine("CARMANAGER: writing packet");
 							this.SendCanPackets(canusb);
 							await Task.Delay(Config.CANUSB_TX_INTERVAL_MS);
 						}
@@ -124,7 +124,7 @@ namespace Solar.Car
 					{
 						while (!token.IsCancellationRequested)
 						{
-							Debug.WriteLine("CARFRONT: checking packets");
+							Debug.WriteLine("CARMANAGER: checking packets");
 							canusb.CheckPackets();
 							await Task.Delay(Config.CANUSB_RX_INTERVAL_MS);
 						}
@@ -135,13 +135,13 @@ namespace Solar.Car
 				}
 				catch (System.IO.IOException ex)
 				{
-					Debug.WriteLine("CARFRONT IO Exception: " + ex.Message);
+					Debug.WriteLine("CARMANAGER IO Exception: " + ex.Message);
 				}
 				finally
 				{
 					canusb.Close();
 				}
-				await Task.Delay(1000); // wait 1s before reopening SerialPort
+				await Task.Delay(5000); // wait 1s before reopening SerialPort
 			}
 		}
 
@@ -169,15 +169,13 @@ namespace Solar.Car
 		/// <param name="obj">The CancellationToken.</param>
 		public async Task BusinessLoop(CancellationToken token)
 		{
-			using (var childTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token))
-			{
-				Task can_loop = this.CanLoop(childTokenSource.Token);
-				Task make_telemetry_loop = this.ProduceCarTelemetry(childTokenSource.Token);
-				Task send_telemetry_loop = this.DataLayer.ConsumeCarTelemetry(token);
-				await can_loop;
-				await make_telemetry_loop;
-				await send_telemetry_loop;
-			}
+
+			Task can_loop = this.CanLoop(token);
+			Task make_telemetry_loop = this.ProduceCarTelemetry(token);
+			Task send_telemetry_loop = this.DataLayer.ConsumeCarTelemetry(token);
+			await can_loop;
+			await make_telemetry_loop;
+			await send_telemetry_loop;
 		}
 
 #endregion

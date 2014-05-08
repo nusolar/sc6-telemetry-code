@@ -2,108 +2,50 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Debug = System.Diagnostics.Debug;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Solar.Laptop
 {
-	class JsonDataSource: IDataSource
-	{
-		class JsonDb
-		{
-			public int count { get; set; }
-
-			public Status[] data { get; set; }
-		}
-
-		static ConcurrentQueue<Status> LoadJson()
-		{
-			try
-			{
-				using (var stream = System.IO.File.OpenText(Solar.Car.Config.DB_JSON_LAPTOP_FILE))
-				{
-					JsonDb obj = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonDb>(stream.ReadToEnd());
-					stream.Close();
-					obj.count = (obj.count == obj.data.Length) ? obj.count : obj.data.Length;
-					return new ConcurrentQueue<Status>(obj.data);
-				}
-			}
-			catch (System.NullReferenceException)
-			{
-				Debug.WriteLine("DB Loading: Unrecognizable JsonDb");
-			}
-			catch (System.IO.FileNotFoundException)
-			{
-				Debug.WriteLine("DB Loading: FNF: " + Solar.Car.Config.DB_JSON_LAPTOP_FILE);
-			}
-			return new ConcurrentQueue<Status>();
-		}
-
-		ConcurrentQueue<Status> data = LoadJson();
-
-		public ConcurrentQueue<Status> GetConnection()
-		{
-			return data;
-		}
-
-		public void Save()
-		{
-			using (var stream = System.IO.File.CreateText(Solar.Car.Config.DB_JSON_LAPTOP_FILE))
-			{
-				JsonDb jdb = new JsonDb { count = this.data.Count, data = this.data.ToArray() };
-				stream.WriteAsync(Newtonsoft.Json.JsonConvert.SerializeObject(jdb)).Wait();
-				stream.Close();
-				Debug.WriteLine("DB Save: Written to file");
-			}
-		}
-
-#region IDisposable
-
-		bool disposed = false;
-
-		public void Dispose()
-		{
-			this.Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!disposed)
-			{
-				if (this.data != null)
-				{
-					this.Save();
-				}
-				disposed = true;
-			}
-		}
-
-#endregion
-	}
-
 	class Program
 	{
 		public static void Main(string[] args)
 		{
+			// Set resource prefix
+			Config.Resource_Prefix = "";
 			// Enable debugging
+			Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener("debug.log"));
 			Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener(System.Console.Out));
 			Debug.WriteLine("PROGRAM: Hello World!");
 			// Setup SolarCar environment
 			if (Environment.OSVersion.Platform.HasFlag(PlatformID.MacOSX) ||
 			    Environment.OSVersion.Platform.HasFlag(PlatformID.Unix))
 			{
-				Solar.Car.Config.Platform = Solar.Car.Config.PlatformID.Unix;
+				Config.Platform = Config.PlatformID.Unix;
 			}
 			else
 			{
-				Solar.Car.Config.Platform = Solar.Car.Config.PlatformID.Win32;
+				Config.Platform = Config.PlatformID.Win32;
 			}
 			// Load configuration from file
-			Solar.Car.Config.LoadConfig(System.IO.File.ReadAllText(@"Config.json"));
+			Config.LoadConfig(System.IO.File.ReadAllText(@"Config.json"));
 
-			using (var ds = new JsonDataSource())
-				Solar.Program.RunProgram(ds, new HttpServerManager(), null).Wait();
+			try
+			{
+				using (var ts = new CancellationTokenSource())
+				using (var ds = new JsonDataSource(Config.Resource_Prefix + Config.DB_JSON_LAPTOP_FILE))
+				{
+					Task laptop_loop = Solar.Program.RunProgram(ts.Token, ds, new HttpServerManager(), null);
+					System.Console.ReadKey();
+					ts.Cancel();
+					laptop_loop.Wait();
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine("PROGRAM: EXCEPTION: " + e.ToString());
+			}
 		}
 	}
 }

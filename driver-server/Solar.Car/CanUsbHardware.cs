@@ -27,9 +27,8 @@ namespace Solar.Car
 		/// </summary>
 		public CanUsbHardware()
 		{
-			string portName = Config.CANUSB_SERIAL_DEV;
-			Debug.WriteLine("UART path: " + portName);
-			this.port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One);
+			Debug.WriteLine("UART path: " + Config.CANUSB_SERIAL_DEV);
+			this.port = new SerialPort(Config.CANUSB_SERIAL_DEV, 115200, Parity.None, 8, StopBits.One);
 			port.NewLine = this.NewLine; // CANUSB uses carriage returns
 			port.ReadTimeout = 50; // 50 ms
 			port.WriteTimeout = 50; // 50 ms
@@ -41,6 +40,9 @@ namespace Solar.Car
 		public override void Open()
 		{
 #if !SIMULATE_HARDWARE
+			if (Config.Platform == Config.PlatformID.Unix)
+			if (!System.IO.File.Exists(Config.CANUSB_SERIAL_DEV))
+				throw new System.IO.IOException("Port doesn't exist");
 			port.Open();
 #endif
 		}

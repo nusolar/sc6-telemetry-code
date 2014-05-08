@@ -103,7 +103,7 @@ namespace Solar
 			while (!token.IsCancellationRequested)
 			{
 				this.DataSource.Save();
-				await Task.Delay(Solar.Car.Config.DB_SAVE_INTERVAL_MS); // 10s
+				await Task.Delay(Config.DB_SAVE_INTERVAL_MS); // 10s
 			}
 		}
 
@@ -127,7 +127,8 @@ namespace Solar
 						try
 						{
 							// default timeout = 100s
-							byte[] response = await myWebClient.UploadDataTaskAsync(Car.Config.HTTPSERVER_LAPTOP_URL, encoded);
+
+							byte[] response = await myWebClient.UploadDataTaskAsync(Config.HTTPSERVER_LAPTOP_URL, encoded);
 							if (response.Length > 1)
 							{
 								// TODO check response status
@@ -146,13 +147,17 @@ namespace Solar
 				{
 					Debug.WriteLine("DB Consumer count: " + this.CountStatus());
 				}
-				if (!success)
+
+				if (!token.IsCancellationRequested)
 				{
-					Debug.WriteLine("DB Consumer: Delaying...");
-					await Task.Delay(950); // extra 950ms if didn't upload
+					if (!success)
+					{
+						Debug.WriteLine("DB Consumer: Delaying...");
+						await Task.Delay(950); // extra 950ms if didn't upload
+					}
+
+					await Task.Delay(50); // 50ms
 				}
-					
-				await Task.Delay(50); // 50ms
 			}
 		}
 #if UNDEFINED
@@ -294,7 +299,7 @@ public Solar.Status GetFirstStatus()
 
 		Table<Solar.Status> statuses = db.GetTable<Solar.Status>();
 
-		IQueryable<Solar.Status> rows = 
+		IQueryable<Solar.Status> rows =
 			from status in statuses
 			orderby status.Timestamp ascending
 			select status;
@@ -313,7 +318,7 @@ public void DeleteFirstStatus()
 
 		Table<Solar.Status> statuses = db.GetTable<Solar.Status>();
 
-		IQueryable<Solar.Status> rows = 
+		IQueryable<Solar.Status> rows =
 			from status in statuses
 			orderby status.Timestamp ascending
 			select status;
@@ -323,5 +328,96 @@ public void DeleteFirstStatus()
 	}
 }
 #endif
+	}
+
+	/// <summary>
+	/// Maintains a ConcurrentQueue in memory, saves to JSON at shutdown.
+	/// WARNING: Can leak memory!
+	/// </summary>
+	public class JsonDataSource: IDataSource
+	{
+		class JsonDb
+		{
+			public int count { get; set; }
+
+			public Status[] data { get; set; }
+		}
+
+		static ConcurrentQueue<Status> LoadJson(string path)
+		{
+			try
+			{
+				using (var stream = System.IO.File.OpenText(path))
+				{
+					JsonDb obj = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonDb>(stream.ReadToEnd());
+					stream.Close();
+					obj.count = (obj.count == obj.data.Length) ? obj.count : obj.data.Length;
+					var r = from datum in obj.data
+					        orderby datum.Timestamp
+					        select datum;
+
+					return new ConcurrentQueue<Status>(r.ToList());
+				}
+			}
+			catch (System.NullReferenceException)
+			{
+				Debug.WriteLine("DB Loading: Unrecognizable JsonDb");
+			}
+			catch (System.IO.FileNotFoundException)
+			{
+				Debug.WriteLine("DB Loading: FNF: " + Config.DB_JSON_CAR_FILE);
+			}
+			return new ConcurrentQueue<Status>();
+		}
+
+		string DataPath { get; set; }
+
+		ConcurrentQueue<Status> data;
+
+		public JsonDataSource(string DataPath)
+		{
+			this.DataPath = DataPath;
+			data = LoadJson(this.DataPath);
+		}
+
+		public ConcurrentQueue<Status> GetConnection()
+		{
+			return data;
+		}
+
+		public void Save()
+		{
+			using (var stream = System.IO.File.CreateText(this.DataPath))
+			{
+				JsonDb jdb = new JsonDb { count = this.data.Count, data = this.data.ToArray() };
+				stream.WriteAsync(Newtonsoft.Json.JsonConvert.SerializeObject(jdb)).Wait();
+				stream.Close();
+				Debug.WriteLine("DB Save: Written to file");
+			}
+		}
+
+#region IDisposable
+
+		bool disposed = false;
+
+		public void Dispose()
+		{
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (this.data != null)
+				{
+					this.Save();
+				}
+				disposed = true;
+			}
+		}
+
+#endregion
 	}
 }

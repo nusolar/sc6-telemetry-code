@@ -7,7 +7,6 @@ using Database = Solar.Database;
 using Stream = System.IO.Stream;
 using Encoding = System.Text.Encoding;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
-using Config = Solar.Car.Config;
 using Debug = System.Diagnostics.Debug;
 
 namespace Solar.Laptop

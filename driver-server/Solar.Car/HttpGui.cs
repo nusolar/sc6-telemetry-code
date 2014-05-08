@@ -95,7 +95,7 @@ namespace Solar.Car
 //					_assembly.GetManifestReourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url);
 					try
 					{
-						using (Stream _stream = File.OpenRead(Config.HTTPSERVER_GUI_SUBDIR + url))
+						using (Stream _stream = File.OpenRead(Config.Resource_Prefix + Config.HTTPSERVER_GUI_SUBDIR + url))
 						{
 							response.ContentLength64 = _stream.Length;
 							response.SendChunked = false;
@@ -161,6 +161,8 @@ namespace Solar.Car
 						{
 							await Task.WhenAny(task, Task.Delay(Config.HTTPSERVER_TIMEOUT_MS));
 
+							if (token.IsCancellationRequested)
+								break;
 							if (task.Status == TaskStatus.RanToCompletion)
 							{
 								Debug.WriteLine("HTTP Context: Received");
@@ -200,7 +202,6 @@ namespace Solar.Car
 		{
 			// open GUI
 			Task http_loop = this.HttpReceiveLoop(token);
-			System.Diagnostics.Process.Start(@"http://localhost:8080/index.html");
 			await http_loop;
 		}
 	}
