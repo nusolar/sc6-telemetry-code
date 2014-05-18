@@ -11,13 +11,13 @@ from scipy.optimize import broyden1
 def last_time():
 	c = con.execute("SELECT time FROM data ORDER BY time DESC LIMIT 1")
 	return dt.datetime.utcnow() - c.fetchone()[0]
-
-
 def derived():
 	num = db.tables[0].last()
 	(volts, max(volts), min(volts), sum(volts)/len(volts),
 		temps, max(temps), min(temps), sum(temps)/len(temps),
 		bms_array_c, mppt_c, speed, current, current/speed, num)
+
+
 
 pi = 3.14159265358979323846264338327950
 R = 8314.4621  # PER KILOMOL

@@ -1,12 +1,11 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+﻿<Properties MonoDevelop.MonoMac.LastXamMacNagTime="5/18/2014 12:47:58 AM">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Solar.Car.WinForms/Program.cs">
     <Files>
-      <File FileName="Solar/Database.cs" Line="377" Column="3" />
-      <File FileName="Solar.Car/CommManager.cs" Line="179" Column="1" />
-      <File FileName="Solar/Program.cs" Line="40" Column="12" />
-      <File FileName="Solar.Car.Console/Program.cs" Line="73" Column="66" />
-      <File FileName="Solar.Laptop/Program.cs" Line="32" Column="39" />
+      <File FileName="Solar/Database.cs" Line="1" Column="1" />
+      <File FileName="Solar.Car/CommManager.cs" Line="1" Column="1" />
+      <File FileName="Solar/Program.cs" Line="1" Column="1" />
+      <File FileName="Solar.Car.Console/Program.cs" Line="1" Column="1" />
       <File FileName="Solar.Car.WinForms/Program.cs" Line="65" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>

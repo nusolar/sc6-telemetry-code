@@ -4,9 +4,50 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Debug = System.Diagnostics.Debug;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Solar
 {
+	public interface IDataSource: IDisposable
+	{
+		ConcurrentQueue<Status> GetConnection();
+
+		void Save();
+	}
+
+	public interface IDataServiceLayer
+	{
+		IDataSource DataSource { get; set; }
+
+		int CountStatus();
+
+		void PushStatus(Solar.Status data);
+
+		Solar.Status GetFirstStatus();
+
+		bool DeleteFirstStatus();
+
+		Task ConsumeCarTelemetry(CancellationToken token);
+	}
+
+	public interface IBusinessLayer
+	{
+		IDataServiceLayer DataLayer { get; set; }
+
+		Solar.Status Status { get; }
+
+		void HandleUserInput(Solar.Gear gear, Solar.Signals sigs);
+
+		Task BusinessLoop(CancellationToken token);
+	}
+
+	public interface IAppLayer
+	{
+		IBusinessLayer Manager { get; set; }
+
+		Task AppLayerLoop(CancellationToken token);
+	}
+
 	/// <summary>
 	/// Centralized tasks for running the solar car.
 	/// </summary>
@@ -40,7 +81,7 @@ namespace Solar
 					tasks.Add(gui.AppLayerLoop(childSource.Token));
 				if (car != null)
 					tasks.Add(car.BusinessLoop(childSource.Token));
-
+					
 				await Task.WhenAny(tasks.ToArray());
 				innerSource.Cancel();
 				Debug.WriteLine("PROGRAM: Aborted");

@@ -66,7 +66,7 @@ Global
 		{C846C080-DC0F-48DF-BE24-9EDF3A090D4F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Solar.Car.Mac\Solar.Car.Mac.csproj
+		StartupItem = Solar.Car.WinForms\Solar.Car.WinForms.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
 		$1.TabsToSpaces = False

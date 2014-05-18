@@ -17,6 +17,7 @@ namespace Solar.Car
 
 		Solar.Status status = new Solar.Status();
 		Solar.DriverInput DriverInput = new Solar.DriverInput { gear = Solar.Gear.Run, sigs = Solar.Signals.None };
+		bool drive_input_new = false;
 
 #endregion
 
@@ -37,12 +38,13 @@ namespace Solar.Car
 		{
 			this.DriverInput.gear = gear;
 			this.DriverInput.sigs = sigs;
-
+			this.drive_input_new = true;
 			Debug.WriteLine("CARMANAGER: input Gear={0}, Signals={1}", gear, sigs);
 		}
 
 		/// <summary>
-		/// Extract CAN packet data, update Model's status.
+		/// Extract CAN packet data, and update the Model.
+		/// This function should apply a low-pass-filter to noisy values.
 		/// </summary>
 		public void ProcessCanPacket(Can.Packet p)
 		{
@@ -62,26 +64,32 @@ namespace Solar.Car
 				case Can.Addr.bms1.max_min_volts._id:
 					break;
 				case Can.Addr.bms1.pack_volt_curr._id:
-					var current_pkt = new Can.Addr.bms1.pack_volt_curr(p.Data);
-					this.status.PackCurrent = current_pkt.pack_current;
+					var current_pkt = new Can.Addr.bms1.pack_volt_curr(p.Data); // t=?
+					this.status.PackCurrent = current_pkt.pack_current; 
 					this.status.PackVoltage = current_pkt.pack_voltage;
 					break;
 				case Can.Addr.dc.pedals._id:
-					var pedals_pkt = new Can.Addr.dc.pedals(p.Data);
+					var pedals_pkt = new Can.Addr.dc.pedals(p.Data); // t=50ms
 					this.status.AccelPedal = pedals_pkt.accel_pedal;
 					this.status.RegenPedal = pedals_pkt.regen_pedal;
 					this.status.BrakePedal = ((Int16)pedals_pkt.brake_pedal > 0);
 					break;
 				case Can.Addr.ws20.motor_bus._id:
-					var motor_bus_pkt = new Can.Addr.ws20.motor_bus(p.Data);
+					var motor_bus_pkt = new Can.Addr.ws20.motor_bus(p.Data); // t=200ms
 					this.status.MotorVoltage = motor_bus_pkt.busVoltage;
 					this.status.MotorCurrent = motor_bus_pkt.busCurrent;
 					break;
 				case Can.Addr.ws20.motor_velocity._id:
-					var motor_vel_pkt = new Can.Addr.ws20.motor_velocity(p.Data);
+					var motor_vel_pkt = new Can.Addr.ws20.motor_velocity(p.Data); // t=200ms
 					// RPM; velocity;
 					this.status.MotorRpm = motor_vel_pkt.motorVelocity;
 					this.status.MotorVelocity = motor_vel_pkt.vehicleVelocity;
+					break;
+				case Can.Addr.ws20.odom_bus_ah._id:
+					var odometer_pkt = new Can.Addr.ws20.odom_bus_ah(p.Data); // t=1s
+					// Distance travelled; Amp-Hours drawn
+					this.status.MotorOdometer = odometer_pkt.odom;
+					this.status.MotorAmpHours = odometer_pkt.dcBusAmpHours;
 					break;
 			}
 		}
@@ -116,7 +124,11 @@ namespace Solar.Car
 						while (!token.IsCancellationRequested)
 						{
 							Debug.WriteLine("CARMANAGER: writing packet");
-							this.SendCanPackets(canusb);
+							if (this.drive_input_new)
+							{
+								this.SendCanPackets(canusb);
+								this.drive_input_new = false;
+							}
 							await Task.Delay(Config.CANUSB_TX_INTERVAL_MS);
 						}
 					});
@@ -158,7 +170,7 @@ namespace Solar.Car
 				{
 					Debug.WriteLine("DB Producer: EXCEPTION: " + e.Message);
 				}
-				await Task.Delay(1000); // 1s
+				await Task.Delay(Config.DB_ADD_INTERVAL_MS); // 1s
 			}
 		}
 

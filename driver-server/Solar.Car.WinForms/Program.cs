@@ -14,7 +14,8 @@ namespace Solar.Car.WinForms
 	{
 		Label label1 = new Label();
 		Button button1 = new Button();
-		FlowLayoutPanel panel1 = new FlowLayoutPanel();
+		Button button2 = new Button();
+		TableLayoutPanel panel1 = new TableLayoutPanel();
 		bool solarcar_running = false;
 		CancellationTokenSource solarcar_cancel = null;
 
@@ -24,15 +25,35 @@ namespace Solar.Car.WinForms
 
 			// Initialize your components here
 			label1.Text = "GUI and Telemetry are: " + "STOPPED";
+//			label1.Dock = DockStyle.Fill;
 
 			button1.DialogResult = DialogResult.OK;
 			button1.Text = "STOP";
 			button1.Click += new EventHandler(this.Button_Click);
+//			button1.Dock = DockStyle.Fill;
+
+			button2.DialogResult = DialogResult.OK;
+			button2.Text = "Show";
+			button2.Click += new EventHandler(this.Button2_Click);
+//			button2.Dock = DockStyle.Fill;
 
 			// Add components to panel
+			panel1.ColumnCount = 1;
 			panel1.Controls.Add(label1);
 			panel1.Controls.Add(button1);
+			panel1.Controls.Add(button2);
+			foreach (ColumnStyle style in panel1.ColumnStyles)
+			{
+				style.SizeType = SizeType.Percent;
+				style.Width = 100;
+			}
+			foreach (RowStyle style in panel1.RowStyles)
+			{
+				style.SizeType = SizeType.Percent;
+				style.Height = 100f / panel1.RowCount;
+			}
 			this.Controls.Add(panel1);
+
 			this.ResumeLayout();
 
 			this.Name = "ZELDA";
@@ -52,6 +73,14 @@ namespace Solar.Car.WinForms
 			else if (!this.solarcar_cancel.IsCancellationRequested)
 			{
 				this.solarcar_cancel.Cancel();
+			}
+		}
+
+		public void Button2_Click(object sender, EventArgs e)
+		{
+			if (this.solarcar_running)
+			{
+				System.Diagnostics.Process.Start(Config.HTTPSERVER_CAR_URL);
 			}
 		}
 
@@ -87,7 +116,6 @@ namespace Solar.Car.WinForms
 			{
 				using (var ds = new JsonDataSource(Config.Resource_Prefix + Config.DB_JSON_CAR_FILE))
 				{
-					System.Diagnostics.Process.Start(Config.HTTPSERVER_CAR_URL);
 					await Solar.Program.RunProgram(this.solarcar_cancel.Token, ds, new CommManager(), new HttpGui());
 				}
 			}

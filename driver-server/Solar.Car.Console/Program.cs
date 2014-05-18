@@ -70,7 +70,7 @@ namespace Solar.Car.Console
 				using (var ds = new JsonDataSource(Config.Resource_Prefix + Config.DB_JSON_CAR_FILE))
 				{
 					Task solarcar_loop = Solar.Program.RunProgram(ts.Token, ds, new CommManager(), new HttpGui());
-					System.Diagnostics.Process.Start(Config.HTTPSERVER_CAR_URL);
+//					System.Diagnostics.Process.Start(Config.HTTPSERVER_CAR_URL);
 					System.Console.ReadKey();
 					ts.Cancel();
 					solarcar_loop.Wait();

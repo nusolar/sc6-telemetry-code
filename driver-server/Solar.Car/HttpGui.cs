@@ -125,7 +125,7 @@ namespace Solar.Car
 					{
 						Debug.WriteLine("HTTP ListenerCallback: FileNotFound: " + e.FileName);
 					}
-					this.DoCommands(this.default_query);
+					// this.DoCommands(this.default_query);
 				}
 			}
 			catch (NullReferenceException e)
@@ -172,12 +172,12 @@ namespace Solar.Car
 							else if (task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted)
 							{
 								Debug.WriteLine("HTTP Context: Errored");
-								this.DoCommands(this.default_query);
+								// this.DoCommands(this.default_query);
 							}
 							else
 							{
 								Debug.WriteLine("HTTP Context: Timedout/Still waiting");
-								this.DoCommands(this.default_query);
+								// this.DoCommands(this.default_query);
 							}
 						}
 					}

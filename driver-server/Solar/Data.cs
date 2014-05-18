@@ -102,6 +102,16 @@ namespace Solar
 		// [Column(Storage = "MotorCurrent", DbType = "REAL", CanBeNull = false)]
 		public float MotorCurrent{ get; set; }
 
+		/// <summary>
+		/// Distance vehicle has travelled since reset.
+		/// </summary>
+		public float MotorOdometer { get; set; }
+
+		/// <summary>
+		/// Charge flow into controller since reset.
+		/// </summary>
+		public float MotorAmpHours { get; set; }
+
 #endregion
 
 #region BPS

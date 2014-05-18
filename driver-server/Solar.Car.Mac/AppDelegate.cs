@@ -65,8 +65,7 @@ namespace Solar.Car.Mac
 
 		public override NSApplicationTerminateReply ApplicationShouldTerminate(NSApplication sender)
 		{
-			this.solarcar_loop.Wait();
-			return NSApplicationTerminateReply.Now;
+			return this.solarcar_loop.IsCanceled ? NSApplicationTerminateReply.Now : NSApplicationTerminateReply.Later;
 		}
 	}
 }

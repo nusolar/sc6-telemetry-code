@@ -10,46 +10,6 @@ using System.Collections.Concurrent;
 
 namespace Solar
 {
-	public interface IDataSource: IDisposable
-	{
-		ConcurrentQueue<Status> GetConnection();
-
-		void Save();
-	}
-
-	public interface IDataServiceLayer
-	{
-		IDataSource DataSource { get; set; }
-
-		int CountStatus();
-
-		void PushStatus(Solar.Status data);
-
-		Solar.Status GetFirstStatus();
-
-		bool DeleteFirstStatus();
-
-		Task ConsumeCarTelemetry(CancellationToken token);
-	}
-
-	public interface IBusinessLayer
-	{
-		IDataServiceLayer DataLayer { get; set; }
-
-		Solar.Status Status { get; }
-
-		void HandleUserInput(Solar.Gear gear, Solar.Signals sigs);
-
-		Task BusinessLoop(CancellationToken token);
-	}
-
-	public interface IAppLayer
-	{
-		IBusinessLayer Manager { get; set; }
-
-		Task AppLayerLoop(CancellationToken token);
-	}
-
 	/// <summary>
 	/// Database for telemetry, trip events, and commands.
 	/// </summary>
@@ -390,7 +350,8 @@ public void DeleteFirstStatus()
 			using (var stream = System.IO.File.CreateText(this.DataPath))
 			{
 				JsonDb jdb = new JsonDb { count = this.data.Count, data = this.data.ToArray() };
-				stream.WriteAsync(Newtonsoft.Json.JsonConvert.SerializeObject(jdb)).Wait();
+				stream.WriteAsync(Newtonsoft.Json.JsonConvert.SerializeObject(jdb).Replace("},{", "},\n{")
+				).Wait();
 				stream.Close();
 				Debug.WriteLine("DB Save: Written to file");
 			}
