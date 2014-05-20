@@ -39,6 +39,7 @@ namespace Solar.Car
 		public event CanHandlerDelegate handlers;
 
 		ICanUsbHardware port = null;
+		bool is_open = false;
 
 		public CanUsbWrapper()
 		{
@@ -52,14 +53,21 @@ namespace Solar.Car
 			port.LockWriteLine("\r\r"); // clear CANUSB buffer
 			port.LockWriteLine("S8"); // set bitrate = 1 Mbit/s
 			port.LockWriteLine("O"); // open CAN channel
+			this.is_open = true;
 		}
 
 		public void Close()
 		{
+			this.is_open = false;
 			this.Dispose();
 		}
 
-		public void CheckPackets()
+		public bool IsOpen
+		{
+			get { return this.port.IsOpen && this.is_open; }
+		}
+
+		public void PollPackets()
 		{
 			this.port.LockReadData();
 		}
@@ -161,20 +169,29 @@ namespace Solar.Car
 			if (!disposed)
 			{
 				// dispose unmanaged resources
-				if (this.port != null)
+				try
 				{
-					if (this.port.IsOpen)
+					if (this.port != null)
 					{
-						port.LockWriteLine("C");
+						if (this.port.IsOpen)
+						{
+							port.LockWriteLine("C");
+						}
+						this.port.Close(); // WARNING: MANAGED!
 					}
-					this.port.Close(); // WARNING: MANAGED!
 				}
-				// disposing managed resources
-				if (disposing)
+				catch (Exception)
 				{
-					this.port.Dispose();
 				}
-				disposed = true;
+				finally
+				{
+					// disposing managed resources
+					if (disposing)
+					{
+						this.port.Dispose();
+					}
+					disposed = true;
+				}
 			}
 		}
 

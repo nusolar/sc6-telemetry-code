@@ -12,22 +12,18 @@ namespace Solar
 	{
 		ConcurrentQueue<Status> GetConnection();
 
-		void Save();
+		void Archive();
 	}
 
 	public interface IDataServiceLayer
 	{
 		IDataSource DataSource { get; set; }
-
-		int CountStatus();
-
+		//int CountStatus();
 		void PushStatus(Solar.Status data);
-
-		Solar.Status GetFirstStatus();
-
-		bool DeleteFirstStatus();
-
-		Task ConsumeCarTelemetry(CancellationToken token);
+		// Solar.Status GetFirstStatus();
+		// bool DeleteFirstStatus();
+		//Task ConsumeCarTelemetry(CancellationToken token);
+		void Archive();
 	}
 
 	public interface IBusinessLayer

@@ -38,7 +38,7 @@ namespace Solar.Car.Mac
 		{
 			try
 			{
-				using (var ds = new JsonDataSource(Config.Resource_Prefix + Config.DB_JSON_CAR_FILE))
+				using (var ds = new JsonDataSource())
 				{
 					await Solar.Program.RunProgram(this.solarcar_cancel.Token, ds, new CommManager(), new HttpGui());
 				}

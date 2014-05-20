@@ -47,7 +47,8 @@ namespace Solar
 		public static int CANUSB_RX_INTERVAL_MS { get { return (int)config["CANUSB_RX_INTERVAL_MS"]; } }
 
 		/// Car Database location
-		public static string DB_JSON_CAR_FILE { get { return (string)config["DB_JSON_CAR_FILE"]; } }
+
+		public static string DB_JSON_CAR_FILES { get { return (string)config["DB_JSON_CAR_FILES"]; } }
 
 		/// Laptop Database location
 		public static string DB_JSON_LAPTOP_FILE { get { return (string)config["DB_JSON_LAPTOP_FILE"]; } }

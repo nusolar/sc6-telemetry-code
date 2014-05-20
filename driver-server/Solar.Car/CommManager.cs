@@ -17,7 +17,6 @@ namespace Solar.Car
 
 		Solar.Status status = new Solar.Status();
 		Solar.DriverInput DriverInput = new Solar.DriverInput { gear = Solar.Gear.Run, sigs = Solar.Signals.None };
-		bool drive_input_new = false;
 
 #endregion
 
@@ -38,7 +37,7 @@ namespace Solar.Car
 		{
 			this.DriverInput.gear = gear;
 			this.DriverInput.sigs = sigs;
-			this.drive_input_new = true;
+			Task.Run(this.SendCanPacket);
 			Debug.WriteLine("CARMANAGER: input Gear={0}, Signals={1}", gear, sigs);
 		}
 
@@ -97,13 +96,7 @@ namespace Solar.Car
 		/// <summary>
 		/// Write Model data to passed CanUsb as CAN packet
 		/// </summary>
-		public void SendCanPackets(CanUsbWrapper canusb)
-		{
-			Can.Addr.os.user_cmds p = new Can.Addr.os.user_cmds(0);
-			p.gearFlags = (UInt16)(this.DriverInput.gear);
-			p.signalFlags = (UInt16)this.DriverInput.sigs;
-			canusb.TransmitPacket(p);
-		}
+		public Action SendCanPacket;
 
 #region Tasks
 
@@ -119,41 +112,40 @@ namespace Solar.Car
 					canusb.handlers += this.ProcessCanPacket;
 					canusb.Open();
 
-					Task send_loop = Task.Run(async () =>
+					this.SendCanPacket = () =>
 					{
-						while (!token.IsCancellationRequested)
+						if (!token.IsCancellationRequested && canusb.IsOpen)
 						{
 							Debug.WriteLine("CARMANAGER: writing packet");
-							if (this.drive_input_new)
+							Can.Addr.os.user_cmds p = new Can.Addr.os.user_cmds
 							{
-								this.SendCanPackets(canusb);
-								this.drive_input_new = false;
-							}
-							await Task.Delay(Config.CANUSB_TX_INTERVAL_MS);
+								gearFlags = (UInt16)this.DriverInput.gear,
+								signalFlags = (UInt16)this.DriverInput.sigs
+							};
+							canusb.TransmitPacket(p);
 						}
-					});
-					Task read_loop = Task.Run(async () =>
-					{
-						while (!token.IsCancellationRequested)
-						{
-							Debug.WriteLine("CARMANAGER: checking packets");
-							canusb.CheckPackets();
-							await Task.Delay(Config.CANUSB_RX_INTERVAL_MS);
-						}
-					});
+					};
 
-					await send_loop;
-					await read_loop;
+					while (!token.IsCancellationRequested)
+					{
+						Debug.WriteLine("CARMANAGER: checking packets");
+						canusb.PollPackets();
+						await Task.Delay(Config.CANUSB_RX_INTERVAL_MS);
+					}
 				}
-				catch (System.IO.IOException ex)
+				catch (System.IO.IOException e)
 				{
-					Debug.WriteLine("CARMANAGER IO Exception: " + ex.Message);
+					Debug.WriteLine("CARMANAGER IO Exception: " + e.ToString());
+				}
+				catch (ObjectDisposedException e)
+				{
+					Debug.WriteLine("CARMANAGER Dispose Exception: " + e.ToString());
 				}
 				finally
 				{
 					canusb.Close();
 				}
-				await Task.Delay(5000); // wait 1s before reopening SerialPort
+				await Task.Delay(5000); // wait 5s before reopening SerialPort
 			}
 		}
 
@@ -170,7 +162,34 @@ namespace Solar.Car
 				{
 					Debug.WriteLine("DB Producer: EXCEPTION: " + e.Message);
 				}
-				await Task.Delay(Config.DB_ADD_INTERVAL_MS); // 1s
+				await Task.Delay(Config.DB_ADD_INTERVAL_MS); // 0.25s
+			}
+		}
+
+		public async Task DropboxCarTelemetry(CancellationToken token)
+		{
+			Dropbox d = new Dropbox();
+
+			Task.Run(async () =>
+			{
+				while (!token.IsCancellationRequested)
+				{
+					this.DataLayer.Archive();
+					await Task.Delay(Config.DB_SAVE_INTERVAL_MS); // 10s
+				}
+			});
+
+			while (!token.IsCancellationRequested)
+			{
+				// push all archives to Dropbox
+				string[] archives = System.IO.Directory.GetFiles(".", string.Format(Config.DB_JSON_CAR_FILES, "*"));
+				foreach (string archive in archives)
+					d.FilesPut(archive, archive);
+
+				if (!token.IsCancellationRequested)
+				{
+					await Task.Delay(Config.DB_SAVE_INTERVAL_MS / 2); //5s between archive pushes
+				}
 			}
 		}
 
@@ -184,7 +203,7 @@ namespace Solar.Car
 
 			Task can_loop = this.CanLoop(token);
 			Task make_telemetry_loop = this.ProduceCarTelemetry(token);
-			Task send_telemetry_loop = this.DataLayer.ConsumeCarTelemetry(token);
+			Task send_telemetry_loop = this.DropboxCarTelemetry(token);
 			await can_loop;
 			await make_telemetry_loop;
 			await send_telemetry_loop;
