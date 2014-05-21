@@ -16,8 +16,7 @@ namespace Solar.Car
 	/// </summary>
 	public class HttpGui: IAppLayer
 	{
-		readonly NameValueCollection default_query = new NameValueCollection { { "gear", "1" }, { "signals", "0" } };
-
+		//readonly NameValueCollection default_query = new NameValueCollection { { "gear", "1" }, { "signals", "0" } };
 		/// <summary>
 		/// Injected by App
 		/// </summary>
@@ -61,7 +60,7 @@ namespace Solar.Car
 				HttpListenerResponse response = context.Response;
 				string url = request.Url.AbsolutePath;
 
-				Debug.WriteLine("HTTP URL: " + request.RawUrl);
+				Debug.WriteLine("HTTP:\t\tURL: " + request.RawUrl);
 
 				if (context.Request.HttpMethod != "GET")
 				{
@@ -80,7 +79,7 @@ namespace Solar.Car
 					using (Stream output = response.OutputStream)
 						output.Write(buffer, 0, buffer.Length);
 
-					Debug.WriteLine("HTTP ListenerCallback: json: " + this.json_data);
+					Debug.WriteLine("HTTP:\t\tListenerCallback: json: " + this.json_data);
 				}
 //				else if (url == "/shutdown")
 //				{
@@ -123,18 +122,18 @@ namespace Solar.Car
 					}
 					catch (FileNotFoundException e)
 					{
-						Debug.WriteLine("HTTP ListenerCallback: FileNotFound: " + e.FileName);
+						Debug.WriteLine("HTTP:\t\tListenerCallback: FileNotFound: " + e.FileName);
 					}
 					// this.DoCommands(this.default_query);
 				}
 			}
 			catch (NullReferenceException e)
 			{
-				Debug.WriteLine("HTTP ListenerCallback: NullReferenceException: " + e.TargetSite);
+				Debug.WriteLine("HTTP:\t\tListenerCallback: NullReferenceException: " + e.TargetSite);
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine("HTTP ListenerCallback: EXCEPTION: " + e.ToString());
+				Debug.WriteLine("HTTP:\t\tListenerCallback: EXCEPTION: " + e.ToString());
 			}
 		}
 
@@ -165,18 +164,18 @@ namespace Solar.Car
 								break;
 							if (task.Status == TaskStatus.RanToCompletion)
 							{
-								Debug.WriteLine("HTTP Context: Received");
+								Debug.WriteLine("HTTP:\t\tContext: Received");
 								this.ListenerCallback(task.Result);
 								break;
 							}
 							else if (task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted)
 							{
-								Debug.WriteLine("HTTP Context: Errored");
+								Debug.WriteLine("HTTP:\t\tContext: Errored");
 								// this.DoCommands(this.default_query);
 							}
 							else
 							{
-								Debug.WriteLine("HTTP Context: Timedout/Still waiting");
+								Debug.WriteLine("HTTP:\t\tContext: Timedout/Still waiting");
 								// this.DoCommands(this.default_query);
 							}
 						}
@@ -186,15 +185,15 @@ namespace Solar.Car
 			catch (HttpListenerException e)
 			{
 				// Bail out - this happens on shutdown
-				Debug.WriteLine("HTTP Listener has shutdown: {0}", e.Message);
+				Debug.WriteLine("HTTP:\t\tListener has shutdown: {0}", e.Message);
 			}
 			catch (TaskCanceledException e)
 			{
-				Debug.WriteLine("HTTP Task Cancelled: {0}", e.Message);
+				Debug.WriteLine("HTTP:\t\tTask Cancelled: {0}", e.Message);
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine("HTTP Unexpected exception: {0}", e.Message);
+				Debug.WriteLine("HTTP:\t\tUnexpected exception: {0}", e.Message);
 			}
 		}
 

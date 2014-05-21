@@ -10,9 +10,11 @@ namespace Solar
 {
 	public interface IDataSource: IDisposable
 	{
-		ConcurrentQueue<Status> GetConnection();
+		JsonDb GetConnection();
 
-		void Archive();
+		JsonDb GetArchive();
+
+		void RestoreArchive(JsonDb archive);
 	}
 
 	public interface IDataServiceLayer
@@ -23,7 +25,7 @@ namespace Solar
 		// Solar.Status GetFirstStatus();
 		// bool DeleteFirstStatus();
 		//Task ConsumeCarTelemetry(CancellationToken token);
-		void Archive();
+		Task PushToDropbox();
 	}
 
 	public interface IBusinessLayer
@@ -80,7 +82,7 @@ namespace Solar
 					
 				await Task.WhenAny(tasks.ToArray());
 				innerSource.Cancel();
-				Debug.WriteLine("PROGRAM: Aborted");
+				Debug.WriteLine("PROGRAM:\tAborted");
 				await Task.WhenAll(tasks.ToArray());
 			}
 		}

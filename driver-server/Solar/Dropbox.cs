@@ -1,6 +1,7 @@
 ﻿using System;
-using RestSharp;
+using System.Threading.Tasks;
 using Debug = System.Diagnostics.Debug;
+using RestSharp;
 
 namespace Solar
 {
@@ -17,9 +18,8 @@ namespace Solar
 			if (string.IsNullOrEmpty(this.AccessToken))
 			{
 				string auth_code = this.OAuth2Authorize(); // "_PZKmyWNtlEAAAAAAAADw2AB7pDfAWXcFLEuAQflY3I";
-				this.AccessToken = this.OAuth2Token(auth_code);
+				this.AccessToken = this.OAuth2Token(auth_code).Result;
 			}
-			this.Metadata("/");
 		}
 
 		public string OAuth2Authorize()
@@ -27,11 +27,11 @@ namespace Solar
 			// get authorization code
 			string url = "https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=" + ConsumerKey;
 			System.Diagnostics.Process.Start(url);
-			Console.WriteLine("DROPBOX: Type authorization code: ");
+			Console.WriteLine("DROPBOX:\tType authorization code: ");
 			return Console.ReadLine();
 		}
 
-		public string OAuth2Token(string auth_code)
+		public async Task<string> OAuth2Token(string auth_code)
 		{
 			// get access token
 			RestRequest token_request = new RestRequest("1/oauth2/token", Method.POST);
@@ -39,22 +39,24 @@ namespace Solar
 			token_request.AddParameter("grant_type", "authorization_code");
 			token_request.AddParameter("client_id", ConsumerKey);
 			token_request.AddParameter("client_secret", ConsumerSecret);
-			IRestResponse<TokenResponse> token_response = api_client.Execute<TokenResponse>(token_request);
-			Debug.WriteLine("DROPBOX: OAuth2Token: " + token_response.Content);
+			// TODO remove these workarounds. RestSharp's ExecuteTaskAsync<> is currently bugged 
+			IRestResponse<TokenResponse> token_response = await Task.Run(() => api_client.Execute<TokenResponse>(token_request));
+			Debug.WriteLine("DROPBOX:\tOAuth2Token: " + token_response.Content);
 			return token_response.Data.AccessToken;
 		}
 
-		public AccountInfoResponse AccountInfo()
+		public async Task<AccountInfoResponse> AccountInfo()
 		{
 			// check account
 			RestRequest account_request = new RestRequest("1/account/info", Method.GET);
 			account_request.AddHeader("Authorization", string.Format("Bearer {0}", this.AccessToken));
-			IRestResponse<AccountInfoResponse> account_response = api_client.Execute<AccountInfoResponse>(account_request);
-			Debug.WriteLine("DROPBOX: AccountInfo: " + account_response.Content);
+			// TODO remove these workarounds. RestSharp's ExecuteTaskAsync<> is currently bugged 
+			IRestResponse<AccountInfoResponse> account_response = await Task.Run(() => api_client.Execute<AccountInfoResponse>(account_request));
+			Debug.WriteLine("DROPBOX:\tAccountInfo: " + account_response.Content);
 			return account_response.Data;
 		}
 
-		public MetadataResponse Metadata(string path, bool list = true)
+		public async Task<MetadataResponse> Metadata(string path, bool list = true)
 		{
 			// check file
 			RestRequest metadata_request = new RestRequest("1/metadata/{root}/{path}", Method.GET);
@@ -62,12 +64,25 @@ namespace Solar
 			metadata_request.AddUrlSegment("root", "sandbox");
 			metadata_request.AddUrlSegment("path", path);
 			metadata_request.AddParameter("list", list ? "true" : "false");
-			IRestResponse<MetadataResponse> metadata_response = api_client.Execute<MetadataResponse>(metadata_request);
-			Debug.WriteLine("DROPBOX: Metadata: " + metadata_response.Content);
+			// TODO remove these workarounds. RestSharp's ExecuteTaskAsync<> is currently bugged 
+			IRestResponse<MetadataResponse> metadata_response = await Task.Run(() => api_client.Execute<MetadataResponse>(metadata_request));
+			Debug.WriteLine("DROPBOX:\tMetadata: " + metadata_response.Content);
 			return metadata_response.Data;
 		}
 
-		public MetadataResponse FilesPut(string source_path, string dest_path, string parent_rev = null)
+		public async Task<MetadataResponse> FilesPut(string source_path, string dest_path, string parent_rev = null)
+		{
+			byte[] fileData = null;
+			using (System.IO.FileStream source_stream = System.IO.File.OpenRead(source_path))
+			{
+				fileData = new byte[source_stream.Length];
+				await source_stream.ReadAsync(fileData, 0, (int)source_stream.Length);
+				source_stream.Close();
+			}
+			return await this.FilesPut(fileData, dest_path, parent_rev);
+		}
+
+		public async Task<MetadataResponse> FilesPut(byte[] fileData, string dest_path, string parent_rev = null)
 		{
 			// upload file
 			RestRequest file_put_request = new RestRequest("1/files_put/{root}/{path}", Method.PUT);
@@ -76,9 +91,11 @@ namespace Solar
 			file_put_request.AddUrlSegment("path", dest_path);
 			if (!string.IsNullOrEmpty(parent_rev))
 				file_put_request.AddParameter("parent_rev", parent_rev, ParameterType.GetOrPost);
-			file_put_request.AddFile("FileData", source_path);
-			IRestResponse<MetadataResponse> file_put_response = content_client.Execute<MetadataResponse>(file_put_request);
-			Debug.WriteLine("DROPBOX: FilesPut: " + file_put_response.Content);
+			//file_put_request.AddFile("FileData", source_path);
+			file_put_request.AddParameter("file", fileData, ParameterType.RequestBody);
+			// TODO remove these workarounds. RestSharp's ExecuteTaskAsync<> is currently bugged 
+			IRestResponse<MetadataResponse> file_put_response = await Task.Run(() => content_client.Execute<MetadataResponse>(file_put_request));
+			Debug.WriteLine("DROPBOX:\tFilesPut: " + file_put_response.Content);
 			return file_put_response.Data;
 		}
 

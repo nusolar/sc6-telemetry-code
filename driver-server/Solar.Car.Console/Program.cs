@@ -14,7 +14,7 @@ namespace Solar.Car.Console
 			// Enable debugging
 			Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener(System.Console.Out));
 			Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener("debug.log"));
-			Debug.WriteLine("PROGRAM: Hello World!");
+			Debug.WriteLine("PROGRAM:\tHello World!");
 			// Setup SolarCar environment
 			if (Environment.OSVersion.Platform.HasFlag(PlatformID.MacOSX) ||
 			    Environment.OSVersion.Platform.HasFlag(PlatformID.Unix))
@@ -52,11 +52,11 @@ namespace Solar.Car.Console
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine("PROGRAM: EXCEPTION: " + e.ToString());
+				Debug.WriteLine("PROGRAM:\tEXCEPTION: " + e.ToString());
 			}
 			finally
 			{
-				Debug.WriteLine("PROGRAM: Run finished");
+				Debug.WriteLine("PROGRAM:\tRun finished");
 			}
 		}
 

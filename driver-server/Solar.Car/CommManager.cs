@@ -38,7 +38,7 @@ namespace Solar.Car
 			this.DriverInput.gear = gear;
 			this.DriverInput.sigs = sigs;
 			Task.Run(this.SendCanPacket);
-			Debug.WriteLine("CARMANAGER: input Gear={0}, Signals={1}", gear, sigs);
+			Debug.WriteLine("MANAGER:\tinput Gear={0}, Signals={1}", gear, sigs);
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace Solar.Car
 					{
 						if (!token.IsCancellationRequested && canusb.IsOpen)
 						{
-							Debug.WriteLine("CARMANAGER: writing packet");
+							Debug.WriteLine("MANAGER:\tCan: writing packet");
 							Can.Addr.os.user_cmds p = new Can.Addr.os.user_cmds
 							{
 								gearFlags = (UInt16)this.DriverInput.gear,
@@ -128,24 +128,24 @@ namespace Solar.Car
 
 					while (!token.IsCancellationRequested)
 					{
-						Debug.WriteLine("CARMANAGER: checking packets");
+						Debug.WriteLine("MANAGER:\tCanUsb: checking packets");
 						canusb.PollPackets();
 						await Task.Delay(Config.CANUSB_RX_INTERVAL_MS);
 					}
 				}
 				catch (System.IO.IOException e)
 				{
-					Debug.WriteLine("CARMANAGER IO Exception: " + e.ToString());
+					Debug.WriteLine("MANAGER:\tCanUsb: IO Exception: " + e.ToString());
 				}
-				catch (ObjectDisposedException e)
+				catch (Exception e)
 				{
-					Debug.WriteLine("CARMANAGER Dispose Exception: " + e.ToString());
+					Debug.WriteLine("MANAGER:\tCanUsb: EXCEPTION: " + e.ToString());
 				}
 				finally
 				{
 					canusb.Close();
 				}
-				await Task.Delay(5000); // wait 5s before reopening SerialPort
+				await Task.Delay(Config.CANUSB_DISCONNECT_RETRY_MS, token); // wait 5s before reopening SerialPort
 			}
 		}
 
@@ -155,41 +155,66 @@ namespace Solar.Car
 			{
 				try
 				{
-					Debug.WriteLine("DB Producer: pushing");
+					Debug.WriteLine("MANAGER:\tDatabase: pushing");
 					await Task.Run(() => DataLayer.PushStatus(this.Status));
 				}
 				catch (Exception e)
 				{
-					Debug.WriteLine("DB Producer: EXCEPTION: " + e.Message);
+					Debug.WriteLine("MANAGER:\tDatabase: EXCEPTION: " + e.Message);
 				}
-				await Task.Delay(Config.DB_ADD_INTERVAL_MS); // 0.25s
+				await Task.Delay(Config.DB_ADD_INTERVAL_MS, token); // 0.25s
 			}
 		}
 
-		public async Task DropboxCarTelemetry(CancellationToken token)
+		async Task DropboxCarTelemetry(CancellationToken token)
 		{
-			Dropbox d = new Dropbox();
-
 			Task.Run(async () =>
 			{
 				while (!token.IsCancellationRequested)
 				{
-					this.DataLayer.Archive();
-					await Task.Delay(Config.DB_SAVE_INTERVAL_MS); // 10s
+					try
+					{
+						// archive every 10s
+						await this.DataLayer.PushToDropbox();
+					}
+					catch (Exception e)
+					{
+						Debug.WriteLine("MANAGER:\tArchiving: EXCEPTION: " + e.ToString());
+					}
+					await Task.Delay(Config.DB_SAVE_INTERVAL_MS, token);
 				}
 			});
 
 			while (!token.IsCancellationRequested)
 			{
-				// push all archives to Dropbox
-				string[] archives = System.IO.Directory.GetFiles(".", string.Format(Config.DB_JSON_CAR_FILES, "*"));
-				foreach (string archive in archives)
-					d.FilesPut(archive, archive);
-
-				if (!token.IsCancellationRequested)
+				try
 				{
-					await Task.Delay(Config.DB_SAVE_INTERVAL_MS / 2); //5s between archive pushes
+					Dropbox d = new Dropbox();
+					await d.Metadata("/", list: false);
+
+					// push each archive to Dropbox, and delete local copy
+					string[] archives = System.IO.Directory.GetFiles(".", string.Format(Config.DB_DROPBOX_FILES, "*"));
+					foreach (string archive in archives)
+					{
+						try
+						{
+							Debug.WriteLine("MANAGER:\tDropbox: pushing archive: " + archive);
+							Dropbox.MetadataResponse resp = await d.FilesPut(archive, archive);
+							Debug.WriteLine("MANAGER:\tDropbox: pushed: " + resp.Path);
+							System.IO.File.Delete(archive);
+						}
+						catch (System.IO.IOException e)
+						{
+							Debug.WriteLine("MANAGER:\tDropbox: IOException: " + e.ToString());
+						}
+					}
 				}
+				catch (Exception e)
+				{
+					Debug.WriteLine("MANAGER:\tDropbox: EXCEPTION: " + e.ToString());
+				}
+				//5s between archive pushes
+				await Task.Delay(Config.DB_SAVE_INTERVAL_MS / 2, token);
 			}
 		}
 

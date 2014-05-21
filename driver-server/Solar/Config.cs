@@ -40,31 +40,26 @@ namespace Solar
 		public static string CANUSB_SERIAL_DEV { get { return ((Platform == PlatformID.Unix) || (Platform == PlatformID.Android)) ?
 					(string)config["CANUSB_SERIAL_DEV_UNIX"] : (string)config["CANUSB_SERIAL_DEV_WINDOWS"]; } }
 
-		/// CANUSB interval between write attempts
-		public static int CANUSB_TX_INTERVAL_MS { get { return (int)config["CANUSB_TX_INTERVAL_MS"]; } }
-
 		/// CANUSB interval between read attempts
 		public static int CANUSB_RX_INTERVAL_MS { get { return (int)config["CANUSB_RX_INTERVAL_MS"]; } }
 
-		/// Car Database location
+		/// CANUSB interval between connection attempts
+		public static int CANUSB_DISCONNECT_RETRY_MS { get { return (int)config["CANUSB_DISCONNECT_RETRY_MS"]; } }
 
-		public static string DB_JSON_CAR_FILES { get { return (string)config["DB_JSON_CAR_FILES"]; } }
+		/// Car Database location
+		public static string DB_DROPBOX_FILES { get { return (string)config["DB_DROPBOX_FILES"]; } }
+
+		/// Car Database location
+		public static string DB_CAR_FILE { get { return (string)config["DB_CAR_FILE"]; } }
 
 		/// Laptop Database location
-		public static string DB_JSON_LAPTOP_FILE { get { return (string)config["DB_JSON_LAPTOP_FILE"]; } }
+		public static string DB_LAPTOP_FILE { get { return (string)config["DB_LAPTOP_FILE"]; } }
 
 		/// Time between additions to DB
 		public static int DB_ADD_INTERVAL_MS { get { return (int)config["DB_ADD_INTERVAL_MS"]; } }
 
 		/// Time between Writeouts of DB to disk.
 		public static int DB_SAVE_INTERVAL_MS { get { return (int)config["DB_SAVE_INTERVAL_MS"]; } }
-
-		/// <summary>
-		/// typeof(Mono.Data.Sqlite.SqliteConnection).AssemblyQualifiedName
-		/// ==
-		/// "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756"
-		/// </summary>
-		public static string SQLITE_CONNECTION_CLASS_AQN = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756";
 
 		/// Car's HTTP Server listening prefix
 		public static string HTTPSERVER_CAR_PREFIX { get { return (string)config["HTTPSERVER_CAR_PREFIX"]; } }

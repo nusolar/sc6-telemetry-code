@@ -34,7 +34,7 @@ namespace Solar.Laptop
 			try
 			{
 				using (var ts = new CancellationTokenSource())
-				using (var ds = new JsonDataSource(Config.Resource_Prefix + Config.DB_JSON_LAPTOP_FILE))
+				using (var ds = new JsonDataSource(Config.Resource_Prefix + Config.DB_LAPTOP_FILE))
 				{
 					Task laptop_loop = Solar.Program.RunProgram(ts.Token, ds, new HttpServerManager(), null);
 					System.Console.ReadKey();

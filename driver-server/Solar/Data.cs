@@ -55,7 +55,7 @@ namespace Solar
 		/// Timestamp, used by CarDatabase.
 		/// </summary>
 		// [Column(IsPrimaryKey = true, Storage = "Timestamp", DbType = "INT", CanBeNull = false)]
-		public long Timestamp { get; set; }
+		public double Timestamp { get; set; }
 
 #region Driver Controls
 

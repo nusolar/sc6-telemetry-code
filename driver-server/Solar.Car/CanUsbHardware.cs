@@ -27,7 +27,7 @@ namespace Solar.Car
 		/// </summary>
 		public CanUsbHardware()
 		{
-			Debug.WriteLine("UART path: " + Config.CANUSB_SERIAL_DEV);
+			Debug.WriteLine("UART:\t\tpath: " + Config.CANUSB_SERIAL_DEV);
 			this.port = new SerialPort(Config.CANUSB_SERIAL_DEV, 115200, Parity.None, 8, StopBits.One);
 			port.NewLine = this.NewLine; // CANUSB uses carriage returns
 			port.ReadTimeout = 50; // 50 ms
@@ -42,7 +42,7 @@ namespace Solar.Car
 #if !SIMULATE_HARDWARE
 			if (Config.Platform == Config.PlatformID.Unix)
 			if (!System.IO.File.Exists(Config.CANUSB_SERIAL_DEV))
-				throw new System.IO.IOException("Port doesn't exist");
+				throw new System.IO.IOException("UART:\t\tOpen: Port doesn't exist");
 			port.Open();
 #endif
 		}
@@ -68,7 +68,7 @@ namespace Solar.Car
 		/// </summary>
 		public override void LockReadData()
 		{
-			Debug.WriteLine("UART ReadData.");
+			Debug.WriteLine("UART:\t\tReadData.");
 
 			// acquire lock on CAN bus, read buffer out.
 			string temp_buffer = null;
@@ -77,12 +77,12 @@ namespace Solar.Car
 				lock (port_lock)
 				{
 #if !SIMULATE_HARDWARE
-					Debug.WriteLine("UART ReadData: BytesToRead before " + port.BytesToRead);
+					Debug.WriteLine("UART:\t\tReadData: BytesToRead before " + port.BytesToRead);
 					temp_buffer = this.port.ReadExisting();
-					Debug.WriteLine("UART ReadData: BytesToRead after " + port.BytesToRead);
+					Debug.WriteLine("UART:\t\tReadData: BytesToRead after " + port.BytesToRead);
 #endif
-					Debug.WriteLine("UART ReadData: Bytes:\n" + temp_buffer.Substring(0, Math.Min(21, temp_buffer.Length)));
-					Debug.WriteLine("UART ReadData: Bytes# " + temp_buffer.Length);
+					Debug.WriteLine("UART:\t\tReadData: Bytes:\n" + temp_buffer.Substring(0, Math.Min(21, temp_buffer.Length)));
+					Debug.WriteLine("UART:\t\tReadData: Bytes# " + temp_buffer.Length);
 
 					// If CANUSB has overflown, then prepend a carriage return
 					if (temp_buffer.Length >= Config.CANUSB_READ_BUFFER_LIMIT)
@@ -93,7 +93,7 @@ namespace Solar.Car
 			}
 			catch (TimeoutException)
 			{
-				Debug.WriteLine("UART ReadData: TimeoutException. SerialPort may be busy.");
+				Debug.WriteLine("UART:\t\tReadData: TimeoutException. SerialPort may be busy.");
 				return;
 			}
 
@@ -130,8 +130,8 @@ namespace Solar.Car
 						break;
 					}
 				}
-				Debug.WriteLine("UART ReadData: NewLine: " + new_line.Substring(0, new_line.Length - 1));
-				Debug.WriteLine("UART ReadData: NewLine# " + new_line.Length);
+				Debug.WriteLine("UART:\t\tReadData: NewLine: " + new_line.Substring(0, new_line.Length - 1));
+				Debug.WriteLine("UART:\t\tReadData: NewLine# " + new_line.Length);
 
 				// Handle non-empty lines, since a NewLine was found;
 				if (new_line.Length > 1)
@@ -150,16 +150,16 @@ namespace Solar.Car
 			{
 				lock (port_lock)
 				{
-					Debug.WriteLine("UART WriteLine: send " + line);
+					Debug.WriteLine("UART:\t\tWriteLine: send " + line);
 #if !SIMULATE_HARDWARE
 					if (port.BytesToWrite < Config.CANUSB_WRITE_BUFFER_LIMIT)
 					{
 						port.WriteLine(line);
-						Debug.WriteLine("UART WriteLine: bytes to write = {0}", port.BytesToWrite);
+						Debug.WriteLine("UART:\t\tWriteLine: bytes to write = {0}", port.BytesToWrite);
 					}
 					else
 					{
-						Debug.WriteLine("UART WriteLine: EXCEPTION: bytes to write = {0}", port.BytesToWrite);
+						Debug.WriteLine("UART:\t\tWriteLine: EXCEPTION: bytes to write = {0}", port.BytesToWrite);
 						throw new System.IO.IOException("UART WriteLine: buffer is clogged.");
 					}
 #endif
@@ -167,7 +167,7 @@ namespace Solar.Car
 			}
 			catch (TimeoutException)
 			{
-				Debug.WriteLine("UART WriteLine: timed out. SerialPort may be busy.");
+				Debug.WriteLine("UART:\t\tWriteLine: timed out. SerialPort may be busy.");
 			}
 		}
 
@@ -177,7 +177,7 @@ namespace Solar.Car
 
 		public override void Dispose()
 		{
-			Debug.WriteLine("UART Dispose: Called");
+			Debug.WriteLine("UART:\t\tDispose: Called");
 
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
@@ -185,31 +185,37 @@ namespace Solar.Car
 
 		protected virtual void Dispose(bool disposing)
 		{
-			Debug.WriteLine("UART disposing: {0}", disposed);
+			Debug.WriteLine("UART:\t\tdisposing: {0}", disposed);
 			if (!disposed)
 			{
-				// disposing managed resources
-				if (this.port != null)
+				// disposing unmanaged resources
+				try
 				{
-					Debug.WriteLine("UART closing: draining buffer...");
-					if (port.IsOpen)
+					Debug.WriteLine("UART:\t\tclosing: draining buffer...");
+
+					// drain Read buffer before closing
+					while (port.BytesToRead > 0)
 					{
-						// drain Read buffer before closing
-						while (port.BytesToRead > 0)
-						{
-							var s = port.ReadExisting();
-							Debug.WriteLine("UART closing: cleared {0} bytes.", s.Length);
-						}
-						port.Close();
+						var s = port.ReadExisting();
+						Debug.WriteLine("UART:\t\tclosing: cleared {0} bytes.", s.Length);
 					}
-					Debug.WriteLine("UART closed");
+					port.Close();
+
+					Debug.WriteLine("UART:\t\tclosed");
 				}
-				// disposing managed resources
-				if (disposing)
+				catch (Exception e)
 				{
-					this.port.Dispose();
+					Debug.WriteLine("UART:\t\tdisposing: EXCEPTION: " + e.ToString());
 				}
-				disposed = true;
+				finally
+				{
+					// disposing managed resources
+					if (disposing)
+					{
+						this.port.Dispose();
+					}
+					disposed = true;
+				}
 			}
 		}
 

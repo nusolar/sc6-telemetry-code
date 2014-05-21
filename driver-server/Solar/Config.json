@@ -4,11 +4,12 @@
 
 	"CANUSB_SERIAL_DEV_WINDOWS": "COM3",
 	"CANUSB_SERIAL_DEV_UNIX": "/dev/tty.usbserial-LWR8N2L2",
-	"CANUSB_TX_INTERVAL_MS": 50,
 	"CANUSB_RX_INTERVAL_MS": 50,
+	"CANUSB_DISCONNECT_RETRY_MS": 5000,
 
-	"DB_JSON_CAR_FILES": "solarcar-{0}.json",
-	"DB_JSON_LAPTOP_FILE": "solarcar2.json",
+	"DB_DROPBOX_FILES": "/solarcar-{0}.json",
+	"DB_CAR_FILE": "solarcar-cache.json",
+	"DB_LAPTOP_FILE": "solarcar.json",
 	"DB_ADD_INTERVAL_MS": 250,
 	"DB_SAVE_INTERVAL_MS": 10000,
 

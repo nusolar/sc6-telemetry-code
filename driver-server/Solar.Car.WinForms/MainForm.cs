@@ -95,7 +95,7 @@ namespace Solar.Car.WinForms
 				main_button.Text = "STOP";
 				label1.Text = "GUI and Telemetry are: RUNNING";
 				this.solarcar_cancel = new CancellationTokenSource();
-				this.SolarCarMain();
+				Task.Run(function: this.SolarCarMain);
 			}
 			else
 			{
@@ -118,7 +118,7 @@ namespace Solar.Car.WinForms
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine("PROGRAM: EXCEPTION: " + e.ToString());
+				Debug.WriteLine("PROGRAM:\tRunProgram: EXCEPTION: " + e.ToString());
 			}
 			finally
 			{

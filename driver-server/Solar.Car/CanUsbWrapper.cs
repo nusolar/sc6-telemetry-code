@@ -93,20 +93,20 @@ namespace Solar.Car
 			// Validate packet
 			if (InLine[0] == 'z')
 			{
-				Debug.WriteLine("CANBUS Line: [z] packet written");
+				Debug.WriteLine("CANUSB:\t\tLine: [z] packet written");
 			}
 			if (InLine[0] != 't')
 			{
-				Debug.WriteLine("CANBUS Line: Expected first character to be t");
+				Debug.WriteLine("CANUSB:\t\tLine: Expected first character to be t");
 			}
 			else if (InLine[InLine.Length - 1] != '\r')
 			{
-				Debug.WriteLine("CANBUS Line: Expected last character to be Carriage Return");
+				Debug.WriteLine("CANUSB:\t\tLine: Expected last character to be Carriage Return");
 			}
 			else if (InLine.Length > 22)
 			{
 				// 1 't', 3 ID, 1 length, upto 16 data, 1 CR
-				Debug.WriteLine("CANBUS Line: Max packet size is 22 characters.");
+				Debug.WriteLine("CANUSB:\t\tLine: Max packet size is 22 characters.");
 			}
 			else
 			{
@@ -143,8 +143,8 @@ namespace Solar.Car
 				}
 				catch (Exception e)
 				{
-					Debug.WriteLine("CANUSB LINE: EXCEPTION:  " + e.Message);
-					Debug.WriteLine("CANUSB LINE: for packet: " + InLine);
+					Debug.WriteLine("CANUSB:\t\tLINE: EXCEPTION:  " + e.Message);
+					Debug.WriteLine("CANUSB:\t\tLINE: for packet: " + InLine);
 					return;
 				}
 				this.handlers(packet);
@@ -157,7 +157,7 @@ namespace Solar.Car
 
 		public void Dispose()
 		{
-			Debug.WriteLine("CANUSB Dispose(): called");
+			Debug.WriteLine("CANUSB:\t\tDispose(): called");
 
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
@@ -165,7 +165,7 @@ namespace Solar.Car
 
 		protected virtual void Dispose(bool disposing)
 		{
-			Debug.WriteLine("CANUSB disposing: {0}", disposed);
+			Debug.WriteLine("CANUSB:\t\tdisposing: {0}", disposed);
 			if (!disposed)
 			{
 				// dispose unmanaged resources
@@ -180,8 +180,9 @@ namespace Solar.Car
 						this.port.Close(); // WARNING: MANAGED!
 					}
 				}
-				catch (Exception)
+				catch (Exception e)
 				{
+					Debug.WriteLine("CANUSB:\t\tdisposing: EXCEPTION: " + e.ToString());
 				}
 				finally
 				{

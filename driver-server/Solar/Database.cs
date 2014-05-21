@@ -7,9 +7,19 @@ using Stream = System.IO.Stream;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 using Debug = System.Diagnostics.Debug;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Solar
 {
+	public class JsonDb
+	{
+		public int count { get; set; }
+
+		public List<string> headers { get; set; }
+
+		public List<List<object>> data { get; set; }
+	}
+
 	/// <summary>
 	/// Database for telemetry, trip events, and commands.
 	/// </summary>
@@ -21,25 +31,69 @@ namespace Solar
 		/// Returns the current Unix/Epoch time, useful for timestamping.
 		/// </summary>
 		/// <returns>The current time.</returns>
-		static public long UnixTimeNow()
+		static public double UnixTimeNow()
 		{
 			TimeSpan timeSpan = (DateTime.UtcNow - epoch);
-			return (long)timeSpan.TotalSeconds;
+			return timeSpan.TotalSeconds;
 		}
 
-		public IDataSource DataSource{ get; set; }
+		public IDataSource DataSource { get; set; }
+
+		public object data_lock = new object();
+
+		List<object> to_list(object obj)
+		{
+			List<object> list = new List<object>();
+			foreach (var prop in obj.GetType().GetProperties())
+			{
+				list.Add(prop.GetValue(obj));
+			}
+			return list;
+		}
 
 		public void PushStatus(Solar.Status data)
 		{
 			if (data.Timestamp == 0)
 				data.Timestamp = UnixTimeNow();
-			ConcurrentQueue<Status> statuses = this.DataSource.GetConnection();
-			statuses.Enqueue(data);
+			List<object> serialized_data = this.to_list(data);
+			lock (data_lock)
+			{
+				JsonDb db = this.DataSource.GetConnection();
+				db.data.Add(serialized_data);
+				++db.count;
+				Debug.WriteLine("DB:\t\tPushStatus: success");
+			}
 		}
 
-		public void Archive()
+		public async Task PushToDropbox()
 		{
-			this.DataSource.Archive();
+			string archive_path = string.Format(Config.DB_DROPBOX_FILES, Database.UnixTimeNow());
+			JsonDb archive_obj = null;
+			lock (data_lock)
+			{
+				archive_obj = this.DataSource.GetArchive();
+			}
+			try
+			{
+				string archive_json = Newtonsoft.Json.JsonConvert.SerializeObject(archive_obj).Replace("],[", "],\n[").Replace("[[", "[\n[");
+				byte[] archive_data = System.Text.Encoding.UTF8.GetBytes(archive_json);
+				Dropbox d = new Dropbox();
+				Debug.WriteLine("DB:\t\tDropbox: pushing archive: " + archive_path);
+				Dropbox.MetadataResponse resp = await d.FilesPut(archive_data, archive_path);
+				Debug.WriteLine("DB:\t\tDropbox: pushed: " + resp.Path);
+				if (resp != null)
+					return; // return if push succeeded
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine("DB:\t\tDropbox: push failed: " + e.Message);
+				this.DataSource.RestoreArchive(archive_obj);
+			}
+			// otherwise if push failed, restore archive so the data isn't lost
+			lock (data_lock)
+			{
+				this.DataSource.RestoreArchive(archive_obj);
+			}
 		}
 		/*public int CountStatus()
 		{
@@ -123,26 +177,46 @@ namespace Solar
 	/// </summary>
 	public class JsonDataSource: IDataSource
 	{
-		class JsonDb
-		{
-			public int count { get; set; }
+		JsonDb db;
 
-			public Status[] data { get; set; }
+		public JsonDataSource()
+		{
+			this.LoadJson();
+			db.count = (db.count == db.data.Count) ? db.count : db.data.Count;
 		}
-		/*static ConcurrentQueue<Status> LoadJson(string path)
+
+		public JsonDb GetConnection()
+		{
+			return this.db;
+		}
+
+		public JsonDb GetArchive()
+		{
+			JsonDb archive = this.db;
+			this.db = new JsonDb
+			{
+				count = 0,
+				headers = new List<string>(archive.headers), 
+				data = new List<List<object>>{ } 
+			};
+			return archive;
+		}
+
+		public void RestoreArchive(JsonDb archive)
+		{
+			this.db.data.InsertRange(0, archive.data);
+			this.db.count += archive.count;
+		}
+
+		void LoadJson()
 		{
 			try
 			{
-				using (var stream = System.IO.File.OpenText(path))
+				using (var stream = System.IO.File.OpenText(Config.DB_CAR_FILE))
 				{
-					JsonDb obj = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonDb>(stream.ReadToEnd());
+					this.db = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonDb>(stream.ReadToEnd());
 					stream.Close();
-					obj.count = (obj.count == obj.data.Length) ? obj.count : obj.data.Length;
-					var r = from datum in obj.data
-					        orderby datum.Timestamp
-					        select datum;
-
-					return new ConcurrentQueue<Status>(r.ToList());
+					return;
 				}
 			}
 			catch (System.NullReferenceException)
@@ -151,34 +225,24 @@ namespace Solar
 			}
 			catch (System.IO.FileNotFoundException)
 			{
-				Debug.WriteLine("DB Loading: FNF: " + Config.DB_JSON_CAR_FILE);
+				Debug.WriteLine("DB Loading: FNF: " + Config.DB_CAR_FILE);
 			}
-			return new ConcurrentQueue<Status>();
-		}*/
-		ConcurrentQueue<Status> data;
 
-		public JsonDataSource()
-		{
-			data = new ConcurrentQueue<Status>();
+			// if load failed, create new and initialize new JsonDb for Solar.Status
+			this.db = new JsonDb { count = 0, headers = new List<string> { }, data = new List<List<object>> { } };
+			foreach (var prop in typeof(Status).GetProperties())
+				this.db.headers.Add(prop.Name);
 		}
 
-		public ConcurrentQueue<Status> GetConnection()
+		void Save()
 		{
-			return data;
-		}
-
-		public void Archive()
-		{
-			using (var stream = System.IO.File.CreateText(Config.Resource_Prefix + string.Format(Config.DB_JSON_CAR_FILES, Database.UnixTimeNow())))
+			using (System.IO.StreamWriter stream = System.IO.File.CreateText(Config.Resource_Prefix + string.Format(Config.DB_DROPBOX_FILES, Database.UnixTimeNow())))
 			{
-				ConcurrentQueue<Status> cache_data = this.data;
-				this.data = new ConcurrentQueue<Status>();
-				JsonDb jdb = new JsonDb { count = cache_data.Count, data = cache_data.ToArray() };
 				stream.WriteAsync(
-					Newtonsoft.Json.JsonConvert.SerializeObject(jdb).Replace("},{", "},\n{")
+					Newtonsoft.Json.JsonConvert.SerializeObject(this.db)
 				).Wait();
 				stream.Close();
-				Debug.WriteLine("DB Save: Written to file");
+				Debug.WriteLine("DB:\t\tArchive: Written to file");
 			}
 		}
 
@@ -196,9 +260,9 @@ namespace Solar
 		{
 			if (!disposed)
 			{
-				if (this.data != null)
+				if (this.db != null)
 				{
-					this.Archive();
+					this.Save();
 				}
 				disposed = true;
 			}
