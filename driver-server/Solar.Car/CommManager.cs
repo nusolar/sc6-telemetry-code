@@ -36,6 +36,7 @@ namespace Solar.Car
 		{
 			this.DataLayer = new Database();
 			this.AppLayer = new HttpGui();
+			this.AppLayer.Manager = this;
 		}
 
 		/// <summary>
