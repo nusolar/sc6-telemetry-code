@@ -70,18 +70,6 @@ namespace Solar
 			return metadata_response.Data;
 		}
 
-		public async Task<MetadataResponse> FilesPut(string source_path, string dest_path, string parent_rev = null)
-		{
-			byte[] fileData = null;
-			using (System.IO.FileStream source_stream = System.IO.File.OpenRead(source_path))
-			{
-				fileData = new byte[source_stream.Length];
-				await source_stream.ReadAsync(fileData, 0, (int)source_stream.Length);
-				source_stream.Close();
-			}
-			return await this.FilesPut(fileData, dest_path, parent_rev);
-		}
-
 		public async Task<MetadataResponse> FilesPut(byte[] fileData, string dest_path, string parent_rev = null)
 		{
 			// upload file

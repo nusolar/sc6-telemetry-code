@@ -176,53 +176,18 @@ namespace Solar.Car
 
 		async Task DropboxCarTelemetry(CancellationToken token)
 		{
-			Task.Run(async () =>
-			{
-				while (!token.IsCancellationRequested)
-				{
-					try
-					{
-						// archive every 10s
-						await this.DataLayer.PushToDropbox();
-					}
-					catch (Exception e)
-					{
-						Debug.WriteLine("MANAGER:\tArchiving: EXCEPTION: " + e.ToString());
-					}
-					await Task.Delay(Config.DB_SAVE_INTERVAL_MS, token);
-				}
-			});
-
 			while (!token.IsCancellationRequested)
 			{
 				try
 				{
-					Dropbox d = new Dropbox();
-					await d.Metadata("/", list: false);
-
-					// push each archive to Dropbox, and delete local copy
-					string[] archives = System.IO.Directory.GetFiles(".", string.Format(Config.DB_DROPBOX_FILES, "*"));
-					foreach (string archive in archives)
-					{
-						try
-						{
-							Debug.WriteLine("MANAGER:\tDropbox: pushing archive: " + archive);
-							Dropbox.MetadataResponse resp = await d.FilesPut(archive, archive);
-							Debug.WriteLine("MANAGER:\tDropbox: pushed: " + resp.Path);
-							System.IO.File.Delete(archive);
-						}
-						catch (System.IO.IOException e)
-						{
-							Debug.WriteLine("MANAGER:\tDropbox: IOException: " + e.ToString());
-						}
-					}
+					// archive every 10s
+					await this.DataLayer.PushToDropbox();
 				}
 				catch (Exception e)
 				{
-					Debug.WriteLine("MANAGER:\tDropbox: EXCEPTION: " + e.ToString());
+					Debug.WriteLine("MANAGER:\tArchiving: EXCEPTION: " + e.ToString());
 				}
-				//5s between archive pushes
-				await Task.Delay(Config.DB_SAVE_INTERVAL_MS / 2, token);
+				await Task.Delay(Config.DB_SAVE_INTERVAL_MS, token);
 			}
 		}
 

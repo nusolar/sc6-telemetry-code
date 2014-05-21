@@ -36,6 +36,7 @@ namespace Solar.Car.Console
 				{
 					Task solarcar_loop = solarcar.BusinessLoop(ts.Token);
 					// System.Diagnostics.Process.Start(Config.HTTPSERVER_CAR_URL);
+					System.Console.WriteLine("Press any key to halt...");
 					System.Console.ReadKey();
 					ts.Cancel();
 					solarcar_loop.Wait();

@@ -1,13 +1,11 @@
-﻿<Properties MonoDevelop.MonoMac.LastXamMacNagTime="5/21/2014 8:44:26 AM">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Solar.Car.WinForms/MainForm.cs">
+﻿<Properties MonoDevelop.MonoMac.LastXamMacNagTime="5/21/2014 10:13:10 AM">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Solar.Car.Console/Program.cs">
     <Files>
-      <File FileName="Solar/Database.cs" Line="256" Column="3" />
-      <File FileName="Solar/Program.cs" Line="13" Column="26" />
-      <File FileName="Solar.Car/CommManager.cs" Line="32" Column="17" />
-      <File FileName="Solar.Car/HttpGui.cs" Line="5" Column="80" />
-      <File FileName="Solar.Car.Console/Program.cs" Line="42" Column="68" />
-      <File FileName="Solar.Car.WinForms/MainForm.cs" Line="116" Column="86" />
+      <File FileName="Solar/Dropbox.cs" Line="76" Column="47" />
+      <File FileName="Solar/Database.cs" Line="83" Column="68" />
+      <File FileName="Solar.Car/CommManager.cs" Line="189" Column="6" />
+      <File FileName="Solar.Car.Console/Program.cs" Line="41" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

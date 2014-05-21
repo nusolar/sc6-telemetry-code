@@ -80,7 +80,7 @@ namespace Solar
 			}
 			try
 			{
-				string archive_json = Newtonsoft.Json.JsonConvert.SerializeObject(archive_obj).Replace("],[", "],\n[").Replace("[[", "[\n[");
+				string archive_json = JsonConvert.SerializeObject(archive_obj).Replace("],[", "],\n[").Replace("[[", "[\n[");
 				byte[] archive_data = System.Text.Encoding.UTF8.GetBytes(archive_json);
 				Dropbox d = new Dropbox();
 				Debug.WriteLine("DB:\t\tDropbox: pushing archive: " + archive_path);
