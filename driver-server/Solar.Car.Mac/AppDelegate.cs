@@ -38,9 +38,9 @@ namespace Solar.Car.Mac
 		{
 			try
 			{
-				using (var ds = new JsonDataSource())
+				using (var solarcar = new CommManager())
 				{
-					await Solar.Program.RunProgram(this.solarcar_cancel.Token, ds, new CommManager(), new HttpGui());
+					await solarcar.BusinessLoop(this.solarcar_cancel.Token);
 				}
 			}
 			catch (Exception e)

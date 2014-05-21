@@ -41,6 +41,11 @@ namespace Solar
 
 		public object data_lock = new object();
 
+		public Database()
+		{
+			this.DataSource = new JsonDataSource();
+		}
+
 		List<object> to_list(object obj)
 		{
 			List<object> list = new List<object>();
@@ -114,61 +119,46 @@ namespace Solar
 			ConcurrentQueue<Status> statuses = this.DataSource.GetConnection();
 			Status stat = null;
 			return statuses.TryDequeue(out stat);
+		}*/
+
+#region IDisposable
+
+		bool disposed = false;
+
+		public void Dispose()
+		{
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
-		public async Task ConsumeCarTelemetry(CancellationToken token)
+		protected virtual void Dispose(bool disposing)
 		{
-			//this.SaveCarTelemetry(token);
-			while (!token.IsCancellationRequested)
+			if (!disposed)
 			{
-				bool success = false;
-				if (this.CountStatus() > 0)
+				if (disposing)
 				{
-					Debug.WriteLine("DB Consumer attempting row");
-					Status status = await Task.Run(() => this.GetFirstStatus());
-					string json = await JsonConvert.SerializeObjectAsync(status);
-					byte[] encoded = System.Text.Encoding.Default.GetBytes(json);
-
-					// upload with POST
-					Debug.WriteLine("DB Consumer uploading: " + status.Timestamp);
-					using (WebClient myWebClient = new WebClient())
+					if (this.DataSource != null)
 					{
+						// attempt to push remaining data to Dropbox
 						try
 						{
-							// default timeout = 100s
-
-							byte[] response = await myWebClient.UploadDataTaskAsync(Config.HTTPSERVER_LAPTOP_URL, encoded);
-							if (response.Length > 1)
-							{
-								// TODO check response status
-								this.DeleteFirstStatus();
-								success = true;
-								Debug.WriteLine("DB Consumer uploaded: " + System.Text.Encoding.Default.GetString(response));
-							}
+							this.PushToDropbox().Wait();
 						}
-						catch (System.Net.WebException e)
+						catch (Exception e)
 						{
-							Debug.WriteLine("DB Consumer WebException: " + e.Message);
+							Debug.WriteLine("DB:\t\tDispose: Exception when Dropboxing: " + e.Message);
+						}
+						finally
+						{
+							this.DataSource.Dispose();
 						}
 					}
 				}
-				else
-				{
-					Debug.WriteLine("DB Consumer count: " + this.CountStatus());
-				}
-
-				if (!token.IsCancellationRequested)
-				{
-					if (!success)
-					{
-						Debug.WriteLine("DB Consumer: Delaying...");
-						await Task.Delay(950); // extra 950ms if didn't upload
-					}
-
-					await Task.Delay(50); // 50ms
-				}
+				disposed = true;
 			}
-		}*/
+		}
+
+#endregion
 	}
 
 	/// <summary>
@@ -177,7 +167,7 @@ namespace Solar
 	/// </summary>
 	public class JsonDataSource: IDataSource
 	{
-		JsonDb db;
+		JsonDb db = null;
 
 		public JsonDataSource()
 		{
@@ -210,22 +200,33 @@ namespace Solar
 
 		void LoadJson()
 		{
+			// load cache
 			try
 			{
-				using (var stream = System.IO.File.OpenText(Config.DB_CAR_FILE))
-				{
+				using (var stream = System.IO.File.OpenText(Config.Resource_Prefix + Config.DB_CAR_FILE))
 					this.db = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonDb>(stream.ReadToEnd());
-					stream.Close();
-					return;
-				}
+				return; // return and delete cache
 			}
 			catch (System.NullReferenceException)
 			{
-				Debug.WriteLine("DB Loading: Unrecognizable JsonDb");
+				Debug.WriteLine("DB:\t\tLoading: Unrecognizable JsonDb");
 			}
 			catch (System.IO.FileNotFoundException)
 			{
-				Debug.WriteLine("DB Loading: FNF: " + Config.DB_CAR_FILE);
+				Debug.WriteLine("DB:\t\tLoading: FNF: " + Config.DB_CAR_FILE);
+			}
+			finally
+			{
+				// delete cache
+				try
+				{
+					if (System.IO.File.Exists(Config.Resource_Prefix + Config.DB_CAR_FILE))
+						System.IO.File.Delete(Config.Resource_Prefix + Config.DB_CAR_FILE);
+				}
+				catch (System.IO.IOException e)
+				{
+					Debug.WriteLine("DB:\t\tLoading: Couldn't delete cache: " + e.Message);
+				}
 			}
 
 			// if load failed, create new and initialize new JsonDb for Solar.Status
@@ -236,14 +237,13 @@ namespace Solar
 
 		void Save()
 		{
-			using (System.IO.StreamWriter stream = System.IO.File.CreateText(Config.Resource_Prefix + string.Format(Config.DB_DROPBOX_FILES, Database.UnixTimeNow())))
-			{
-				stream.WriteAsync(
-					Newtonsoft.Json.JsonConvert.SerializeObject(this.db)
-				).Wait();
-				stream.Close();
-				Debug.WriteLine("DB:\t\tArchive: Written to file");
-			}
+			if (this.db.data.Count > 0)
+				using (System.IO.StreamWriter stream = System.IO.File.CreateText(Config.Resource_Prefix + Config.DB_CAR_FILE))
+				{
+					stream.WriteAsync(JsonConvert.SerializeObject(this.db)).Wait();
+					stream.Close();
+					Debug.WriteLine("DB:\t\tArchive: Written to file");
+				}
 		}
 
 #region IDisposable

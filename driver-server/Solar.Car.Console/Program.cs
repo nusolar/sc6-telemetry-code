@@ -16,23 +16,14 @@ namespace Solar.Car.Console
 			Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener("debug.log"));
 			Debug.WriteLine("PROGRAM:\tHello World!");
 			// Setup SolarCar environment
-			if (Environment.OSVersion.Platform.HasFlag(PlatformID.MacOSX) ||
-			    Environment.OSVersion.Platform.HasFlag(PlatformID.Unix))
-			{
-				Config.Platform = Config.PlatformID.Unix;
-			}
-			else
-			{
-				Config.Platform = Config.PlatformID.Win32;
-			}
+			Config.Platform = 
+				(Environment.OSVersion.Platform.HasFlag(PlatformID.MacOSX) || Environment.OSVersion.Platform.HasFlag(PlatformID.Unix)) ? 
+				Config.PlatformID.Unix : 
+				Config.PlatformID.Win32;
 			// Load configuration from file
 			Config.LoadConfig(System.IO.File.ReadAllText(@"Config.json"));
 
 			RunApp();
-
-			// Console.WriteLine("Press any key to continue...");
-			// Console.WriteLine();
-			// Console.ReadKey();
 		}
 
 		public static void RunApp()
@@ -41,9 +32,9 @@ namespace Solar.Car.Console
 			try
 			{
 				using (var ts = new CancellationTokenSource())
-				using (var ds = new JsonDataSource())
+				using (var solarcar = new CommManager())
 				{
-					Task solarcar_loop = Solar.Program.RunProgram(ts.Token, ds, new CommManager(), new HttpGui());
+					Task solarcar_loop = solarcar.BusinessLoop(ts.Token);
 					// System.Diagnostics.Process.Start(Config.HTTPSERVER_CAR_URL);
 					System.Console.ReadKey();
 					ts.Cancel();

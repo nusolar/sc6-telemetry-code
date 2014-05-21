@@ -15,7 +15,7 @@ namespace Solar.Laptop
 	/// Business-Layer driving the underlying Database and exposing the Status.
 	/// Http server.
 	/// </summary>
-	class HttpServerManager: Solar.IBusinessLayer
+	class HttpServerManager: IBusinessLayer
 	{
 		public IDataServiceLayer DataLayer { get; set; }
 
@@ -120,6 +120,34 @@ namespace Solar.Laptop
 				Debug.WriteLine("HTTP Unexpected exception: {0}", e.Message);
 			}
 		}
-	}
+
 #endregion
+
+#region IDisposable
+
+		bool disposed = false;
+
+		public void Dispose()
+		{
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					if (this.DataLayer != null)
+					{
+						this.DataLayer.Dispose();
+					}
+				}
+				disposed = true;
+			}
+		}
+
+#endregion
+	}
 }

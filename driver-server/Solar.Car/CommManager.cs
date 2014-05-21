@@ -25,10 +25,18 @@ namespace Solar.Car
 		/// </summary>
 		public IDataServiceLayer DataLayer { get; set; }
 
+		public IAppLayer AppLayer { get; set; }
+
 		/// <summary>
 		/// Gets a Copy of Model's status.
 		/// </summary>
 		public Solar.Status Status { get { return (Solar.Status)status.DeepClone(); } }
+
+		public CommManager()
+		{
+			this.DataLayer = new Database();
+			this.AppLayer = new HttpGui();
+		}
 
 		/// <summary>
 		/// Accept data from Application Layer/UI, update Model's status.
@@ -220,18 +228,58 @@ namespace Solar.Car
 
 		/// <summary>
 		/// Maintain the Model of the Car, by reading and writing to the CAN bus.
+		/// Run the solar car's HttpGui, command Driver Controls, gather telemetry.
 		/// Accepts a Task CancellationToken.
 		/// </summary>
 		/// <param name="obj">The CancellationToken.</param>
-		public async Task BusinessLoop(CancellationToken token)
+		public async Task BusinessLoop(CancellationToken parentToken)
 		{
+			using (var innerSource = new CancellationTokenSource())
+			{
+				var childSource = CancellationTokenSource.CreateLinkedTokenSource(parentToken, innerSource.Token);
+				List<Task> tasks = new List<Task>();
 
-			Task can_loop = this.CanLoop(token);
-			Task make_telemetry_loop = this.ProduceCarTelemetry(token);
-			Task send_telemetry_loop = this.DropboxCarTelemetry(token);
-			await can_loop;
-			await make_telemetry_loop;
-			await send_telemetry_loop;
+				// collect data from CanUsb
+				tasks.Add(this.CanLoop(childSource.Token));
+				// Telemetry caching
+				tasks.Add(this.ProduceCarTelemetry(childSource.Token));
+				// Telemetry transmission
+				tasks.Add(this.DropboxCarTelemetry(childSource.Token));
+				// UIs run on separate thread.
+				tasks.Add(this.AppLayer.AppLayerLoop(childSource.Token));
+
+				await Task.WhenAny(tasks.ToArray());
+				innerSource.Cancel();
+				Debug.WriteLine("MANAGER:\tBusinessLoop: Aborted");
+				await Task.WhenAll(tasks.ToArray());
+			}
+		}
+
+#endregion
+
+#region IDisposable
+
+		bool disposed = false;
+
+		public void Dispose()
+		{
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					if (this.DataLayer != null)
+					{
+						this.DataLayer.Dispose();
+					}
+				}
+				disposed = true;
+			}
 		}
 
 #endregion

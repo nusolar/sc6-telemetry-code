@@ -12,17 +12,12 @@ namespace Solar.Car.WinForms
 			Config.Resource_Prefix = "";
 			// Enable debugging
 			Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener("debug.log"));
-			Debug.WriteLine("PROGRAM: Hello World!");
+			Debug.WriteLine("PROGRAM:\tHello World!");
 			// Setup SolarCar environment
-			if (Environment.OSVersion.Platform.HasFlag(PlatformID.MacOSX) ||
-			    Environment.OSVersion.Platform.HasFlag(PlatformID.Unix))
-			{
-				Config.Platform = Config.PlatformID.Unix;
-			}
-			else
-			{
-				Config.Platform = Config.PlatformID.Win32;
-			}
+			Config.Platform = 
+				(Environment.OSVersion.Platform.HasFlag(PlatformID.MacOSX) || Environment.OSVersion.Platform.HasFlag(PlatformID.Unix)) ? 
+				Config.PlatformID.Unix : 
+				Config.PlatformID.Win32;
 			// Load configuration from file
 			Config.LoadConfig(System.IO.File.ReadAllText(@"Config.json"));
 

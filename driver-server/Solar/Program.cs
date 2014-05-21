@@ -17,18 +17,19 @@ namespace Solar
 		void RestoreArchive(JsonDb archive);
 	}
 
-	public interface IDataServiceLayer
+	public interface IDataServiceLayer: IDisposable
 	{
 		IDataSource DataSource { get; set; }
-		//int CountStatus();
+
 		void PushStatus(Solar.Status data);
+
+		Task PushToDropbox();
+		//int CountStatus();
 		// Solar.Status GetFirstStatus();
 		// bool DeleteFirstStatus();
-		//Task ConsumeCarTelemetry(CancellationToken token);
-		Task PushToDropbox();
 	}
 
-	public interface IBusinessLayer
+	public interface IBusinessLayer: IDisposable
 	{
 		IDataServiceLayer DataLayer { get; set; }
 
@@ -44,47 +45,5 @@ namespace Solar
 		IBusinessLayer Manager { get; set; }
 
 		Task AppLayerLoop(CancellationToken token);
-	}
-
-	/// <summary>
-	/// Centralized tasks for running the solar car.
-	/// </summary>
-	public class Program
-	{
-		/// <summary>
-		/// Run the solar car's HttpGui, command Driver Controls, gather telemetry.
-		/// </summary>
-		public static async Task RunProgram(CancellationToken parentToken,
-		                                    IDataSource dataSource,
-		                                    IBusinessLayer car,
-		                                    IAppLayer gui = null)
-		{
-			// Telemetry caching
-			IDataServiceLayer db = new Database();
-			db.DataSource = dataSource;
-			// DataAggregator collects all data
-			if (car != null)
-				car.DataLayer = db;
-			// UIs run on separate threads.
-			if (gui != null)
-				gui.Manager = car;
-				
-			// spawn cancellable CAN and GUI communication threads:
-			using (var innerSource = new CancellationTokenSource())
-			{
-				var childSource = CancellationTokenSource.CreateLinkedTokenSource(parentToken, innerSource.Token);
-
-				List<Task> tasks = new List<Task>();
-				if (gui != null)
-					tasks.Add(gui.AppLayerLoop(childSource.Token));
-				if (car != null)
-					tasks.Add(car.BusinessLoop(childSource.Token));
-					
-				await Task.WhenAny(tasks.ToArray());
-				innerSource.Cancel();
-				Debug.WriteLine("PROGRAM:\tAborted");
-				await Task.WhenAll(tasks.ToArray());
-			}
-		}
 	}
 }
