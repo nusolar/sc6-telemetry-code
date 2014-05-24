@@ -16,7 +16,6 @@ namespace Solar.Car
 	/// </summary>
 	public class HttpGui: IAppLayer
 	{
-		//readonly NameValueCollection default_query = new NameValueCollection { { "gear", "1" }, { "signals", "0" } };
 		/// <summary>
 		/// Injected by App
 		/// </summary>
@@ -89,9 +88,6 @@ namespace Solar.Car
 //				}
 				else // e.g. url == "/index.html"
 				{
-//					url = url.Replace('/', '.');
-//					Assembly _assembly = typeof(HttpGui).Assembly;
-//					_assembly.GetManifestReourceStream("SolarCar." + Config.HTTPSERVER_GUI_SUBDIR + url);
 					try
 					{
 						using (Stream _stream = File.OpenRead(Config.Resource_Prefix + Config.HTTPSERVER_GUI_SUBDIR + url))
@@ -124,7 +120,6 @@ namespace Solar.Car
 					{
 						Debug.WriteLine("HTTP:\t\tListenerCallback: FileNotFound: " + e.FileName);
 					}
-					// this.DoCommands(this.default_query);
 				}
 			}
 			catch (NullReferenceException e)
@@ -171,12 +166,10 @@ namespace Solar.Car
 							else if (task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted)
 							{
 								Debug.WriteLine("HTTP:\t\tContext: Errored");
-								// this.DoCommands(this.default_query);
 							}
 							else
 							{
 								Debug.WriteLine("HTTP:\t\tContext: Timedout/Still waiting");
-								// this.DoCommands(this.default_query);
 							}
 						}
 					}

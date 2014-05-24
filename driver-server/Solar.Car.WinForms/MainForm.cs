@@ -22,17 +22,17 @@ namespace Solar.Car.WinForms
 
 			// Initialize your components here
 			label1.Text = "GUI and Telemetry are: " + "STOPPED";
-			//			label1.Dock = DockStyle.Fill;
+			// label1.Dock = DockStyle.Fill;
 
 			main_button.DialogResult = DialogResult.OK;
 			main_button.Text = "STOP";
 			main_button.Click += new EventHandler(this.MainButton_Click);
-			//			button1.Dock = DockStyle.Fill;
+			// button1.Dock = DockStyle.Fill;
 
 			gui_button.DialogResult = DialogResult.OK;
 			gui_button.Text = "Show";
 			gui_button.Click += new EventHandler(this.GuiButton_Click);
-			//			button2.Dock = DockStyle.Fill;
+			// button2.Dock = DockStyle.Fill;
 
 			// Add components to panel
 			panel1.ColumnCount = 1;
