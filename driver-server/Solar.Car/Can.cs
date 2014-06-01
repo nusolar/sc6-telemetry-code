@@ -267,14 +267,14 @@ namespace Solar.Car
 
 					public UInt32 bmsId
 					{
-						get { return this.frame.status.uint32_0; }
-						set { this.frame.status.uint32_0 = value; }
+						get { return this.frame.uint32x2.uint32_0; }
+						set { this.frame.uint32x2.uint32_0 = value; }
 					}
 
 					public UInt32 uptime_s
 					{
-						get { return this.frame.status.uint32_1; }
-						set { this.frame.status.uint32_1 = value; }
+						get { return this.frame.uint32x2.uint32_1; }
+						set { this.frame.uint32x2.uint32_1 = value; }
 					}
 				}
 
@@ -646,14 +646,14 @@ namespace Solar.Car
 
 					public UInt32 tritiumId
 					{
-						get { return this.frame.status.uint32_0; }
-						set { this.frame.status.uint32_0 = value; }
+						get { return this.frame.uint32x2.uint32_0; }
+						set { this.frame.uint32x2.uint32_0 = value; }
 					}
 
 					public UInt32 serialNo
 					{
-						get { return this.frame.status.uint32_1; }
-						set { this.frame.status.uint32_1 = value; }
+						get { return this.frame.uint32x2.uint32_1; }
+						set { this.frame.uint32x2.uint32_1 = value; }
 					}
 				}
 
@@ -975,14 +975,14 @@ namespace Solar.Car
 
 					public UInt32 drvId
 					{
-						get { return this.frame.status.uint32_0; }
-						set { this.frame.status.uint32_0 = value; }
+						get { return this.frame.uint32x2.uint32_0; }
+						set { this.frame.uint32x2.uint32_0 = value; }
 					}
 
 					public UInt32 serialNo
 					{
-						get { return this.frame.status.uint32_1; }
-						set { this.frame.status.uint32_1 = value; }
+						get { return this.frame.uint32x2.uint32_1; }
+						set { this.frame.uint32x2.uint32_1 = value; }
 					}
 				}
 
@@ -1038,14 +1038,14 @@ namespace Solar.Car
 
 					public UInt32 unused0
 					{
-						get { return this.frame.status.uint32_0; }
-						set { this.frame.status.uint32_0 = value; }
+						get { return this.frame.uint32x2.uint32_0; }
+						set { this.frame.uint32x2.uint32_0 = value; }
 					}
 
 					public UInt32 unused1
 					{
-						get { return this.frame.status.uint32_1; }
-						set { this.frame.status.uint32_1 = value; }
+						get { return this.frame.uint32x2.uint32_1; }
+						set { this.frame.uint32x2.uint32_1 = value; }
 					}
 				}
 
@@ -1136,14 +1136,14 @@ namespace Solar.Car
 
 					public UInt32 bmsId
 					{
-						get { return this.frame.status.uint32_0; }
-						set { this.frame.status.uint32_0 = value; }
+						get { return this.frame.uint32x2.uint32_0; }
+						set { this.frame.uint32x2.uint32_0 = value; }
 					}
 
 					public UInt32 serialNo
 					{
-						get { return this.frame.status.uint32_1; }
-						set { this.frame.status.uint32_1 = value; }
+						get { return this.frame.uint32x2.uint32_1; }
+						set { this.frame.uint32x2.uint32_1 = value; }
 					}
 				}
 
@@ -1908,28 +1908,52 @@ namespace Solar.Car
 
 					public const UInt16 _id = 0x771;
 
-					public UInt16 flags_Vin
+					public Byte Vin_MSB_flags
 					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
+						get { return this.frame.uint8x8.byte_0; }
+						set { this.frame.uint8x8.byte_0 = value; }
 					}
 
-					public UInt16 flags_Iin
+					public Byte Vin_LSB
 					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
+						get { return this.frame.uint8x8.byte_1; }
+						set { this.frame.uint8x8.byte_1 = value; }
 					}
 
-					public UInt16 flags_Vout
+					public Byte Iin_MSB
 					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
+						get { return this.frame.uint8x8.byte_2; }
+						set { this.frame.uint8x8.byte_2 = value; }
 					}
 
-					public UInt16 flags_Tout
+					public Byte Iin_LSB
 					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
+						get { return this.frame.uint8x8.byte_3; }
+						set { this.frame.uint8x8.byte_3 = value; }
+					}
+
+					public Byte Vout_MSB
+					{
+						get { return this.frame.uint8x8.byte_4; }
+						set { this.frame.uint8x8.byte_4 = value; }
+					}
+
+					public Byte Vout_LSB
+					{
+						get { return this.frame.uint8x8.byte_5; }
+						set { this.frame.uint8x8.byte_5 = value; }
+					}
+
+					public Byte pcb_temp
+					{
+						get { return this.frame.uint8x8.byte_6; }
+						set { this.frame.uint8x8.byte_6 = value; }
+					}
+
+					public Byte unused0
+					{
+						get { return this.frame.uint8x8.byte_7; }
+						set { this.frame.uint8x8.byte_7 = value; }
 					}
 				}
 
@@ -1941,28 +1965,52 @@ namespace Solar.Car
 
 					public const UInt16 _id = 0x772;
 
-					public UInt16 flags_Vin
+					public Byte Vin_MSB_flags
 					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
+						get { return this.frame.uint8x8.byte_0; }
+						set { this.frame.uint8x8.byte_0 = value; }
 					}
 
-					public UInt16 flags_Iin
+					public Byte Vin_LSB
 					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
+						get { return this.frame.uint8x8.byte_1; }
+						set { this.frame.uint8x8.byte_1 = value; }
 					}
 
-					public UInt16 flags_Vout
+					public Byte Iin_MSB
 					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
+						get { return this.frame.uint8x8.byte_2; }
+						set { this.frame.uint8x8.byte_2 = value; }
 					}
 
-					public UInt16 flags_Tout
+					public Byte Iin_LSB
 					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
+						get { return this.frame.uint8x8.byte_3; }
+						set { this.frame.uint8x8.byte_3 = value; }
+					}
+
+					public Byte Vout_MSB
+					{
+						get { return this.frame.uint8x8.byte_4; }
+						set { this.frame.uint8x8.byte_4 = value; }
+					}
+
+					public Byte Vout_LSB
+					{
+						get { return this.frame.uint8x8.byte_5; }
+						set { this.frame.uint8x8.byte_5 = value; }
+					}
+
+					public Byte pcb_temp
+					{
+						get { return this.frame.uint8x8.byte_6; }
+						set { this.frame.uint8x8.byte_6 = value; }
+					}
+
+					public Byte unused0
+					{
+						get { return this.frame.uint8x8.byte_7; }
+						set { this.frame.uint8x8.byte_7 = value; }
 					}
 				}
 
@@ -1974,28 +2022,52 @@ namespace Solar.Car
 
 					public const UInt16 _id = 0x773;
 
-					public UInt16 flags_Vin
+					public Byte Vin_MSB_flags
 					{
-						get { return this.frame.uint16x4.uint16_0; }
-						set { this.frame.uint16x4.uint16_0 = value; }
+						get { return this.frame.uint8x8.byte_0; }
+						set { this.frame.uint8x8.byte_0 = value; }
 					}
 
-					public UInt16 flags_Iin
+					public Byte Vin_LSB
 					{
-						get { return this.frame.uint16x4.uint16_1; }
-						set { this.frame.uint16x4.uint16_1 = value; }
+						get { return this.frame.uint8x8.byte_1; }
+						set { this.frame.uint8x8.byte_1 = value; }
 					}
 
-					public UInt16 flags_Vout
+					public Byte Iin_MSB
 					{
-						get { return this.frame.uint16x4.uint16_2; }
-						set { this.frame.uint16x4.uint16_2 = value; }
+						get { return this.frame.uint8x8.byte_2; }
+						set { this.frame.uint8x8.byte_2 = value; }
 					}
 
-					public UInt16 flags_Tout
+					public Byte Iin_LSB
 					{
-						get { return this.frame.uint16x4.uint16_3; }
-						set { this.frame.uint16x4.uint16_3 = value; }
+						get { return this.frame.uint8x8.byte_3; }
+						set { this.frame.uint8x8.byte_3 = value; }
+					}
+
+					public Byte Vout_MSB
+					{
+						get { return this.frame.uint8x8.byte_4; }
+						set { this.frame.uint8x8.byte_4 = value; }
+					}
+
+					public Byte Vout_LSB
+					{
+						get { return this.frame.uint8x8.byte_5; }
+						set { this.frame.uint8x8.byte_5 = value; }
+					}
+
+					public Byte pcb_temp
+					{
+						get { return this.frame.uint8x8.byte_6; }
+						set { this.frame.uint8x8.byte_6 = value; }
+					}
+
+					public Byte unused0
+					{
+						get { return this.frame.uint8x8.byte_7; }
+						set { this.frame.uint8x8.byte_7 = value; }
 					}
 				}
 			}

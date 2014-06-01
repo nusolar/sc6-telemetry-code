@@ -99,6 +99,20 @@ namespace Solar.Car
 					this.status.MotorOdometer = odometer_pkt.odom;
 					this.status.MotorAmpHours = odometer_pkt.dcBusAmpHours;
 					break;
+			/*
+				case Can.Addr.mppt.mppt1._id:
+					var mppt1_pkt = new Can.Addr.mppt.mppt1(p.Data);
+					Debug.WriteLine("MANAGER:\tMPPT1: " + p.Data.ToString("x8") + ", " + mppt1_pkt.Vout_MSB);
+					this.status.Mppt1VoltageIn	= (ushort)((mppt1_pkt.Vin_MSB_flags & 0x3) << 8 + mppt1_pkt.Vin_LSB);
+					this.status.Mppt1CurrentIn	= (ushort)((mppt1_pkt.Iin_MSB & 0x3) << 8 + mppt1_pkt.Iin_LSB);
+					this.status.Mppt1VoltageOut	= (ushort)((mppt1_pkt.Vout_MSB & 0x3) << 8 + mppt1_pkt.Vout_LSB);
+					this.status.Mppt1Temp	= mppt1_pkt.pcb_temp;
+					this.status.Mppt1Flags	= (Byte)(mppt1_pkt.Vin_MSB_flags & 0xf0);
+					break;
+			*/
+				default:
+					Debug.WriteLine("MANAGER:\tCanPacket: Unrecognized: " + p.ID.ToString("X") + ", " + p.Data.ToString("X"));
+					break;
 			}
 		}
 
@@ -121,6 +135,7 @@ namespace Solar.Car
 					canusb.handlers += this.ProcessCanPacket;
 					canusb.Open();
 
+					// enable Steering Wheel
 					this.SendCanPacket = () =>
 					{
 						if (!token.IsCancellationRequested && canusb.IsOpen)
@@ -135,6 +150,12 @@ namespace Solar.Car
 						}
 					};
 
+					// activate MPPTs
+					canusb.TransmitPacket(new Can.Addr.mppt_master.mppt1());
+					canusb.TransmitPacket(new Can.Addr.mppt_master.mppt2());
+					canusb.TransmitPacket(new Can.Addr.mppt_master.mppt3());
+
+					// Read telemetry
 					while (!token.IsCancellationRequested)
 					{
 						Debug.WriteLine("MANAGER:\tCanUsb: checking packets");

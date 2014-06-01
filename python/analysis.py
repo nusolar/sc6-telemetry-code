@@ -3,11 +3,13 @@
 import datetime as dt
 import time
 import sys
+import os
 import numpy as np
 import matplotlib.pyplot as pyplot
 from scipy.optimize import broyden1
 import dropbox
 import json
+import csv
 
 
 if (sys.version_info.major < 3) or (sys.version_info.major == 3 and sys.version_info.minor < 3):
@@ -23,13 +25,16 @@ class Dropbox:
 
 	def __init__(self):
 		try:
-			with open('Config.json', 'rb') as config_fp:
+			with open('Config.json', 'r') as config_fp:
 				config = json.load(config_fp)
 				self.access_token = config['access_token']
-		except Exception:
+		except Exception as e:
+			print('EXCEPTION: ' + str(e))
 			print('Could not read access_token from Config.json')
 			self.authorize()
 			print('Add\t"access_token"='+self.access_token+"\t to Config.json")
+		self.client = dropbox.client.DropboxClient(self.access_token)
+		print('linked account: ' + self.client.account_info()["display_name"])
 
 	def authorize(self):
 		flow = dropbox.client.DropboxOAuth2FlowNoRedirect(self.app_key, self.app_secret)
@@ -41,21 +46,43 @@ class Dropbox:
 		code = input("Enter the authorization code here: ").strip()
 		# This will fail if the user enters an invalid authorization code
 		self.access_token, user_id = flow.finish(code)
-		self.client = dropbox.client.DropboxClient(self.access_token)
-		print('linked account: ' + self.client.account_info())
 
 	def pull_raw_data(self):
 		# list Dropbox data
 		folder_metadata = self.client.metadata('/')
-		paths = [file['path'] for file in folder_metadata['content']
-			if file['is_dir'] and 'solarcar_' in file['path'] and '.json' in file['path']]
+		paths = [file['path'] for file in folder_metadata['contents']
+			if not file['is_dir'] and 'solarcar-' in file['path'] and '.json' in file['path']]
+		print("Dropbox:\tPulling " + str(len(paths)) + " files")
 		for path in paths:
 			# pull files to current directory
 			f, metadata = self.client.get_file_and_metadata(path)
-			with open('.' + path, 'wb') as out:
+			with open('./' + path, 'wb') as out:
 				out.write(f.read())
 			# delete the Dropbox copy
 			_metadata = self.client.file_delete(path)
+
+	def read_data(self, name):
+		headers = None
+		data = []
+		if not os.path.isdir(name + '-rawdata'):
+			os.mkdir(name + '-rawdata')
+		for path in os.listdir("."):
+			if ('solarcar-' in path and '.json' in path):
+				with open(path) as fp:
+					_json = json.load(fp)
+					if _json["count"] != len(_json["data"]):
+						print("WARNING: check file " + path)
+					if headers is None:
+						headers = _json["headers"]
+					for line in _json["data"]:
+						data.append(line)
+				os.rename(path, name + '-rawdata/' + path)
+
+		with open(name + '.csv', 'w') as csvfile:
+			writer = csv.writer(csvfile)
+			writer.writerow(headers)
+			for line in data:
+				writer.writerow(line)
 
 
 pi = 3.14159265358979323846264338327950
@@ -124,12 +151,14 @@ class ArrayPower:
 	def __init__(self, car: "SolarCar"):
 		self.car = car
 
-	def __call__(self, time, geo, weather):
-		car = self.car
+	def radiant_flux(self, time, geo):
 		radii = self.solar_radius(time)
 		cosines = self.cos_sun(time, *geo.spherical())
-		radiant_flux = self.solar_constant/radii**2 * cosines
-		return car.area * radiant_flux
+		return self.solar_constant/radii**2 * cosines
+
+	def __call__(self, time, geo, weather):
+		car = self.car
+		return car.area * self.radiant_flux(time, geo)
 
 
 class PowerLoss:
@@ -188,11 +217,11 @@ class Location:
 
 
 class TimeRange:
-	race_day = dt.timedelta(0, 7*3600).total_seconds()
+	race_day = 8*3600
 	solar_day = 86400
 
 	def __init__(self, start=dt.datetime(2014, 7, 17, 10, 0, 0, 0),
-						end=dt.datetime(2014, 7, 17+2, 12+5, 0, 0, 0), end_t=None):
+						end=dt.datetime(2014, 7, 17+2, 12+6, 0, 0, 0), end_t=None):
 		'''Start your race at 10AM. This class assumes 7 hour race days. Resolution = 1 sec.'''
 		if start.tzinfo != dt.timezone.utc:
 			start.replace(tzinfo=dt.timezone.utc)
@@ -245,7 +274,8 @@ class SC6:
 	m = 306				# kg
 
 	# array
-	area = (0.3382+0.3493+0.3603)		# effective m^2 @ 59dC
+	area = 5.9951287		# (0.3382+0.3493+0.3603)
+	eff = 0.9242492889		# effective m^2 @ 69dC
 
 	# batteries
 	V_nom = 120			# V
@@ -274,6 +304,7 @@ class SC6LeadAcids:
 	V_nom = 120			# V
 	Q_nom = 18*3600		# Coulomb
 	E_0 = V_nom*Q_nom
+	batt_R = 0.018*10		# Ohms
 
 
 class COTA:
@@ -313,18 +344,20 @@ def FSGP():
 	print(str(v * fsgp.time.total() / fsgp.track.length) + " laps")
 
 	pyplot.plot(fsgp.time(), (fsgp.car.E_0 + fsgp.E_in) / 10**6)
-	xL, xH = int(min(fsgp.time()))-1, int(max(fsgp.time()))+1
-	pyplot.xticks(list(range(xL, xH, int((xH-xL)/10))))
+	pyplot.xticks(list(range(0, int(fsgp.time.total()), int(fsgp.time.total()/10))))
 	pyplot.xlim(min(fsgp.time()), max(fsgp.time()))
 	pyplot.title("SC6 Solar Energy at FSGP")
 	pyplot.xlabel("Hour of race (7 hr/day)")
 	pyplot.ylabel("Megajoules received")
 	pyplot.savefig('race_received_energy_2014.png')
-	pyplot.show()
+	# pyplot.show()
 
 
 def main():
-	FSGP()
+	d = Dropbox()
+	d.pull_raw_data()
+	d.read_data('debug')
+	# FSGP()
 
 if __name__ == '__main__':
 	main()

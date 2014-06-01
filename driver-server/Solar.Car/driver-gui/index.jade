@@ -1,5 +1,5 @@
 doctype html
-html(lang="en", ng-app, ng-csp)
+html(lang="en", ng-app="DriverApp", ng-csp)
 	head
 		meta(charset='utf-8')
 		link(rel="icon", type="image/png", href="icon_64.png")
@@ -17,7 +17,7 @@ html(lang="en", ng-app, ng-csp)
 			include:js index.js
 
 	body
-		article.MainTable(ng-controller='MainTable')
+		article.MainTable(ng-controller='MainTableController')
 			header.HeaderRow
 				.TextCell.Title.TopLeftCorner
 				.TextCell.Title(colspan='2', ng-bind="title_string")
@@ -61,7 +61,7 @@ html(lang="en", ng-app, ng-csp)
 							="BATTERIES {{ (battery_btn? 'ARE': 'NOT') }} RUNNING"
 						.Gap
 						.Button.SmallButton.DangerousToggle(ng-class="{DangerousToggleOn: motor_btn}", ng-click="Motor()")
-							="MOTOR IS {{ (motor_btn? 'ON': 'OFF') }}"
+							="MOTOR IS {{ (motor_btn? 'ON': 'REGEN') }}"
 						.Gap
 						.Button.SmallButton(ng-class="{ButtonOn: reverse_btn}", ng-click="Reverse()")
 							="{{(reverse_btn? 'REVERSE': 'FORWARD')}}"

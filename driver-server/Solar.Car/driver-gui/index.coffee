@@ -1,11 +1,7 @@
-# namespace function from the coffeescript faq
-namespace = (target, name, block) ->
-  [target, name, block] = [(if typeof exports isnt 'undefined' then exports else window), arguments...] if arguments.length < 3
-  top    = target
-  target = target[item] or= {} for item in name.split '.'
-  block target, top
+app_module = angular.module('DriverApp', [])
 
-window.MainTable = ($scope, $timeout, $interval) ->
+app_module.controller 'MainTableController',
+["$scope", "$timeout", "$interval", ($scope, $timeout, $interval) ->
 	# enum for TurnSignals state
 	$scope.TurnSignals =
 		Off: 0,
@@ -144,7 +140,10 @@ window.MainTable = ($scope, $timeout, $interval) ->
 			success: (json_text) =>
 				try
 					json = window.JSON.parse(json_text)
-					$scope.title_string = "v = " + json["MotorVelocity"] + " m/s"
+					$scope.title_string = "v: " + json["MotorVelocity"] + "m/s, " +
+						"I: " + json["MotorCurrent"] + "A, " +
+						"d: " + json["MotorOdometer"] + "m, " +
+						"C: " + json["MotorAmpHours"] + "Ah"
 					# TODO update values for $scope.commands
 				catch e
 					window.console.log(e)
@@ -156,6 +155,6 @@ window.MainTable = ($scope, $timeout, $interval) ->
 
 	### INITIALIZE ###
 	$scope.print_query_string = $.param($scope.serialize_commands())
-	$scope.title_string = "v = 0 m/s"
+	$scope.title_string = "v: 0m/s, I: 0A, d: 0m, C: 0Ah"
 	$scope.set_panel_button('drive_btn')
-
+]

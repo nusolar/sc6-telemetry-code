@@ -176,6 +176,39 @@ namespace Solar
 
 #endregion
 
+#if MPPT
+		
+		public Byte Mppt1Flags { get; set; }
+
+		public UInt16 Mppt1VoltageIn { get; set; }
+
+		public UInt16 Mppt1CurrentIn { get; set; }
+
+		public UInt16 Mppt1VoltageOut { get; set; }
+
+		public Byte Mppt1Temp { get; set; }
+
+		public Byte Mppt2Flags { get; set; }
+
+		public UInt16 Mppt2VoltageIn { get; set; }
+
+		public UInt16 Mppt2CurrentIn { get; set; }
+
+		public UInt16 Mppt2VoltageOut { get; set; }
+
+		public Byte Mppt2Temp { get; set; }
+
+		public Byte Mppt3Flags { get; set; }
+
+		public UInt16 Mppt3VoltageIn { get; set; }
+
+		public UInt16 Mppt3CurrentIn { get; set; }
+
+		public UInt16 Mppt3VoltageOut { get; set; }
+
+		public Byte Mppt3Temp { get; set; }
+
+#endif
 		/// <summary>
 		/// Clone the Status values.
 		/// </summary>
